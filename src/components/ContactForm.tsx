@@ -102,8 +102,8 @@ export default function ContactForm() {
       {status === 'error' && (
         <p className="text-center text-sm text-red-500">
           Algo fue mal. Escríbenos directamente a{' '}
-          <a href="mailto:hola@dalsat.com" className="underline">
-            hola@dalsat.com
+          <a href="mailto:dalsat.soluciones@gmail.com" className="underline">
+            dalsat.soluciones@gmail.com
           </a>
         </p>
       )}
