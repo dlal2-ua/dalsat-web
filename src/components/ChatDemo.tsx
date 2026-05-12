@@ -70,7 +70,7 @@ export default function ChatDemo() {
     <div className="mx-auto max-w-sm">
       <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
         {/* WhatsApp header */}
-        <div className="bg-[#128C7E] px-4 py-3 flex items-center gap-3">
+        <div className="bg-[#001A3F] px-4 py-3 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-sm">
             AP
           </div>
@@ -79,7 +79,7 @@ export default function ChatDemo() {
             <p className="text-white/70 text-xs">Agente Dalsat · en línea</p>
           </div>
           <div className="ml-auto flex gap-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#00E0FF]" />
           </div>
         </div>
 
@@ -93,7 +93,7 @@ export default function ChatDemo() {
             <div className="flex items-center justify-center h-full">
               <button
                 onClick={() => setStarted(true)}
-                className="bg-[#25D366] text-white font-semibold px-6 py-3 rounded-full shadow-md hover:bg-[#128C7E] transition-colors text-sm"
+                className="bg-[#001A3F] text-white font-semibold px-6 py-3 rounded-full shadow-md hover:bg-[#00E0FF] hover:text-[#001A3F] transition-colors text-sm"
               >
                 ▶ Ver demo en vivo
               </button>
@@ -140,7 +140,7 @@ export default function ChatDemo() {
           <div className="bg-[#ECE5DD] px-3 pb-3 text-center">
             <button
               onClick={reset}
-              className="text-xs text-[#128C7E] underline hover:text-[#0B5E55]"
+              className="text-xs text-[#001A3F] underline hover:text-[#00E0FF]"
             >
               Reiniciar demo
             </button>

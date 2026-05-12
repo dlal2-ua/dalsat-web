@@ -42,7 +42,7 @@ export default function ContactForm() {
           type="text"
           required
           placeholder="Tu nombre o empresa"
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transparent text-gray-900 placeholder-gray-400 text-sm"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#00E0FF] focus:border-transparent text-gray-900 placeholder-gray-400 text-sm"
         />
       </div>
 
@@ -56,7 +56,7 @@ export default function ContactForm() {
           type="email"
           required
           placeholder="tu@email.com"
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transparent text-gray-900 placeholder-gray-400 text-sm"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#00E0FF] focus:border-transparent text-gray-900 placeholder-gray-400 text-sm"
         />
       </div>
 
@@ -69,7 +69,7 @@ export default function ContactForm() {
           name="business"
           type="text"
           placeholder="Gimnasio, clínica, autoescuela…"
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transparent text-gray-900 placeholder-gray-400 text-sm"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#00E0FF] focus:border-transparent text-gray-900 placeholder-gray-400 text-sm"
         />
       </div>
 
@@ -81,15 +81,15 @@ export default function ContactForm() {
           id="message"
           name="message"
           rows={3}
-          placeholder="Cuéntanos sobre tu negocio o deja tu WhatsApp"
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transparent text-gray-900 placeholder-gray-400 text-sm resize-none"
+          placeholder="Cuéntanos sobre tu negocio o qué te gustaría automatizar"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#00E0FF] focus:border-transparent text-gray-900 placeholder-gray-400 text-sm resize-none"
         />
       </div>
 
       <button
         type="submit"
         disabled={status === 'sending'}
-        className="w-full bg-[#25D366] hover:bg-[#128C7E] disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl transition-colors text-sm shadow-lg shadow-green-200"
+        className="w-full bg-[#001A3F] hover:bg-[#00E0FF] hover:text-[#001A3F] disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl transition-colors text-sm shadow-lg shadow-[#001A3F]/20"
       >
         {status === 'sending' ? 'Enviando…' : 'Empezar ahora →'}
       </button>
