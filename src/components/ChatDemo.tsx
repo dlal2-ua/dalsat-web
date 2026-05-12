@@ -7,23 +7,23 @@ interface Message {
 }
 
 const MESSAGES: Message[] = [
-  { from: 'client', text: '¿Cuánto cuesta el carnet de coche?', delay: 0 },
+  { from: 'client', text: '¿Cuánto cuesta el carnet de coche?', delay: 600 },
   {
     from: 'bot',
     text: '¡Hola! 👋 El carnet B (coche) tiene un precio de 950€ todo incluido: clases prácticas, tasas de examen y gestión. ¿Te gustaría más info sobre el proceso?',
-    delay: 1200,
+    delay: 1600,
   },
-  { from: 'client', text: 'Sí, ¿cuántas clases son?', delay: 2800 },
+  { from: 'client', text: 'Sí, ¿cuántas clases son?', delay: 1000 },
   {
     from: 'bot',
     text: 'El paquete estándar incluye 30 clases prácticas de 45 min. Si necesitas más, cada clase adicional son 28€. La mayoría de alumnos aprueban en el primer intento con ese paquete 🚗',
-    delay: 4200,
+    delay: 1600,
   },
-  { from: 'client', text: '¿Y podéis empezar esta semana?', delay: 6000 },
+  { from: 'client', text: '¿Y podéis empezar esta semana?', delay: 1000 },
   {
     from: 'bot',
-    text: 'Tenemos huecos disponibles! Para reservar tu primera clase y elegir horario, déjame tu nombre y te paso con el equipo para concretar 😊',
-    delay: 7400,
+    text: '¡Tenemos huecos disponibles! Para reservar tu primera clase y elegir horario, déjame tu nombre y te paso con el equipo para concretar 😊',
+    delay: 1600,
   },
 ];
 
@@ -31,7 +31,7 @@ export default function ChatDemo() {
   const [visibleCount, setVisibleCount] = useState(0);
   const [typing, setTyping] = useState(false);
   const [started, setStarted] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!started) return;
@@ -47,13 +47,15 @@ export default function ChatDemo() {
       if (next && next.from === 'bot') {
         setTimeout(() => setTyping(true), 300);
       }
-    }, current.delay + (visibleCount === 0 ? 0 : MESSAGES[visibleCount - 1]?.delay ?? 0));
+    }, current.delay);
 
     return () => clearTimeout(showTimer);
   }, [visibleCount, started]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
   }, [visibleCount, typing]);
 
   const reset = () => {
@@ -73,7 +75,7 @@ export default function ChatDemo() {
             AP
           </div>
           <div>
-            <p className="text-white font-semibold text-sm">Autoescuela Pollica</p>
+            <p className="text-white font-semibold text-sm">Autoescuela Reyes</p>
             <p className="text-white/70 text-xs">Agente Dalsat · en línea</p>
           </div>
           <div className="ml-auto flex gap-1">
@@ -83,6 +85,7 @@ export default function ChatDemo() {
 
         {/* Chat area */}
         <div
+          ref={containerRef}
           className="bg-[#ECE5DD] px-3 py-4 space-y-2 overflow-y-auto"
           style={{ minHeight: '340px', maxHeight: '340px' }}
         >
@@ -127,7 +130,7 @@ export default function ChatDemo() {
                   </div>
                 </div>
               )}
-              <div ref={bottomRef} />
+              <div />
             </>
           )}
         </div>
