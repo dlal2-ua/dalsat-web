@@ -1,0 +1,20 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 207.180.228.20
+          username: dalsat
+          key: ${{ secrets.DALSAT_WEB_SSH_KEY }}
+          port: 22
+          script: |
+            cd /home/dalsat/dalsat-web
+            git pull origin develop
