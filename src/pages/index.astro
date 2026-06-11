@@ -1,516 +1,205 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import ChatDemo from '../components/ChatDemo';
+import SplitHero from '../components/SplitHero';
+import ServiceTabs from '../components/ServiceTabs';
+import MobileMenu from '../components/MobileMenu';
 import ContactForm from '../components/ContactForm';
+
+// TODO: sustituir por el número real de WhatsApp de Dalsat (formato internacional sin +)
+const WHATSAPP_URL = 'https://wa.me/34600000000';
 ---
 
-<Layout title="Dalsat — Automatización e IA para negocios" description="Dalsat diseña e implanta agentes de IA e integraciones que automatizan tu negocio: WhatsApp, calendario, email, facturación y más. Sin código, listo en días.">
-  <!-- NAV -->
-  <header class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-100">
+<Layout
+  title="Dalsat — Automatización e IA para negocios"
+  description="Dalsat diseña e implanta agentes de IA e integraciones que automatizan tu negocio: WhatsApp, calendario, email, facturación y más. Sin código, listo en días."
+>
+  <!-- ===================== NAVBAR ===================== -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-[#001A3F]/80 backdrop-blur-md border-b border-white/10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2.5">
-        <img src="/logo_sin_fondo.png" alt="Dalsat logo" class="h-11 w-auto" />
-        <span class="font-bold text-[#001A3F] text-lg">Dalsat</span>
+      <a href="#hero" class="flex items-center gap-2.5">
+        <img src="/logo_sin_fondo.png" alt="Dalsat logo" width="44" height="44" class="h-10 w-auto object-contain brightness-0 invert" />
+        <span class="font-display font-bold text-white text-lg tracking-wider">DALSAT</span>
       </a>
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
-        <a href="#servicios" class="hover:text-[#001A3F] transition-colors">Servicios</a>
-        <a href="#como-funciona" class="hover:text-[#001A3F] transition-colors">Cómo funciona</a>
-        <a href="#prueba-social" class="hover:text-[#001A3F] transition-colors">Casos reales</a>
-        <a href="#quienes-somos" class="hover:text-[#001A3F] transition-colors">Quiénes somos</a>
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-white/70" aria-label="Menú principal">
+        <a href="#servicios" class="hover:text-white transition-colors">Servicios</a>
+        <a href="#como-funciona" class="hover:text-white transition-colors">Cómo funciona</a>
+        <a href="#quienes-somos" class="hover:text-white transition-colors">Quiénes somos</a>
+        <a href="#contacto" class="hover:text-white transition-colors">Contacto</a>
       </nav>
-      <a
-        href="#contacto"
-        class="bg-[#001A3F] hover:bg-[#00E0FF] hover:text-[#001A3F] text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors shadow-sm"
-      >
-        Hablar con nosotros →
-      </a>
+      <div class="flex items-center gap-2">
+        <a
+          href="#contacto"
+          class="hidden md:inline-flex bg-[#00E0FF] hover:bg-white text-[#001A3F] text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors shadow-sm"
+        >
+          Hablar con nosotros →
+        </a>
+        <MobileMenu client:load />
+      </div>
     </div>
   </header>
 
-  <main class="pt-16">
-    <!-- ===================== HERO ===================== -->
-    <section class="relative overflow-hidden bg-[#001A3F] pt-20 pb-24 sm:pt-28 sm:pb-32">
-      <div class="absolute inset-0 pointer-events-none">
-        <div class="absolute top-0 right-0 w-[700px] h-[700px] rounded-full bg-[#00E0FF]/8 translate-x-1/3 -translate-y-1/3" />
-        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-[#00E0FF]/5 -translate-x-1/3 translate-y-1/3" />
-      </div>
+  <main>
+    <!-- ===================== 1. HERO GALÁCTICO: SPLIT + CHAT ===================== -->
+    <SplitHero client:load />
 
-      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-12 items-center">
-        <div>
-          <div class="inline-flex items-center gap-2 bg-[#00E0FF]/10 border border-[#00E0FF]/20 text-[#00E0FF] text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#00E0FF] animate-pulse" />
-            Agentes de IA para negocios reales
-          </div>
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
-            Tu negocio en&nbsp;
-            <span class="text-[#00E0FF]">piloto automático</span>
-          </h1>
-          <p class="text-lg sm:text-xl text-white/60 mb-10 leading-relaxed max-w-lg">
-            Dalsat diseña e implanta agentes de IA e integraciones que automatizan las tareas repetitivas de tu negocio: atención en WhatsApp, gestión de agenda, emails, facturación y más.
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4">
-            <a
-              href="#contacto"
-              class="inline-flex items-center justify-center gap-2 bg-[#00E0FF] hover:bg-white text-[#001A3F] font-semibold px-8 py-4 rounded-xl transition-colors shadow-lg shadow-[#00E0FF]/20 text-base"
-            >
-              Automatiza tu negocio
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </a>
-            <a
-              href="#servicios"
-              class="inline-flex items-center justify-center gap-2 text-white/70 hover:text-white font-medium px-8 py-4 rounded-xl border border-white/20 hover:border-white/50 transition-colors text-base"
-            >
-              Ver servicios
-            </a>
-          </div>
-          <div class="mt-10 flex items-center gap-6 text-sm text-white/40">
-            <div class="flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-[#00E0FF]" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-              </svg>
-              Sin código
-            </div>
-            <div class="flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-[#00E0FF]" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-              </svg>
-              Listo en días
-            </div>
-            <div class="flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-[#00E0FF]" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-              </svg>
-              24/7 activo
-            </div>
-          </div>
-        </div>
-
-        <!-- Chat preview hero -->
-        <div class="lg:flex justify-center hidden">
-          <ChatDemo client:visible />
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== SERVICIOS / INTEGRACIONES ===================== -->
-    <section id="servicios" class="py-24 bg-[#F2F4F7]">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="text-center mb-16">
-          <span class="text-xs font-bold uppercase tracking-widest text-[#00E0FF] bg-[#001A3F] px-3 py-1 rounded-full mb-4 inline-block">Servicios</span>
-          <h2 class="text-3xl sm:text-4xl font-bold text-[#001A3F] mt-4 mb-4">Todo lo que podemos automatizar</h2>
+    <!-- ===================== 2. SERVICIOS CON TABS ===================== -->
+    <section id="servicios" class="min-h-screen flex items-center bg-[#F2F4F7] py-24">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 w-full">
+        <div class="text-center mb-12">
+          <span class="text-xs font-bold uppercase tracking-widest text-[#00E0FF] bg-[#001A3F] px-3 py-1 rounded-full inline-block">Servicios</span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-[#001A3F] mt-4 mb-4">¿En qué te ayudamos?</h2>
           <p class="text-gray-500 text-lg max-w-xl mx-auto">
-            Cada negocio es distinto. Te ayudamos a identificar dónde pierdes más tiempo y lo automatizamos.
+            Selecciona tu sector y descubre cómo lo haríamos contigo
           </p>
         </div>
-
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            {
-              icon: '💬',
-              title: 'Agente WhatsApp',
-              badge: 'Disponible',
-              badgeColor: 'bg-emerald-100 text-emerald-700',
-              desc: 'Responde preguntas frecuentes, gestiona citas y escala a un humano cuando hace falta. Activo 24/7, sin intervención tuya.',
-              highlight: true,
-            },
-            {
-              icon: '📅',
-              title: 'Gestión de calendario',
-              badge: 'Disponible',
-              badgeColor: 'bg-emerald-100 text-emerald-700',
-              desc: 'Integración con Google Calendar: reservas automáticas, recordatorios y gestión de disponibilidad sin ir y venir de emails.',
-              highlight: false,
-            },
-            {
-              icon: '📧',
-              title: 'Automatización de Gmail',
-              badge: 'Disponible',
-              badgeColor: 'bg-emerald-100 text-emerald-700',
-              desc: 'Clasificación, respuestas automáticas a consultas habituales y flujos de seguimiento. Tu bandeja de entrada bajo control.',
-              highlight: false,
-            },
-            {
-              icon: '🧾',
-              title: 'Facturación automática',
-              badge: 'Próximamente',
-              badgeColor: 'bg-amber-100 text-amber-700',
-              desc: 'Generación y envío de facturas disparados por eventos: confirmación de cita, pago recibido, cierre de servicio.',
-              highlight: false,
-            },
-            {
-              icon: '🔗',
-              title: 'Integraciones a medida',
-              badge: 'A consultar',
-              badgeColor: 'bg-blue-100 text-blue-700',
-              desc: 'CRM, ERP, TPV, plataformas de reservas... Si ya usas una herramienta, estudiamos cómo conectarla a tu flujo automatizado.',
-              highlight: false,
-            },
-            {
-              icon: '📊',
-              title: 'Reportes e informes',
-              badge: 'Próximamente',
-              badgeColor: 'bg-amber-100 text-amber-700',
-              desc: 'Resúmenes automáticos de actividad, conversaciones y métricas clave directamente en tu email o WhatsApp cada semana.',
-              highlight: false,
-            },
-          ].map((s) => (
-            <div class={`rounded-2xl p-6 border transition-all hover:shadow-lg ${s.highlight ? 'bg-[#001A3F] border-[#001A3F]' : 'bg-white border-gray-100 hover:border-[#00E0FF]/40'}`}>
-              <div class="flex items-start justify-between mb-4">
-                <span class="text-3xl">{s.icon}</span>
-                <span class={`text-xs font-semibold px-2.5 py-1 rounded-full ${s.badgeColor}`}>{s.badge}</span>
-              </div>
-              <h3 class={`font-bold text-base mb-2 ${s.highlight ? 'text-white' : 'text-[#001A3F]'}`}>{s.title}</h3>
-              <p class={`text-sm leading-relaxed ${s.highlight ? 'text-white/60' : 'text-gray-500'}`}>{s.desc}</p>
-            </div>
-          ))}
-        </div>
+        <ServiceTabs client:visible />
       </div>
     </section>
 
-    <!-- ===================== PROBLEMA / SOLUCIÓN ===================== -->
-    <section class="py-20 bg-white">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="grid md:grid-cols-2 gap-16 items-center">
-          <!-- Problema -->
-          <div>
-            <span class="text-xs font-bold uppercase tracking-widest text-red-500 mb-4 block">El problema</span>
-            <h2 class="text-3xl sm:text-4xl font-bold text-[#001A3F] mb-6">
-              Las tareas repetitivas te roban horas cada día
-            </h2>
-            <ul class="space-y-4">
-              {[
-                'Responder las mismas preguntas una y otra vez',
-                'Confirmar citas y enviar recordatorios manualmente',
-                'Reenviar presupuestos y facturas a mano',
-                'Buscar huecos en el calendario para cada cliente',
-              ].map((q) => (
-                <li class="flex items-start gap-3 p-4 bg-[#F2F4F7] rounded-xl border border-gray-100">
-                  <span class="text-red-400 mt-0.5">✕</span>
-                  <div>
-                    <p class="font-medium text-gray-800">"{q}"</p>
-                    <p class="text-sm text-gray-400 mt-0.5">Tiempo tuyo desperdiciado que un agente puede hacer en segundos.</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <!-- Solución -->
-          <div>
-            <span class="text-xs font-bold uppercase tracking-widest text-[#00E0FF] bg-[#001A3F] px-2 py-0.5 rounded mb-4 inline-block">La solución</span>
-            <h2 class="text-3xl sm:text-4xl font-bold text-[#001A3F] mb-6 mt-2">
-              Dalsat lo automatiza, tú te centras en crecer
-            </h2>
-            <div class="space-y-4">
-              {[
-                {
-                  icon: '⚡',
-                  title: 'Respuesta en segundos',
-                  desc: 'Tus agentes contestan, reservan y gestionan en tiempo real, a cualquier hora.',
-                },
-                {
-                  icon: '🎯',
-                  title: 'Contexto de tu negocio',
-                  desc: 'Conocen tus precios, horarios, servicios y tono de voz. No son bots genéricos.',
-                },
-                {
-                  icon: '🤝',
-                  title: 'Escalan cuando toca',
-                  desc: 'Si el cliente necesita un humano, te avisan con el contexto completo de la conversación.',
-                },
-              ].map((item) => (
-                <div class="flex items-start gap-4 p-4 bg-[#F2F4F7] rounded-xl border border-gray-100">
-                  <span class="text-2xl">{item.icon}</span>
-                  <div>
-                    <p class="font-semibold text-[#001A3F]">{item.title}</p>
-                    <p class="text-sm text-gray-500 mt-0.5">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== CÓMO FUNCIONA ===================== -->
-    <section id="como-funciona" class="py-24 bg-[#F2F4F7]">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-        <span class="text-xs font-bold uppercase tracking-widest text-[#00E0FF] bg-[#001A3F] px-3 py-1 rounded-full mb-4 inline-block">Proceso</span>
+    <!-- ===================== 4. CÓMO FUNCIONA ===================== -->
+    <section id="como-funciona" class="min-h-screen flex items-center bg-[#F2F4F7] py-24 border-t border-gray-200/60">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 w-full text-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-[#00E0FF] bg-[#001A3F] px-3 py-1 rounded-full inline-block">Proceso</span>
         <h2 class="text-3xl sm:text-4xl font-bold text-[#001A3F] mt-4 mb-4">Listo en 3 pasos</h2>
         <p class="text-gray-500 text-lg max-w-xl mx-auto mb-16">
           Sin técnicos de tu lado, sin semanas de espera. Tu automatización activa en días.
         </p>
 
-        <div class="grid md:grid-cols-3 gap-8 relative">
-          <div class="hidden md:block absolute top-12 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-[#00E0FF] to-[#001A3F] opacity-30" />
+        <div class="relative grid md:grid-cols-3 gap-10 md:gap-8 md:pl-0 pl-10">
+          <!-- Línea conectora horizontal (desktop) -->
+          <div class="hidden md:block absolute top-16 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-[#00E0FF]/60 via-[#001A3F]/30 to-[#00E0FF]/60" aria-hidden="true"></div>
+          <!-- Línea conectora vertical (mobile) -->
+          <div class="md:hidden absolute left-3 top-10 bottom-10 w-0.5 bg-gradient-to-b from-[#00E0FF]/60 to-[#001A3F]/30" aria-hidden="true"></div>
 
-          {[
-            {
-              step: '01',
-              icon: '📋',
-              title: 'Nos cuentas tu negocio',
-              desc: 'Horarios, servicios, precios, flujos de trabajo. Puedes subir PDFs, Word o Excel. Nosotros nos encargamos del resto.',
-            },
-            {
-              step: '02',
-              icon: '🤖',
-              title: 'Configuramos los agentes',
-              desc: 'Diseñamos e implantamos las integraciones adaptadas a tu negocio. Sin ingeniería de tu parte.',
-            },
-            {
-              step: '03',
-              icon: '🚀',
-              title: 'Tu negocio se automatiza',
-              desc: 'Los agentes trabajan por ti. Tú solo gestionas lo que realmente necesita tu atención.',
-            },
-          ].map((item) => (
-            <div class="relative bg-white rounded-2xl p-8 text-left border border-gray-100 hover:border-[#00E0FF]/40 hover:shadow-lg transition-all">
-              <div class="text-4xl mb-4">{item.icon}</div>
-              <div class="text-xs font-bold text-[#00E0FF] bg-[#001A3F] px-2 py-0.5 rounded inline-block mb-2">PASO {item.step}</div>
-              <h3 class="text-lg font-bold text-[#001A3F] mb-2">{item.title}</h3>
-              <p class="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== CAPACIDADES ===================== -->
-    <section id="funcionalidades" class="py-24 bg-[#001A3F]">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="text-center mb-16">
-          <span class="text-xs font-bold uppercase tracking-widest text-[#00E0FF] mb-4 block">Capacidades</span>
-          <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Tecnología real. No demos.</h2>
-          <p class="text-white/60 text-lg max-w-xl mx-auto">
-            Cada agente corre en producción con IA de última generación y se adapta a las particularidades de tu negocio.
-          </p>
-        </div>
-
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            {
-              icon: '🧠',
-              title: 'IA con contexto de tu negocio',
-              desc: 'Los agentes conocen tus servicios, precios, horarios y tono de voz. No son chatbots genéricos.',
-            },
-            {
-              icon: '🔍',
-              title: 'Búsqueda semántica',
-              desc: 'Encuentra la información correcta aunque el cliente no use las palabras exactas de tus documentos.',
-            },
-            {
-              icon: '💬',
-              title: 'Memoria de conversación',
-              desc: 'Los agentes recuerdan el contexto de la conversación. Los clientes no tienen que repetirse.',
-            },
-            {
-              icon: '📤',
-              title: 'Escalado inteligente',
-              desc: 'Detecta cuándo escalar a humano y te notifica con el resumen completo de la conversación.',
-            },
-            {
-              icon: '📁',
-              title: 'Ingestión de documentos',
-              desc: 'Sube PDFs, Word y Excel. El agente los procesa y los convierte en base de conocimiento.',
-            },
-            {
-              icon: '🔗',
-              title: 'Multi-integración',
-              desc: 'WhatsApp, Calendar, Gmail, CRMs... Los agentes se conectan a las herramientas que ya usas.',
-            },
-          ].map((f) => (
-            <div class="bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:bg-white/12 hover:border-[#00E0FF]/30 transition-all">
-              <div class="text-3xl mb-4">{f.icon}</div>
-              <h3 class="text-white font-semibold text-base mb-2">{f.title}</h3>
-              <p class="text-white/60 text-sm leading-relaxed">{f.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== DIFERENCIADORES ===================== -->
-    <section class="py-20 bg-white">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl sm:text-4xl font-bold text-[#001A3F] mb-4">Dalsat vs. las alternativas</h2>
-          <p class="text-gray-500">Por qué no lo hacen igual que nosotros.</p>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="border-b border-gray-100">
-                <th class="text-left py-4 pr-4 text-gray-400 font-medium w-1/3"></th>
-                <th class="text-center py-4 px-3 text-gray-400 font-medium">Herramientas genéricas</th>
-                <th class="text-center py-4 px-3 text-gray-400 font-medium">Desarrollo a medida</th>
-                <th class="text-center py-4 px-3 bg-[#F2F4F7] rounded-t-xl font-bold text-[#001A3F]">Dalsat</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['Tiempo de implantación', 'Días–semanas', 'Semanas–meses', 'Días'],
-                ['Conoce tu negocio', 'Entrenamiento manual', 'Desarrollo a medida', 'Auto desde config'],
-                ['Multi-canal', 'Raramente', 'A veces', 'Siempre'],
-                ['Escalado a humano', 'Limitado', 'A medida', 'Integrado'],
-                ['Soporte directo', '✕', 'Variable', '✓ WhatsApp'],
-                ['Precio', 'Medio', 'Alto', 'Asequible'],
-              ].map(([label, generic, custom, dalsat]) => (
-                <tr class="border-b border-gray-50">
-                  <td class="py-4 pr-4 text-gray-700 font-medium">{label}</td>
-                  <td class="py-4 px-3 text-center text-gray-400">{generic}</td>
-                  <td class="py-4 px-3 text-center text-gray-400">{custom}</td>
-                  <td class="py-4 px-3 text-center bg-[#F2F4F7] text-[#001A3F] font-semibold">{dalsat}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== PRUEBA SOCIAL ===================== -->
-    <section id="prueba-social" class="py-24 bg-[#F2F4F7]">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="text-center mb-16">
-          <span class="text-xs font-bold uppercase tracking-widest text-[#00E0FF] bg-[#001A3F] px-3 py-1 rounded-full mb-4 inline-block">Caso real</span>
-          <h2 class="text-3xl sm:text-4xl font-bold text-[#001A3F] mt-4 mb-4">
-            Autoescuela Reyes — Valencia
-          </h2>
-          <p class="text-gray-500 text-lg max-w-xl mx-auto">
-            Agente WhatsApp que responde sobre carnets, precios, documentación y proceso de examen. Disponible 24/7. Escala a humano para consultas personalizadas.
-          </p>
-        </div>
-
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-          <div class="space-y-6">
-            {[
+          {
+            [
               {
-                icon: '🚗',
-                label: 'Carnets gestionados',
-                value: 'B, A2, AM',
-                desc: 'Responde con detalle sobre cada tipo de carnet',
+                step: '01',
+                title: 'Cuéntanos tu negocio',
+                desc: 'Subes documentos, nos explicas tus flujos, horarios y servicios. Nosotros nos encargamos del resto.',
+                time: '30 minutos de reunión',
+                icon: 'M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 8.25h7.5m-7.5 3h7.5m3-9v9a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V4.5a2.25 2.25 0 0 1 2.25-2.25h5.379c.597 0 1.17.237 1.591.659l4.621 4.621c.422.422.659.994.659 1.591Z',
               },
               {
-                icon: '⏰',
-                label: 'Disponibilidad',
-                value: '24 / 7',
-                desc: 'Consultas fuera de horario resueltas sin personal',
+                step: '02',
+                title: 'Diseñamos tu agente',
+                desc: 'Configuramos e integramos el agente con tus herramientas, adaptado a tu tono de voz y a tu forma de trabajar.',
+                time: '3-5 días',
+                icon: 'M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
               },
               {
-                icon: '📞',
-                label: 'Escalado automático',
-                value: 'Activo',
-                desc: 'Expedientes concretos y fechas de examen → humano',
+                step: '03',
+                title: 'Activamos y mejoramos',
+                desc: 'Tu agente entra en producción y lo afinamos contigo semana a semana revisando conversaciones reales.',
+                time: 'Desde el día 1, activo 24/7',
+                icon: 'M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z',
               },
-              {
-                icon: '🗣️',
-                label: 'Tono de voz',
-                value: 'Cercano',
-                desc: 'Español informal, adaptado a la marca de la autoescuela',
-              },
-            ].map((stat) => (
-              <div class="flex items-start gap-4 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                <span class="text-2xl">{stat.icon}</span>
-                <div class="flex-1">
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-gray-500">{stat.label}</span>
-                    <span class="font-bold text-[#001A3F] text-sm">{stat.value}</span>
+            ].map((item) => (
+              <div class="relative bg-white rounded-2xl p-8 text-left border border-gray-100 hover:border-[#00E0FF]/40 hover:shadow-lg transition-all duration-200">
+                <div class="w-16 h-16 rounded-2xl bg-[#001A3F] flex items-center justify-center mb-5">
+                  <svg class="w-8 h-8 text-[#00E0FF]" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d={item.icon} />
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-[#00E0FF] bg-[#001A3F] px-2 py-0.5 rounded inline-block mb-2">PASO {item.step}</div>
+                  <h3 class="text-lg font-bold text-[#001A3F] mb-2">{item.title}</h3>
+                  <p class="text-gray-500 text-sm leading-relaxed mb-4">{item.desc}</p>
+                  <div class="flex items-center gap-1.5 text-xs font-semibold text-[#001A3F]">
+                    <svg class="w-4 h-4 text-[#00E0FF]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    {item.time}
                   </div>
-                  <p class="text-xs text-gray-400 mt-0.5">{stat.desc}</p>
                 </div>
               </div>
-            ))}
-          </div>
-
-          <ChatDemo client:visible />
+            ))
+          }
         </div>
       </div>
     </section>
 
-
-<!-- ===================== QUIÉNES SOMOS ===================== -->
-    <section id="quienes-somos" class="py-24 bg-[#F2F4F7]">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="flex justify-center mb-14">
-          <img
-            src="/logo_sin_fondo.png"
-            alt="Dalsat"
-            class="h-36 w-auto drop-shadow-md"
-          />
+    <!-- ===================== 5. QUIÉNES SOMOS ===================== -->
+    <section id="quienes-somos" class="min-h-screen flex items-center bg-white py-24">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 w-full">
+        <div class="flex justify-center mb-12">
+          <img src="/logo_sin_fondo.png" alt="Dalsat logo" width="180" height="128" class="h-32 w-auto object-contain drop-shadow-md" loading="lazy" />
         </div>
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div>
-            <span class="text-xs font-bold uppercase tracking-widest text-[#00E0FF] bg-[#001A3F] px-3 py-1 rounded-full mb-4 inline-block">Quiénes somos</span>
-            <h2 class="text-3xl sm:text-4xl font-bold text-[#001A3F] mb-6 mt-4">
+            <span class="text-xs font-bold uppercase tracking-widest text-[#00E0FF] bg-[#001A3F] px-3 py-1 rounded-full inline-block">Quiénes somos</span>
+            <h2 class="text-3xl sm:text-4xl font-bold text-[#001A3F] mt-4 mb-6">
               Construido por gente que entiende tu negocio
             </h2>
-            <p class="text-gray-500 text-lg leading-relaxed mb-6">
+            <p class="text-gray-500 text-lg leading-relaxed mb-4">
               Dalsat nació de una frustración real: ver cómo negocios brillantes perdían tiempo y clientes en tareas que una máquina puede hacer mejor y más rápido.
             </p>
-            <p class="text-gray-500 leading-relaxed mb-6">
-              Somos un equipo técnico con experiencia en inteligencia artificial y automatización. No vendemos humo — implantamos agentes reales, en producción, para negocios reales. Cada integración la supervisamos de principio a fin.
-            </p>
             <p class="text-gray-500 leading-relaxed">
-              Nuestra obsesión es que la automatización sea invisible para tus clientes — que siempre tengan respuesta, siempre al momento, exactamente como tú lo harías.
+              Somos un equipo técnico con experiencia en IA y automatización. No vendemos humo — implantamos agentes reales, en producción, para negocios reales.
             </p>
 
             <div class="mt-8 flex flex-wrap gap-4">
-              {[
-                { label: 'Agentes desplegados', value: '10+' },
-                { label: 'Mensajes gestionados', value: '50.000+' },
-                { label: 'Disponibilidad', value: '99,9 %' },
-              ].map((stat) => (
-                <div class="bg-white rounded-2xl px-6 py-4 border border-gray-100 text-center shadow-sm">
-                  <div class="text-2xl font-extrabold text-[#001A3F]">{stat.value}</div>
-                  <div class="text-xs text-gray-500 mt-0.5">{stat.label}</div>
-                </div>
-              ))}
+              {
+                [
+                  { label: 'Agentes desplegados', value: '10+' },
+                  { label: 'Mensajes gestionados', value: '50.000+' },
+                  { label: 'Disponibilidad', value: '99,9 %' },
+                ].map((stat) => (
+                  <div class="bg-[#F2F4F7] rounded-2xl px-6 py-4 border border-gray-100 text-center">
+                    <div class="text-2xl font-extrabold text-[#001A3F]">{stat.value}</div>
+                    <div class="text-xs text-gray-500 mt-0.5">{stat.label}</div>
+                  </div>
+                ))
+              }
             </div>
           </div>
 
-          <div class="space-y-5">
-            {[
-              {
-                icon: '🔬',
-                title: 'Tecnología real, no demos',
-                desc: 'Cada agente que implantamos corre en producción con IA de última generación, búsqueda semántica y memoria de conversación real.',
-              },
-              {
-                icon: '🤝',
-                title: 'Soporte cercano',
-                desc: 'No eres un ticket. Cuando algo falla o quieres ajustar el comportamiento del agente, hablamos directamente contigo por WhatsApp.',
-              },
-              {
-                icon: '🔒',
-                title: 'Tus datos, en tu servidor',
-                desc: 'La plataforma es desplegable en tu propio VPS. Tus conversaciones y base de conocimiento no salen de tu infraestructura.',
-              },
-              {
-                icon: '📈',
-                title: 'Mejora continua',
-                desc: 'Revisamos los escalados y los fallos contigo para afinar el comportamiento de los agentes semana a semana.',
-              },
-            ].map((v) => (
-              <div class="flex gap-4 p-5 rounded-2xl border border-gray-100 hover:border-[#00E0FF]/40 hover:shadow-sm transition-all bg-white">
-                <span class="text-2xl shrink-0">{v.icon}</span>
-                <div>
-                  <h3 class="font-semibold text-[#001A3F] mb-1">{v.title}</h3>
-                  <p class="text-sm text-gray-500 leading-relaxed">{v.desc}</p>
+          <div class="space-y-4">
+            {
+              [
+                {
+                  title: 'Tecnología real, no demos',
+                  desc: 'Cada agente corre en producción con IA de última generación, búsqueda semántica y memoria de conversación.',
+                  icon: 'M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5',
+                },
+                {
+                  title: 'Soporte cercano',
+                  desc: 'No eres un ticket. Cuando quieres ajustar el agente, hablamos directamente contigo por WhatsApp.',
+                  icon: 'M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z',
+                },
+                {
+                  title: 'Tus datos, en tu servidor',
+                  desc: 'La plataforma es desplegable en tu propio VPS. Tus conversaciones no salen de tu infraestructura.',
+                  icon: 'M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z',
+                },
+                {
+                  title: 'Mejora continua',
+                  desc: 'Revisamos escalados y fallos contigo para afinar el comportamiento de los agentes semana a semana.',
+                  icon: 'M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941',
+                },
+              ].map((v) => (
+                <div class="flex gap-4 p-5 rounded-2xl border border-gray-100 hover:border-[#00E0FF]/40 hover:shadow-sm transition-all duration-200 bg-[#F2F4F7]">
+                  <div class="w-11 h-11 shrink-0 rounded-xl bg-[#001A3F] flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#00E0FF]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d={v.icon} />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-[#001A3F] mb-1">{v.title}</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">{v.desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            }
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ===================== CTA + CONTACTO ===================== -->
-    <section id="contacto" class="py-24 bg-[#001A3F]">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6">
+    <!-- ===================== 6. CTA + CONTACTO ===================== -->
+    <section id="contacto" class="min-h-screen flex items-center bg-[#001A3F] py-24">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 w-full">
         <div class="text-center mb-12">
           <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
             Empieza hoy. Sin compromiso.
@@ -524,24 +213,37 @@ import ContactForm from '../components/ContactForm';
           <ContactForm client:visible />
         </div>
 
-        <div class="mt-8 text-center text-white/40 text-sm">
-          También puedes escribirnos a{' '}
-          <a href="mailto:dalsat.soluciones@gmail.com" class="text-white/70 underline hover:text-white">
-            dalsat.soluciones@gmail.com
+        <div class="mt-8 flex flex-col items-center gap-4">
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2.5 bg-[#25D366] hover:bg-[#1ebe5b] text-white font-semibold px-7 py-3.5 rounded-xl transition-colors shadow-lg shadow-[#25D366]/20 text-sm"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
+            </svg>
+            O escríbenos directamente por WhatsApp
           </a>
+          <p class="text-white/40 text-sm">
+            También por email:{' '}
+            <a href="mailto:dalsat.soluciones@gmail.com" class="text-white/70 underline hover:text-white transition-colors">
+              dalsat.soluciones@gmail.com
+            </a>
+          </p>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="bg-gray-900 text-gray-400 py-10">
+  <!-- ===================== 7. FOOTER ===================== -->
+  <footer class="bg-[#000F26] text-gray-400 py-10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
       <div class="flex items-center gap-2.5">
-        <img src="/logo_sin_fondo.png" alt="Dalsat logo" class="h-8 w-auto brightness-0 invert opacity-80" />
-        <span class="font-semibold text-white">Dalsat</span>
+        <img src="/logo_sin_fondo.png" alt="Dalsat logo" width="32" height="32" class="h-8 w-auto object-contain brightness-0 invert opacity-80" loading="lazy" />
+        <span class="font-display font-semibold text-white tracking-wider">DALSAT</span>
       </div>
-      <p>&copy; 2025 Dalsat. Todos los derechos reservados.</p>
+      <p>&copy; 2026 Dalsat. Todos los derechos reservados.</p>
       <a href="mailto:dalsat.soluciones@gmail.com" class="hover:text-white transition-colors">dalsat.soluciones@gmail.com</a>
     </div>
   </footer>
