@@ -1,5 +1,6 @@
 ---
 import Analytics from '@vercel/analytics/astro';
+import CookieBanner from '../components/CookieBanner';
 
 interface Props {
   title?: string;
@@ -40,5 +41,6 @@ const {
   <body class="font-sans antialiased bg-white text-gray-900">
     <slot />
     <Analytics />
+    <CookieBanner client:load />
   </body>
 </html>
