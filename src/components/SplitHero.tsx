@@ -26,12 +26,6 @@ const MESSAGES: ChatMessage[] = [
     text: 'Sí. Da igual si tienes una clínica, un restaurante, una academia o una tienda online. Si tienes clientes que hacen preguntas repetitivas, Dalsat te ahorra horas cada semana. ✅',
     time: '14:48',
   },
-  { from: 'client', text: '¿Y si el cliente necesita hablar con una persona?', time: '14:49' },
-  {
-    from: 'bot',
-    text: 'El agente detecta cuándo escalar y te avisa con todo el contexto de la conversación. Tú solo intervienes cuando de verdad hace falta. 🎯',
-    time: '14:49',
-  },
 ];
 
 const PAIRS = MESSAGES.length / 2;
