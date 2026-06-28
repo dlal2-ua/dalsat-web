@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "citas.dalsats.com"
+        }
+      ],
+      "destination": "http://207.180.228.20:8000/book/movil-bot-pruebas-bq/:path*"
+    }
+  ]
+}
