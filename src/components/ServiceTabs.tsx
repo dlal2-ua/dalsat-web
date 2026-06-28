@@ -1,201 +1,501 @@
-import { useState } from 'react';
-import type { ReactElement } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-type SectorId = 'todos' | 'salud' | 'hosteleria' | 'academias' | 'ecommerce';
-
-interface Sector {
-  id: SectorId;
-  label: string;
-}
-
-interface Service {
+interface ServiceNode {
+  id: string;
+  code: string;
+  shortName: string;
   title: string;
-  badge: string;
-  badgeColor: string;
-  icon: ReactElement;
-  copy: Record<SectorId, string>;
+  subtitle: string;
+  category: string;
+  colorTheme: string;
+  glowColor: string;
+  borderColor: string;
+  description: string;
+  highlights: string[];
+  metrics: { label: string; val: string }[];
+  simulatorType: 'whatsapp' | 'calendar' | 'email' | 'invoice' | 'integration' | 'analytics';
 }
 
-const SECTORS: Sector[] = [
-  { id: 'todos', label: 'Todos los negocios' },
-  { id: 'salud', label: 'Clínicas y salud' },
-  { id: 'hosteleria', label: 'Hostelería y restauración' },
-  { id: 'academias', label: 'Academias y formación' },
-  { id: 'ecommerce', label: 'eCommerce y tiendas' },
-];
-
-const iconClass = 'h-6 w-6';
-
-const SERVICES: Service[] = [
+const SERVICES: ServiceNode[] = [
   {
+    id: 'whatsapp',
+    code: 'SYS-01',
+    shortName: 'WhatsApp 24/7',
     title: 'Agente WhatsApp 24/7',
-    badge: 'Disponible',
-    badgeColor: 'bg-emerald-100 text-emerald-700',
-    icon: (
-      <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-      </svg>
-    ),
-    copy: {
-      todos: 'Responde preguntas frecuentes, atiende fuera de horario y escala a humano cuando hace falta. Activo siempre, sin intervención tuya.',
-      salud: 'Resuelve dudas de pacientes sobre tratamientos, horarios y preparación de pruebas. Sin colas telefónicas ni recepción saturada.',
-      hosteleria: 'Atiende reservas, consultas de carta, alérgenos y horarios mientras tu equipo está en sala. Sin perder ni una mesa.',
-      academias: 'Responde sobre cursos, plazas, precios y matrículas al instante, también cuando la secretaría está cerrada.',
-      ecommerce: 'Resuelve dudas de producto, tallas, envíos y devoluciones al momento. Menos carritos abandonados por falta de respuesta.',
-    },
+    subtitle: 'Atención autónoma y ventas inmediatas por chat.',
+    category: 'IA Conversacional',
+    colorTheme: 'from-[#25D366] via-[#10B981] to-[#059669]',
+    glowColor: 'rgba(37, 211, 102, 0.35)',
+    borderColor: 'border-[#25D366]/60',
+    description: 'Conversación 100% natural. El agente consulta tu catálogo y precios en milisegundos, cerrando citas o ventas a las 3 AM sin intervención humana.',
+    highlights: ['Latencia < 1.8s', 'Cero colas', 'Escalado a humano'],
+    metrics: [{ label: 'Conversión', val: '+38%' }, { label: 'Ahorro', val: '85%' }],
+    simulatorType: 'whatsapp',
   },
   {
-    title: 'Gestión de citas y calendario',
-    badge: 'Disponible',
-    badgeColor: 'bg-emerald-100 text-emerald-700',
-    icon: (
-      <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-      </svg>
-    ),
-    copy: {
-      todos: 'Reservas automáticas integradas con tu calendario: el agente propone huecos, confirma y envía recordatorios solo.',
-      salud: 'El paciente pide cita por WhatsApp y el agente la agenda según tu disponibilidad real. Recordatorios que reducen ausencias.',
-      hosteleria: 'Reservas de mesa confirmadas al momento, con gestión de turnos y recordatorio el mismo día para reducir no-shows.',
-      academias: 'Agenda clases de prueba, tutorías y matrículas sin cruces de horario. Recordatorios automáticos a los alumnos.',
-      ecommerce: 'Agenda llamadas comerciales, recogidas y citas de showroom sin intercambio de emails.',
-    },
+    id: 'calendar',
+    code: 'SYS-02',
+    shortName: 'Citas y Agenda',
+    title: 'Citas y Calendario IA',
+    subtitle: 'Sincronización de reservas y recordatorios anti-olvido.',
+    category: 'Operativa Autónoma',
+    colorTheme: 'from-[#00E0FF] via-[#00B8FF] to-[#0080FF]',
+    glowColor: 'rgba(0, 224, 255, 0.35)',
+    borderColor: 'border-[#00E0FF]/60',
+    description: 'El agente negocia huecos libres con el cliente, agenda en Google Calendar / Outlook y envía avisos automáticos por WhatsApp 24h antes.',
+    highlights: ['Sincronía real', '0% ausencias', 'Reagendado solo'],
+    metrics: [{ label: 'Ausencias', val: '0.2%' }, { label: 'Citas/Mes', val: '+450' }],
+    simulatorType: 'calendar',
   },
   {
-    title: 'Automatización de email',
-    badge: 'Disponible',
-    badgeColor: 'bg-emerald-100 text-emerald-700',
-    icon: (
-      <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-      </svg>
-    ),
-    copy: {
-      todos: 'Clasificación, respuestas a consultas habituales y flujos de seguimiento. Tu bandeja de entrada bajo control.',
-      salud: 'Confirmaciones de cita, envío de instrucciones previas y seguimiento post-consulta sin que nadie lo redacte a mano.',
-      hosteleria: 'Confirmaciones de reserva, menús de grupo y presupuestos de eventos respondidos sin esperar al fin del servicio.',
-      academias: 'Información de cursos, seguimiento de interesados y comunicación con alumnos automatizada de principio a fin.',
-      ecommerce: 'Estados de pedido, incidencias de envío y solicitudes de devolución gestionados sin tocar la bandeja de entrada.',
-    },
+    id: 'email',
+    code: 'SYS-03',
+    shortName: 'Emailing IA',
+    title: 'Automatización Emailing',
+    subtitle: 'Bandeja clasificada, borradores y anti-spam.',
+    category: 'Productividad 360°',
+    colorTheme: 'from-[#A78BFA] via-[#8B5CF6] to-[#6D28D9]',
+    glowColor: 'rgba(167, 139, 250, 0.35)',
+    borderColor: 'border-[#A78BFA]/60',
+    description: 'Tu correo bajo control. La IA clasifica por urgencia, redacta presupuestos formales adjuntando catálogos y responde dudas habituales al instante.',
+    highlights: ['Clasificación IA', 'Tu tono exacto', 'Seguimiento leads'],
+    metrics: [{ label: 'Respuesta', val: '4 seg' }, { label: 'Limpio', val: '100%' }],
+    simulatorType: 'email',
   },
   {
-    title: 'Facturación automática',
-    badge: 'Próximamente',
-    badgeColor: 'bg-amber-100 text-amber-700',
-    icon: (
-      <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 14.25h6m-6 2.25h3m-5.25 4.5h10.5a2.25 2.25 0 0 0 2.25-2.25V5.106c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m-4.5 0H6a.75.75 0 0 1 .75.75v.75H3.75v-.75A.75.75 0 0 1 4.5 8.25Zm0 3.75H6a.75.75 0 0 1 .75.75v.75H3.75v-.75a.75.75 0 0 1 .75-.75Zm0 3.75H6a.75.75 0 0 1 .75.75v.75H3.75v-.75a.75.75 0 0 1 .75-.75Z" />
-      </svg>
-    ),
-    copy: {
-      todos: 'Generación y envío de facturas disparados por eventos: confirmación de cita, pago recibido, cierre de servicio.',
-      salud: 'Factura emitida y enviada al paciente en cuanto termina la consulta o se confirma el pago del tratamiento.',
-      hosteleria: 'Facturas de eventos y comidas de empresa generadas y enviadas en cuanto se cierra la cuenta.',
-      academias: 'Recibos de mensualidades y facturas de matrícula emitidos automáticamente cada ciclo de cobro.',
-      ecommerce: 'Factura generada y adjuntada en el email de confirmación de cada pedido, sin pasos manuales.',
-    },
+    id: 'invoice',
+    code: 'SYS-04',
+    shortName: 'Facturación PDF',
+    title: 'Facturación Instantánea',
+    subtitle: 'Generación y envío automático de facturas al cobrar.',
+    category: 'Finanzas & Cobros',
+    colorTheme: 'from-[#FBBF24] via-[#F59E0B] to-[#D97706]',
+    glowColor: 'rgba(251, 191, 36, 0.35)',
+    borderColor: 'border-[#FBBF24]/60',
+    description: 'Disparado por eventos: al cobrar por Bizum o tarjeta o terminar consulta, el sistema calcula impuestos, genera el PDF y lo envía adjunto.',
+    highlights: ['Conexión contable', 'Cero errores', 'Ahorro gestiones'],
+    metrics: [{ label: 'Errores', val: '0.0%' }, { label: 'Ahorro', val: '18h/mes' }],
+    simulatorType: 'invoice',
   },
   {
-    title: 'Integraciones a medida',
-    badge: 'A consultar',
-    badgeColor: 'bg-blue-100 text-blue-700',
-    icon: (
-      <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
-      </svg>
-    ),
-    copy: {
-      todos: 'CRM, ERP, TPV, plataformas de reservas… Si ya usas una herramienta, estudiamos cómo conectarla a tu flujo automatizado.',
-      salud: 'Conectamos con tu software de gestión clínica e historiales para que el agente trabaje con tus datos reales.',
-      hosteleria: 'Integración con tu TPV, plataforma de reservas o sistema de pedidos a domicilio para un flujo único.',
-      academias: 'Conexión con tu plataforma de e-learning o software de gestión académica: matrículas y notas sin duplicar datos.',
-      ecommerce: 'Integración con Shopify, WooCommerce o tu CRM: el agente conoce stock, pedidos y clientes en tiempo real.',
-    },
+    id: 'integration',
+    code: 'SYS-05',
+    shortName: 'Conexión CRM',
+    title: 'Conexión CRM y ERP',
+    subtitle: 'Conectamos la IA con tus herramientas (Shopify, TPV).',
+    category: 'Arquitectura & API',
+    colorTheme: 'from-[#F43F5E] via-[#E11D48] to-[#BE123C]',
+    glowColor: 'rgba(244, 63, 94, 0.35)',
+    borderColor: 'border-[#F43F5E]/60',
+    description: 'No cambias de software. Conectamos nuestros agentes por API REST o Webhooks a tu sistema médico, TPV de hostelería o tienda online.',
+    highlights: ['Bidireccional', 'Datos blindados', 'Modular'],
+    metrics: [{ label: 'Sincronía', val: '100%' }, { label: 'Latencia', val: '12ms' }],
+    simulatorType: 'integration',
   },
   {
-    title: 'Reportes semanales',
-    badge: 'Próximamente',
-    badgeColor: 'bg-amber-100 text-amber-700',
-    icon: (
-      <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
-      </svg>
-    ),
-    copy: {
-      todos: 'Resúmenes automáticos de actividad, conversaciones y métricas clave directamente en tu email o WhatsApp cada semana.',
-      salud: 'Citas gestionadas, consultas más frecuentes y escalados de la semana, resumidos en un informe claro.',
-      hosteleria: 'Reservas, ocupación y preguntas más repetidas de tus clientes, cada lunes en tu WhatsApp.',
-      academias: 'Nuevos interesados, matrículas cerradas y dudas frecuentes de alumnos en un resumen semanal.',
-      ecommerce: 'Consultas atendidas, incidencias resueltas y productos más preguntados, resumido cada semana.',
-    },
+    id: 'analytics',
+    code: 'SYS-06',
+    shortName: 'Reportes BI',
+    title: 'Reportes Ejecutivos',
+    subtitle: 'Inteligencia de negocio directa en tu WhatsApp.',
+    category: 'BI & Analítica',
+    colorTheme: 'from-[#38BDF8] via-[#0EA5E9] to-[#0284C7]',
+    glowColor: 'rgba(56, 189, 248, 0.35)',
+    borderColor: 'border-[#38BDF8]/60',
+    description: 'Recibe en tu móvil un resumen semanal con conversiones cerradas por la IA, horarios pico y nuevas dudas frecuentes de clientes.',
+    highlights: ['KPIs directos', 'Nuevas tendencias', 'Cálculo ROI'],
+    metrics: [{ label: 'Precisión', val: '99.9%' }, { label: 'Envío', val: 'Semanal' }],
+    simulatorType: 'analytics',
   },
 ];
 
 export default function ServiceTabs() {
-  const [sector, setSector] = useState<SectorId>('todos');
+  const containerRef = useRef<HTMLDivElement>(null);
+  const swiperRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
+  const [manualIndex, setManualIndex] = useState<number | null>(null);
+  const [isTyping, setIsTyping] = useState(true);
+  const lastScrollY = useRef(0);
+
+  // Escuchador de scroll para cambiar automáticamente las soluciones al bajar
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+      
+      // Si el usuario hace scroll manual en la página, cancelamos el clic manual para retomar el scroll automático
+      if (Math.abs(window.scrollY - lastScrollY.current) > 15 && manualIndex !== null) {
+        setManualIndex(null);
+      }
+      lastScrollY.current = window.scrollY;
+
+      const rect = containerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const totalScroll = rect.height - windowHeight;
+      
+      if (totalScroll <= 0) return;
+      
+      const currentScroll = -rect.top;
+      const p = Math.max(0, Math.min(1, currentScroll / totalScroll));
+      setProgress(p);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [manualIndex]);
+
+  const scrollIdx = Math.min(SERVICES.length - 1, Math.max(0, Math.floor(progress * SERVICES.length)));
+  const activeTab = manualIndex !== null ? manualIndex : scrollIdx;
+  const active = SERVICES[activeTab] || SERVICES[0];
+
+  // Efecto visual de escritura en el simulador al cambiar de pestaña
+  useEffect(() => {
+    setIsTyping(true);
+    const timer = setTimeout(() => setIsTyping(false), 2000);
+    
+    // Auto-scroll horizontal de la barra móvil para que la pestaña activa siempre sea visible
+    if (swiperRef.current) {
+      const activeBtn = swiperRef.current.children[activeTab] as HTMLElement;
+      if (activeBtn) {
+        activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+
+    return () => clearTimeout(timer);
+  }, [activeTab]);
 
   return (
-    <div>
-      <style>{`
-        @keyframes svcFadeIn {
-          from { opacity: 0; transform: translateY(14px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .svc-card {
-          animation: svcFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .svc-card { animation: none; }
-        }
-      `}</style>
+    <section id="servicios" ref={containerRef} className="relative h-[450vh] bg-[#000814] border-b border-white/10">
+      
+      {/* Contenedor Sticky que se queda fijo mientras haces scroll */}
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden px-3 sm:px-6 py-4">
+        
+        {/* Malla y luz de fondo reactiva al servicio actual */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:36px_36px] pointer-events-none" />
+        <div 
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[700px] h-[500px] sm:h-[700px] rounded-full blur-[170px] pointer-events-none transition-all duration-700 ease-out opacity-35"
+          style={{ background: `radial-gradient(circle, ${active.glowColor} 0%, transparent 70%)` }}
+        />
 
-      {/* Tabs: scroll horizontal con snap en mobile */}
-      <div
-        role="tablist"
-        aria-label="Sectores"
-        className="-mx-4 mb-10 flex snap-x gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-0"
-      >
-        {SECTORS.map((s) => {
-          const active = s.id === sector;
-          return (
-            <button
-              key={s.id}
-              role="tab"
-              aria-selected={active}
-              onClick={() => setSector(s.id)}
-              className={`min-h-[44px] shrink-0 cursor-pointer snap-start whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-200 ${
-                active
-                  ? 'bg-[#001A3F] text-white shadow-md'
-                  : 'border border-gray-200 bg-white text-gray-600 hover:border-[#00E0FF] hover:text-[#001A3F]'
-              }`}
-            >
-              {s.label}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Cards: key={sector} fuerza la reanimación al cambiar de tab */}
-      <div key={sector} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {SERVICES.map((service, i) => (
-          <div
-            key={service.title}
-            className="svc-card rounded-2xl border border-gray-100 bg-white p-6 transition-all duration-200 hover:border-[#00E0FF]/60 hover:shadow-lg"
-            style={{ animationDelay: `${i * 60}ms` }}
-          >
-            <div className="mb-4 flex items-start justify-between">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#001A3F] text-[#00E0FF]">
-                {service.icon}
-              </div>
-              <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${service.badgeColor}`}>
-                {service.badge}
+        <div className="max-w-6xl w-full mx-auto relative z-10 flex flex-col items-center justify-center">
+          
+          {/* Cabecera */}
+          <div className="text-center max-w-3xl mx-auto mb-3 sm:mb-8 pointer-events-none">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.05] border border-white/15 backdrop-blur-xl shadow-md mb-2 sm:mb-4">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00E0FF] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00E0FF]"></span>
+              </span>
+              <span className="text-[10px] sm:text-xs font-extrabold tracking-widest uppercase text-[#00E0FF]">
+                Simulador IA Activado por Scroll
               </span>
             </div>
-            <h3 className="mb-2 text-base font-bold text-[#001A3F]">{service.title}</h3>
-            <p className="text-sm leading-relaxed text-gray-500">{service.copy[sector]}</p>
+
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-1 sm:mb-3">
+              Centro de Mando <span className="bg-gradient-to-r from-[#00E0FF] via-[#7C6BD6] to-[#FF00E5] bg-clip-text text-transparent">En Vivo</span>
+            </h2>
+            <p className="text-white/70 text-xs sm:text-base hidden sm:block font-light">
+              Haz scroll hacia abajo para ver cómo nuestros agentes cambian y ejecutan procesos en tiempo real.
+            </p>
           </div>
-        ))}
+
+          {/* BARRA MÓVIL RESPONSIVE: Swiper de pastillas que avanza con el scroll */}
+          <div className="lg:hidden w-full mb-4 z-30">
+            <div ref={swiperRef} className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none snap-x px-1">
+              {SERVICES.map((item, idx) => {
+                const isSelected = idx === activeTab;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      lastScrollY.current = window.scrollY;
+                      setManualIndex(idx);
+                    }}
+                    className={`snap-center shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 ${
+                      isSelected
+                        ? `bg-gradient-to-r ${item.colorTheme} text-white shadow-[0_0_15px_rgba(255,255,255,0.3)] scale-105 border border-white/40`
+                        : 'bg-white/[0.06] text-white/60 border border-white/10'
+                    }`}
+                  >
+                    <span className={`font-mono text-[10px] px-1 rounded ${isSelected ? 'bg-black/30 text-white font-black' : 'bg-white/10 text-white/50'}`}>
+                      0{idx + 1}
+                    </span>
+                    <span>{item.shortName}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Rejilla Principal */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center w-full">
+            
+            {/* Panel Izquierdo: Nodos Cibernéticos (SOLO DESKTOP) */}
+            <div className="hidden lg:flex lg:col-span-5 flex-col justify-between gap-3 w-full">
+              {SERVICES.map((item, idx) => {
+                const isSelected = idx === activeTab;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      lastScrollY.current = window.scrollY;
+                      setManualIndex(idx);
+                    }}
+                    className={`group relative w-full text-left p-4 rounded-2xl sm:rounded-3xl transition-all duration-500 overflow-hidden flex items-center justify-between cursor-pointer ${
+                      isSelected
+                        ? `bg-gradient-to-r from-white/[0.15] to-white/[0.04] border ${item.borderColor} shadow-[0_10px_35px_rgba(0,0,0,0.9)] scale-[1.03] z-20`
+                        : 'bg-white/[0.03] border border-white/10 hover:bg-white/[0.08] hover:border-white/20 opacity-75 hover:opacity-100'
+                    }`}
+                    style={{
+                      boxShadow: isSelected ? `0 0 30px -5px ${item.glowColor}` : 'none'
+                    }}
+                  >
+                    {isSelected && (
+                      <div className={`absolute -right-10 -bottom-10 w-28 h-28 rounded-full bg-gradient-to-br ${item.colorTheme} blur-2xl opacity-40 pointer-events-none`} />
+                    )}
+
+                    <div className="flex items-center gap-3.5 relative z-10 pl-1">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-mono font-extrabold text-xs shadow-lg shrink-0 transition-transform duration-300 ${
+                        isSelected 
+                          ? `bg-gradient-to-br ${item.colorTheme} text-white border border-white/30 scale-110` 
+                          : 'bg-white/10 text-white/60 border border-white/10'
+                      }`}>
+                        {item.code.replace('SYS-', '')}
+                      </div>
+
+                      <div>
+                        <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#00E0FF] bg-[#00E0FF]/10 px-2 py-0.5 rounded border border-[#00E0FF]/20">
+                          {item.category}
+                        </span>
+                        <div className={`text-base sm:text-lg font-extrabold transition-colors leading-tight mt-0.5 ${isSelected ? 'text-white font-black' : 'text-white/80 group-hover:text-white'}`}>
+                          {item.title}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2.5 relative z-10">
+                      {isSelected && (
+                        <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[9px] font-extrabold">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          ACTIVO
+                        </span>
+                      )}
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${
+                        isSelected ? `bg-white text-black shadow-[0_0_12px_white] scale-110` : 'bg-white/5 text-white/40 group-hover:bg-white/15'
+                      }`}>
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Panel Derecho: Consola de Simulación En Vivo que avanza con el scroll */}
+            <div 
+              className={`lg:col-span-7 w-full bg-gradient-to-b from-white/[0.1] to-white/[0.02] border ${active.borderColor} rounded-2xl sm:rounded-3xl p-4 sm:p-8 backdrop-blur-3xl shadow-2xl relative min-h-[420px] sm:min-h-[480px] flex flex-col justify-between overflow-hidden transition-all duration-500`}
+              style={{ boxShadow: `0 20px 60px -15px ${active.glowColor}` }}
+            >
+              <div className={`absolute top-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r ${active.colorTheme}`} />
+              
+              {/* Cabecera del terminal */}
+              <div>
+                <div className="flex items-center justify-between gap-2 pb-3 sm:pb-5 border-b border-white/10 mb-3 sm:mb-5 flex-wrap">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="flex gap-1 bg-black/40 px-2 py-1 rounded-full border border-white/10">
+                      <div className="w-2 h-2 rounded-full bg-red-500" />
+                      <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                      <div className="w-2 h-2 rounded-full bg-green-500" />
+                    </div>
+                    <span className="text-[10px] sm:text-xs font-mono font-bold text-white/70">
+                      TERMINAL // {active.id.toUpperCase()}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 ml-auto">
+                    {active.metrics.map((m, i) => (
+                      <div key={i} className="bg-white/5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-white/10 text-right">
+                        <span className="text-[8px] sm:text-[9px] text-white/50 uppercase font-bold block">{m.label}</span>
+                        <span className={`text-xs sm:text-sm font-extrabold bg-gradient-to-r ${active.colorTheme} bg-clip-text text-transparent font-mono`}>{m.val}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Título y descripción */}
+                <h3 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-white mb-1.5 sm:mb-2 tracking-tight leading-tight">
+                  {active.subtitle}
+                </h3>
+                <p className="text-white/80 text-xs sm:text-sm md:text-base font-light leading-relaxed mb-3 sm:mb-5">
+                  {active.description}
+                </p>
+
+                {/* Badges */}
+                <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
+                  {active.highlights.map((h, i) => (
+                    <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl bg-white/[0.06] border border-white/15 text-[10px] sm:text-xs font-bold text-white shadow-sm">
+                      <span className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${active.colorTheme}`} />
+                      {h}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* BANCO DE SIMULACIÓN VISUAL */}
+              <div className="mt-auto pt-3 sm:pt-5 border-t border-white/10 bg-[#00040A]/90 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-white/15 shadow-inner relative overflow-hidden">
+                <div className="flex items-center justify-between text-[9px] sm:text-xs font-mono uppercase tracking-wider text-white/40 mb-2.5 pb-2 border-b border-white/5">
+                  <span className="flex items-center gap-1.5 text-[#00E0FF] font-bold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00E0FF] animate-ping" />
+                    SIMULACIÓN EN VIVO
+                  </span>
+                  <span>LATENCIA: 11ms</span>
+                </div>
+
+                {/* 1. WHATSAPP SIMULADOR */}
+                {active.simulatorType === 'whatsapp' && (
+                  <div className="space-y-2 font-sans text-xs sm:text-sm">
+                    <div className="bg-white/10 rounded-2xl rounded-tl-none p-2.5 sm:p-3 max-w-[92%] sm:max-w-[85%] text-white border border-white/10 shadow flex gap-2 items-start animate-fadeIn">
+                      <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-500 shrink-0 flex items-center justify-center font-bold text-white text-[10px]">C</div>
+                      <div>
+                        <div className="font-bold text-white/60 text-[9px] sm:text-[10px] mb-0.5">Cliente (WhatsApp)</div>
+                        ¿Hola! ¿Tenéis mesa libre en terraza para cenar hoy a las 22:00? Somos 4 personas.
+                      </div>
+                    </div>
+
+                    {isTyping ? (
+                      <div className="bg-[#005C4B] rounded-2xl rounded-tr-none p-2.5 max-w-[65%] sm:max-w-[50%] ml-auto text-white shadow border border-emerald-500/30 flex items-center gap-2 justify-end">
+                        <span className="text-[10px] sm:text-xs font-mono text-emerald-200">Agente IA escribiendo</span>
+                        <span className="flex gap-1">
+                          <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" />
+                          <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:0.2s]" />
+                          <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:0.4s]" />
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="bg-[#005C4B] rounded-2xl rounded-tr-none p-3 sm:p-3.5 max-w-[94%] sm:max-w-[88%] ml-auto text-white shadow border border-emerald-500/40 animate-fadeIn">
+                        <div className="font-bold text-emerald-300 text-[10px] mb-1 flex items-center justify-between">
+                          <span>🤖 Agente Dalsat IA</span>
+                          <span className="text-[8px] bg-black/30 px-1.5 py-0.5 rounded text-white/80 font-mono">0.4s</span>
+                        </div>
+                        ¡Hola Carlos! Sí, nos queda la última mesa en terraza exterior a las 22:00. Acabo de reservarla a tu nombre. Te mandamos el enlace. ¡Te esperamos! 🍽️✨
+                        <div className="text-[9px] text-emerald-200 mt-1 text-right flex items-center justify-end gap-1 font-mono">
+                          WhatsApp API <span className="text-cyan-300 font-extrabold text-xs">✓✓</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 2. CALENDARIO SIMULADOR */}
+                {active.simulatorType === 'calendar' && (
+                  <div className="space-y-2 font-sans animate-fadeIn">
+                    <div className="flex items-center justify-between p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-500/40 text-white gap-2 flex-wrap sm:flex-nowrap">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-cyan-500 flex flex-col items-center justify-center font-extrabold text-black shrink-0 shadow">
+                          <span className="text-[8px] sm:text-[9px] uppercase font-mono leading-none">MAÑ</span>
+                          <span className="text-sm sm:text-base leading-none mt-0.5">18</span>
+                        </div>
+                        <div>
+                          <div className="font-extrabold text-xs sm:text-sm text-white leading-tight">Consulta Dr. San Marcos</div>
+                          <div className="text-[10px] sm:text-xs text-cyan-300 font-medium">18:00 - 18:30 • Elena Gómez</div>
+                        </div>
+                      </div>
+                      <span className="px-2 py-1 rounded-full bg-cyan-400 text-black font-extrabold text-[9px] sm:text-[10px] tracking-wider">
+                        CONFIRMADO
+                      </span>
+                    </div>
+                    <div className="p-2 sm:p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[10px] sm:text-xs font-mono flex items-center justify-between flex-wrap gap-1">
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                        Sincronizado en Google Calendar & Outlook
+                      </span>
+                      <span className="bg-emerald-500/20 px-1.5 py-0.5 rounded text-white font-bold text-[9px]">Aviso 24h OK</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* 3. EMAIL SIMULADOR */}
+                {active.simulatorType === 'email' && (
+                  <div className="space-y-2 font-mono text-[10px] sm:text-xs animate-fadeIn">
+                    <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-white/90 flex-wrap gap-1">
+                      <span className="flex items-center gap-1 truncate">
+                        <span className="text-purple-400 font-bold">📧 INBOX:</span> Solicitud presupuesto corporativo...
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded bg-purple-500/30 text-purple-200 border border-purple-500/40 font-bold text-[8px]">
+                        ALTA PRIORIDAD // VIP
+                      </span>
+                    </div>
+                    <div className="p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-purple-500/20 to-indigo-500/10 border border-purple-500/40 text-purple-100 shadow leading-relaxed font-sans text-xs">
+                      <div className="font-mono text-[9px] sm:text-[10px] text-purple-300 mb-0.5 font-bold">⚡ ACCIÓN IA EJECUTADA (Latencia: 3.2s):</div>
+                      Borrador redactado adjuntando catálogo PDF de tarifas 2026 y enlace de reunión en Calendly. Enviado y archivado en CRM automáticamente.
+                    </div>
+                  </div>
+                )}
+
+                {/* 4. FACTURA SIMULADOR */}
+                {active.simulatorType === 'invoice' && (
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-transparent border border-amber-500/40 flex items-center justify-between animate-fadeIn text-white flex-wrap gap-2.5">
+                    <div className="space-y-0.5">
+                      <div className="text-[9px] sm:text-[10px] text-amber-300 font-mono font-extrabold flex items-center gap-1">
+                        <span>📄 FACTURA #2026-8942.PDF</span>
+                        <span className="px-1 py-0.5 rounded bg-amber-500/20 text-amber-200 text-[8px]">IVA 21% OK</span>
+                      </div>
+                      <div className="text-sm sm:text-lg font-extrabold text-white">Tratamiento Odontológico</div>
+                      <div className="text-[10px] sm:text-xs text-white/60 font-mono">Total: 180,00 € • Cobrado vía Bizum</div>
+                    </div>
+                    <div className="w-full sm:w-auto text-center px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold text-[11px] sm:text-xs shadow flex items-center justify-center gap-1">
+                      ✓ EMITIDA Y ENVIADA
+                    </div>
+                  </div>
+                )}
+
+                {/* 5. INTEGRACIONES SIMULADOR */}
+                {active.simulatorType === 'integration' && (
+                  <div className="p-3.5 sm:p-5 rounded-xl bg-gradient-to-r from-rose-500/20 to-pink-500/10 border border-rose-500/40 text-center animate-fadeIn">
+                    <div className="flex items-center justify-center gap-1.5 sm:gap-3 text-xs sm:text-sm font-extrabold text-white mb-2.5 flex-wrap">
+                      <span className="px-2 py-1 rounded-lg bg-white/10 border border-white/20 text-[10px] sm:text-xs">📱 WhatsApp API</span>
+                      <span className="text-rose-400 font-bold text-sm animate-pulse">⇄</span>
+                      <span className="px-2.5 py-1 rounded-lg bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow border border-white/30 text-[11px] sm:text-xs font-black">
+                        ⚡ CEREBRO DALSAT
+                      </span>
+                      <span className="text-rose-400 font-bold text-sm animate-pulse">⇄</span>
+                      <span className="px-2 py-1 rounded-lg bg-white/10 border border-white/20 text-[10px] sm:text-xs">🏢 Tu CRM / TPV</span>
+                    </div>
+                    <div className="text-[9px] sm:text-[11px] text-rose-200 font-mono bg-black/40 py-1 px-2.5 rounded-lg border border-rose-500/20 inline-block">
+                      ✓ Sincronía bidireccional en tiempo real (0 pérdida)
+                    </div>
+                  </div>
+                )}
+
+                {/* 6. ANALÍTICA SIMULADOR */}
+                {active.simulatorType === 'analytics' && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 animate-fadeIn text-center font-sans">
+                    <div className="bg-white/10 p-2.5 rounded-xl border border-white/15">
+                      <div className="text-[9px] sm:text-[10px] font-bold text-white/60 uppercase">Consultas Resueltas</div>
+                      <div className="text-base sm:text-2xl font-extrabold text-[#00E0FF] mt-0.5 font-mono">1.482</div>
+                    </div>
+                    <div className="bg-white/10 p-2.5 rounded-xl border border-white/15">
+                      <div className="text-[9px] sm:text-[10px] font-bold text-white/60 uppercase">Tiempo Ahorrado</div>
+                      <div className="text-base sm:text-2xl font-extrabold text-emerald-400 mt-0.5 font-mono">48.5 h</div>
+                    </div>
+                    <div className="bg-white/10 p-2.5 rounded-xl border border-white/15 col-span-2 sm:col-span-1">
+                      <div className="text-[9px] sm:text-[10px] font-bold text-white/60 uppercase">Conversión Nocturna</div>
+                      <div className="text-base sm:text-2xl font-extrabold text-purple-400 mt-0.5 font-mono">+38 %</div>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
-    </div>
+    </section>
   );
 }

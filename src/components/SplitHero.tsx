@@ -482,24 +482,30 @@ export default function SplitHero() {
             </div>
           </div>
 
-          {/* Barra de entrada (decorativa) */}
-          <div className="flex items-center gap-3 rounded-b-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-md">
-            <svg className="h-5 w-5 shrink-0 text-white/50" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
+          {/* Barra de entrada enlazada a WhatsApp real */}
+          <a
+            href="https://wa.me/34646005171"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Escríbeme por WhatsApp: 646 00 51 71"
+            className="group flex items-center gap-3 rounded-b-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:border-[#00E0FF]/60 hover:bg-white/10 cursor-pointer"
+          >
+            <svg className="h-5 w-5 shrink-0 text-white/50 transition-colors group-hover:text-[#00E0FF]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
             </svg>
-            <span className="flex-1 select-none text-sm text-white/40">Escribe un mensaje…</span>
-            <svg className="h-5 w-5 shrink-0 text-white/50" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
+            <span className="flex-1 select-none text-sm text-white/50 font-medium transition-colors group-hover:text-white">Escríbeme por WhatsApp (646 00 51 71)…</span>
+            <svg className="h-5 w-5 shrink-0 text-white/50 transition-colors group-hover:text-[#00E0FF]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
             </svg>
             <div
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#00E0FF]"
-              style={{ boxShadow: '0 0 16px rgba(0,224,255,0.4)' }}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#00E0FF] transition-transform duration-300 group-hover:scale-110"
+              style={{ boxShadow: '0 0 16px rgba(0,224,255,0.5)' }}
             >
               <svg className="h-4 w-4 text-[#001A3F]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
               </svg>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </section>
