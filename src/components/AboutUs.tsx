@@ -154,12 +154,18 @@ export default function AboutUs() {
           {STATS.map((stat) => (
             <div
               key={stat.label}
-              className="group relative rounded-3xl p-8 border border-white/15 bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-xl text-center overflow-hidden hover:border-white/30 hover:shadow-[0_10px_30px_rgba(0,224,255,0.15)] transition-all duration-300"
+              className="group relative rounded-3xl p-8 border border-white/15 bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-xl text-center overflow-hidden hover:border-white/40 hover:shadow-[0_10px_35px_rgba(0,224,255,0.25)] hover:-translate-y-1 transition-all duration-300"
             >
-              <div className={`text-4xl sm:text-6xl font-extrabold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-2 group-hover:scale-105 transition-transform duration-300 inline-block`}>
-                {stat.value}
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full bg-gradient-to-r ${stat.color} opacity-75`} />
+                  <span className={`relative inline-flex rounded-full h-2.5 w-2.5 bg-gradient-to-r ${stat.color}`} />
+                </span>
+                <div className={`text-4xl sm:text-6xl font-extrabold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300 inline-block font-mono`}>
+                  {stat.value}
+                </div>
               </div>
-              <div className="text-xs sm:text-sm font-bold text-white/70 uppercase tracking-widest">
+              <div className="text-xs sm:text-sm font-bold text-white/70 uppercase tracking-widest group-hover:text-white transition-colors">
                 {stat.label}
               </div>
             </div>

@@ -52,7 +52,10 @@ export default function MobileMenu() {
         }`}
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-          <span className="font-display text-lg font-bold tracking-widest text-white">DALSAT</span>
+          <a href="#hero" onClick={() => setOpen(false)} className="flex items-center gap-2.5">
+            <img src="/logo_sin_fondo.png" alt="Dalsat logo" width="36" height="36" className="h-8 w-auto object-contain brightness-0 invert" />
+            <span className="font-display text-lg font-bold tracking-widest text-white">DALSAT</span>
+          </a>
           <button
             type="button"
             aria-label="Cerrar menú"
