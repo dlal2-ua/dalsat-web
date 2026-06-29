@@ -82,15 +82,16 @@ const SERVICES: ServiceNode[] = [
 export default function ServiceTabs() {
   const containerRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [manualIndex, setManualIndex] = useState<number | null>(null);
   const [isTyping, setIsTyping] = useState(true);
   const lastScrollY = useRef(0);
 
-  // Escuchador de scroll para cambiar automáticamente las soluciones al bajar
+  // Escuchador de scroll para cambiar automáticamente las soluciones al bajar (Solo PC)
   useEffect(() => {
     const handleScroll = () => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || window.innerWidth < 768) return;
       
       // Si el usuario hace scroll manual en la página, cancelamos el clic manual para retomar el scroll automático
       if (Math.abs(window.scrollY - lastScrollY.current) > 15 && manualIndex !== null) {
@@ -118,6 +119,23 @@ export default function ServiceTabs() {
   const activeTab = manualIndex !== null ? manualIndex : scrollIdx;
   const active = SERVICES[activeTab] || SERVICES[0];
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        setManualIndex((prev) => Math.min(SERVICES.length - 1, (prev !== null ? prev : activeTab) + 1));
+      } else {
+        setManualIndex((prev) => Math.max(0, (prev !== null ? prev : activeTab) - 1));
+      }
+    }
+    touchStartX.current = null;
+  };
+
   // Efecto visual de escritura en el simulador al cambiar de pestaña
   useEffect(() => {
     setIsTyping(true);
@@ -139,10 +157,10 @@ export default function ServiceTabs() {
   }, [activeTab]);
 
   return (
-    <section id="servicios" ref={containerRef} className="relative h-[280vh] bg-[#000814] border-b border-white/10">
+    <section id="servicios" ref={containerRef} className="relative min-h-screen md:h-[280vh] bg-[#000814] border-b border-white/10 py-12 md:py-0">
       
-      {/* Contenedor Sticky que se queda fijo mientras haces scroll */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden px-3 sm:px-6 py-4">
+      {/* Contenedor Sticky en PC, normal en Móvil */}
+      <div className="relative md:sticky md:top-0 min-h-screen md:h-screen w-full flex flex-col justify-center items-center overflow-hidden px-3 sm:px-6 py-4">
         
         {/* Malla y luz de fondo reactiva al servicio actual */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:36px_36px] pointer-events-none" />
@@ -193,6 +211,8 @@ export default function ServiceTabs() {
           <div className="w-full">
             <div 
               key={active.id}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
               className={`w-full bg-[#001026] border-2 ${active.borderColor} rounded-2xl sm:rounded-3xl p-4 sm:p-8 md:p-10 relative min-h-[440px] sm:min-h-[540px] md:min-h-[580px] flex flex-col justify-between overflow-hidden transition-all duration-700 ${activeTab % 2 === 0 ? 'animate-slideInLeft' : 'animate-slideInRight'}`}
               style={{ boxShadow: `0 0 60px -10px ${active.glowColor}` }}
             >
