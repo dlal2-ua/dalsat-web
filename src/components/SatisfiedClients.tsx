@@ -20,11 +20,11 @@ export default function SatisfiedClients() {
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
-            Resultados Reales en Producción
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3">
+            Resultados Reales
           </h2>
-          <p className="text-white/70 text-base sm:text-xl font-light">
-            Automatización inteligente aplicada al día a día de negocios líderes en su sector.
+          <p className="text-white/70 text-base sm:text-lg font-light">
+            Sistemas de IA operando en negocios reales.
           </p>
         </div>
 
@@ -72,7 +72,7 @@ export default function SatisfiedClients() {
                     -80%
                   </div>
                   <div className="text-xs sm:text-sm text-white/70 font-medium leading-snug">
-                    Tiempo invertido en consultas repetitivas de trimestrales y nóminas.
+                    Consultas repetitivas automatizadas.
                   </div>
                 </div>
 
@@ -81,7 +81,7 @@ export default function SatisfiedClients() {
                     24/7
                   </div>
                   <div className="text-xs sm:text-sm text-white/70 font-medium leading-snug">
-                    Atención automatizada por WhatsApp en plena campaña de Renta.
+                    Atención por WhatsApp en campaña de Renta.
                   </div>
                 </div>
               </div>
@@ -89,7 +89,7 @@ export default function SatisfiedClients() {
               {/* Testimonio Directo */}
               <div className="relative pl-6 sm:pl-8 border-l-2 border-[#00E0FF]">
                 <p className="text-base sm:text-xl text-white/90 italic font-light leading-relaxed mb-4">
-                  "El agente responde dudas fiscales básicas a nuestros clientes 24/7 por WhatsApp. Nos ha salvado la productividad y descongestionado las llamadas en momentos críticos del año."
+                  "El agente responde dudas fiscales básicas 24/7. Nos ha salvado la productividad y descongestionado las llamadas."
                 </p>
                 <div className="text-xs sm:text-sm font-bold text-white/60 tracking-wider uppercase">
                   Dirección General — <span className="text-white">Atrio Asesores</span>

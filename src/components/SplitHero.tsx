@@ -8,28 +8,28 @@ interface ChatMessage {
 
 // 4 pares pregunta-respuesta: cada tramo de scroll revela un par completo
 const MESSAGES: ChatMessage[] = [
-  { from: 'client', text: 'Oye, ¿qué es Dalsat?', time: '14:46' },
+  { from: 'client', text: '¿Qué hace Dalsat?', time: '14:46' },
   {
     from: 'bot',
-    text: 'Dalsat automatiza las tareas repetitivas de tu negocio. Imagina que alguien responde tus WhatsApps, gestiona citas y manda facturas — sin que tú hagas nada. 🤖',
+    text: 'Automatiza tu negocio con IA. WhatsApp, escalado a humano y recordatorios de citas 24/7. ⚡',
     time: '14:46',
   },
-  { from: 'client', text: '¿Y eso cómo funciona?', time: '14:47' },
+  { from: 'client', text: '¿Cuánto tarda?', time: '14:47' },
   {
     from: 'bot',
-    text: 'Cuéntanos cómo funciona tu negocio — horarios, servicios, preguntas frecuentes. En días, tu agente está activo respondiendo como si fueras tú.',
+    text: 'Listo en pocos días, adaptado a tu empresa. 🚀',
     time: '14:47',
   },
-  { from: 'client', text: '¿Para cualquier tipo de empresa?', time: '14:48' },
+  { from: 'client', text: '¿Sirve para mi negocio?', time: '14:48' },
   {
     from: 'bot',
-    text: 'Sí. Da igual si tienes una clínica, un restaurante, una academia o una tienda online. Si tienes clientes que hacen preguntas repetitivas, Dalsat te ahorra horas cada semana. ✅',
+    text: 'Sí. Ahorra horas de gestión en consultas y cobros repetitivos. ✅',
     time: '14:48',
   },
-  { from: 'client', text: '¿Y si el cliente necesita hablar con una persona?', time: '14:49' },
+  { from: 'client', text: '¿Y si necesitan hablar conmigo?', time: '14:49' },
   {
     from: 'bot',
-    text: 'El agente detecta cuándo escalar y te avisa con todo el contexto de la conversación. Tú solo intervienes cuando de verdad hace falta. 🎯',
+    text: 'La IA te avisa y te transfiere el chat al instante con un resumen. 🎯',
     time: '14:49',
   },
 ];
