@@ -157,7 +157,7 @@ export default function ServiceTabs() {
   }, [activeTab]);
 
   return (
-    <section id="servicios" ref={containerRef} className="relative min-h-screen md:h-[280vh] bg-[#000814] border-b border-white/10 py-12 md:py-0">
+    <section id="servicios" ref={containerRef} className="relative min-h-screen md:h-[550vh] bg-[#000814] border-b border-white/10 py-12 md:py-0">
       
       {/* Contenedor Sticky en PC, normal en Móvil */}
       <div className="relative md:sticky md:top-0 min-h-screen md:h-screen w-full flex flex-col justify-center items-center overflow-hidden px-3 sm:px-6 py-4">
