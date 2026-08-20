@@ -1,22 +1,72 @@
-export default function SatisfiedClients() {
-  return (
-    <section id="clientes" className="relative py-24 sm:py-36 bg-[#000814] border-t border-white/10 overflow-hidden min-h-screen flex items-center justify-center">
-      
-      {/* Iluminación de fondo ambiental esmerilada y cibernética */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[700px] h-[400px] sm:h-[500px] bg-gradient-to-tr from-[#00E0FF]/20 via-[#0080FF]/15 to-transparent rounded-full blur-[170px] pointer-events-none" />
+import { useState } from 'react';
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 w-full relative z-10">
+interface ClientCase {
+  id: string;
+  name: string;
+  category: string;
+  tag: string;
+  logo: string;
+  logoBg: string;
+  quote: string;
+  role: string;
+  metrics: { val: string; label: string }[];
+  accentColor: string;
+}
+
+const CLIENTS: ClientCase[] = [
+  {
+    id: 'vibora-studio',
+    name: 'Víbora Studio',
+    category: 'Tatuaje & Micro Realismo',
+    tag: '🌟 Caso de Éxito',
+    logo: '/vibora-studio.png',
+    logoBg: 'bg-[#0A0F0D]',
+    quote: 'La IA atiende dudas y agenda citas 24/7 sin interrumpirnos mientras tatuamos.',
+    role: 'Víbora Studio',
+    metrics: [
+      { val: '-90%', label: 'Consultas de citas automatizadas.' },
+      { val: '24/7', label: 'Reservas activas por WhatsApp.' },
+    ],
+    accentColor: '#39FF14',
+  },
+  {
+    id: 'atrio-asesores',
+    name: 'Atrio Asesores',
+    category: 'Asesoría Fiscal y Laboral',
+    tag: '🌟 Caso de Éxito',
+    logo: '/atrio-asesores.jpg',
+    logoBg: 'bg-white',
+    quote: 'El agente responde dudas 24/7 y ha descongestionado las llamadas.',
+    role: 'Atrio Asesores',
+    metrics: [
+      { val: '-80%', label: 'Consultas automatizadas.' },
+      { val: '24/7', label: 'Atención por WhatsApp.' },
+    ],
+    accentColor: '#00E0FF',
+  },
+];
+
+export default function SatisfiedClients() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const active = CLIENTS[activeIdx];
+
+  return (
+    <section id="clientes" className="relative py-20 sm:py-32 bg-[#000814] border-t border-white/10 overflow-hidden min-h-[90vh] flex items-center justify-center">
+      {/* Iluminación de fondo ambiental esmerilada */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[750px] h-[400px] sm:h-[550px] bg-gradient-to-tr from-[#00E0FF]/15 via-[#7C6BD6]/15 to-transparent rounded-full blur-[170px] pointer-events-none" />
+
+      <div className="max-w-6xl lg:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         
         {/* Cabecera */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-20">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00E0FF]/10 border border-[#00E0FF]/30 backdrop-blur-xl shadow-[0_0_20px_rgba(0,224,255,0.25)] mb-4">
             <span className="flex h-2 w-2 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00E0FF] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00E0FF]"></span>
             </span>
             <span className="text-xs font-extrabold tracking-widest uppercase text-[#00E0FF]">
-              Empresas Satisfechas
+              Clientes Satisfechos
             </span>
           </div>
 
@@ -24,75 +74,90 @@ export default function SatisfiedClients() {
             Resultados Reales
           </h2>
           <p className="text-white/70 text-base sm:text-lg font-light">
-            Sistemas de IA operando en negocios reales.
+            Sistemas de IA operando en negocios reales con éxito garantizado.
           </p>
+
+          {/* Selector de Clientes */}
+          <div className="flex flex-wrap justify-center gap-3 mt-6">
+            {CLIENTS.map((client, idx) => (
+              <button
+                key={client.id}
+                type="button"
+                onClick={() => setActiveIdx(idx)}
+                className={`px-5 py-2.5 rounded-2xl font-bold text-sm transition-all duration-300 flex items-center gap-3 border cursor-pointer ${
+                  idx === activeIdx
+                    ? 'bg-white/15 text-white border-[#00E0FF] shadow-[0_0_25px_rgba(0,224,255,0.3)] scale-105'
+                    : 'bg-white/5 text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: client.accentColor }} />
+                <span>{client.name}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Tarjeta Monumental de Caso de Éxito: Atrio Asesores */}
-        <div className="group relative rounded-[32px] sm:rounded-[40px] p-6 sm:p-12 md:p-16 bg-gradient-to-b from-white/[0.12] via-white/[0.06] to-white/[0.02] border border-[#00E0FF]/50 backdrop-blur-3xl shadow-[0_25px_70px_rgba(0,0,0,0.8)] transition-all duration-500 hover:border-[#00E0FF] hover:shadow-[0_0_80px_rgba(0,224,255,0.25)] overflow-hidden">
+        {/* Tarjeta Monumental de Caso de Éxito */}
+        <div 
+          key={active.id}
+          className="group relative rounded-[32px] sm:rounded-[40px] p-6 sm:p-12 md:p-14 bg-gradient-to-b from-white/[0.12] via-white/[0.06] to-white/[0.02] border border-[#00E0FF]/40 backdrop-blur-3xl shadow-[0_25px_70px_rgba(0,0,0,0.8)] transition-all duration-500 hover:border-[#00E0FF] hover:shadow-[0_0_80px_rgba(0,224,255,0.25)] overflow-hidden"
+        >
           
           {/* Resplandor superior neón */}
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#00E0FF] via-[#0080FF] to-[#00E0FF]" />
-          <div className="absolute -top-32 -right-32 w-64 h-64 bg-[#00E0FF]/25 rounded-full blur-3xl pointer-events-none group-hover:bg-[#00E0FF]/40 transition-all duration-500" />
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#00E0FF] via-[#7C6BD6] to-[#00E0FF]" />
+          <div className="absolute -top-32 -right-32 w-64 h-64 bg-[#00E0FF]/20 rounded-full blur-3xl pointer-events-none group-hover:bg-[#00E0FF]/35 transition-all duration-500" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center relative z-10">
             
-            {/* Columna Izquierda: Logo de Atrio Asesores e Identificación */}
+            {/* Columna Izquierda: Logo del Cliente e Identificación */}
             <div className="lg:col-span-5 flex flex-col items-center lg:items-start text-center lg:text-left border-b lg:border-b-0 lg:border-r border-white/10 pb-8 lg:pb-0 lg:pr-10">
               
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white/90 text-xs font-bold uppercase tracking-wider mb-6">
-                🌟 Caso de Éxito Destacado
+                {active.tag}
               </div>
 
-              {/* Contenedor del Logo con fondo blanco para que resalte impecable */}
-              <div className="p-4 sm:p-6 rounded-3xl bg-white shadow-[0_15px_35px_rgba(255,255,255,0.15)] mb-6 transform group-hover:scale-105 transition-transform duration-500 flex items-center justify-center w-64 sm:w-72 h-28 sm:h-32">
+              {/* Contenedor del Logo */}
+              <div className={`p-3 sm:p-4 rounded-3xl ${active.logoBg} border border-white/20 shadow-[0_15px_35px_rgba(0,0,0,0.4)] mb-6 transform group-hover:scale-105 transition-transform duration-500 flex items-center justify-center w-60 sm:w-72 h-32 sm:h-36 overflow-hidden`}>
                 <img 
-                  src="/atrio-asesores.jpg" 
-                  alt="Logo Atrio Asesores" 
-                  className="max-h-full max-w-full object-contain"
+                  src={active.logo} 
+                  alt={`Logo ${active.name}`} 
+                  className="max-h-full max-w-full object-contain rounded-xl"
                 />
               </div>
 
               <h3 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
-                Atrio Asesores
+                {active.name}
               </h3>
               <p className="text-[#00E0FF] font-semibold text-sm sm:text-base">
-                Asesoría Fiscal, Laboral y Contable
+                {active.category}
               </p>
 
             </div>
 
-            {/* Columna Derecha: Métricas Impactantes y Testimonio */}
+            {/* Columna Derecha: Métricas e Impacto */}
             <div className="lg:col-span-7 flex flex-col justify-between h-full space-y-8 pl-0 lg:pl-4">
               
               {/* Fila de Métricas */}
               <div className="grid grid-cols-2 gap-4 sm:gap-6">
-                <div className="bg-white/[0.04] p-5 sm:p-6 rounded-2xl border border-white/10 relative overflow-hidden group/stat">
-                  <div className="text-3xl sm:text-5xl font-extrabold bg-gradient-to-r from-white via-[#00E0FF] to-white bg-clip-text text-transparent font-mono mb-2">
-                    -80%
+                {active.metrics.map((m, idx) => (
+                  <div key={idx} className="bg-white/[0.04] p-5 sm:p-6 rounded-2xl border border-white/10 relative overflow-hidden group/stat">
+                    <div className="text-3xl sm:text-5xl font-extrabold bg-gradient-to-r from-white via-[#00E0FF] to-white bg-clip-text text-transparent font-mono mb-2">
+                      {m.val}
+                    </div>
+                    <div className="text-xs sm:text-sm text-white/70 font-medium leading-snug">
+                      {m.label}
+                    </div>
                   </div>
-                  <div className="text-xs sm:text-sm text-white/70 font-medium leading-snug">
-                    Consultas repetitivas automatizadas.
-                  </div>
-                </div>
-
-                <div className="bg-white/[0.04] p-5 sm:p-6 rounded-2xl border border-white/10 relative overflow-hidden group/stat">
-                  <div className="text-3xl sm:text-5xl font-extrabold bg-gradient-to-r from-[#00E0FF] to-[#0080FF] bg-clip-text text-transparent font-mono mb-2">
-                    24/7
-                  </div>
-                  <div className="text-xs sm:text-sm text-white/70 font-medium leading-snug">
-                    Atención por WhatsApp en campaña de Renta.
-                  </div>
-                </div>
+                ))}
               </div>
 
               {/* Testimonio Directo */}
               <div className="relative pl-6 sm:pl-8 border-l-2 border-[#00E0FF]">
                 <p className="text-base sm:text-xl text-white/90 italic font-light leading-relaxed mb-4">
-                  "El agente responde dudas fiscales básicas 24/7. Nos ha salvado la productividad y descongestionado las llamadas."
+                  "{active.quote}"
                 </p>
                 <div className="text-xs sm:text-sm font-bold text-white/60 tracking-wider uppercase">
-                  Dirección General — <span className="text-white">Atrio Asesores</span>
+                  {active.role}
                 </div>
               </div>
 
@@ -115,3 +180,4 @@ export default function SatisfiedClients() {
     </section>
   );
 }
+

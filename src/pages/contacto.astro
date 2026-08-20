@@ -1,0 +1,76 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header';
+import ContactForm from '../components/ContactForm';
+import Footer from '../components/Footer';
+
+const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20me%20gustar%C3%ADa%20hablar%20con%20el%20equipo%20de%20Dalsat.';
+---
+
+<Layout
+  title="Contacto — Dalsat"
+  description="Ponte en contacto con Dalsat. Hablemos de cómo automatizar la atención al cliente de tu negocio."
+>
+  <Header client:load currentPath="/contacto" />
+
+  <main class="pt-16">
+    <section id="contacto" class="relative min-h-[calc(100vh-64px)] flex items-center bg-gradient-to-b from-[#000A18] via-[#00122E] to-[#000814] py-16 sm:py-24 border-t border-white/10 overflow-hidden">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#00E0FF]/15 rounded-full blur-[140px] pointer-events-none" aria-hidden="true"></div>
+      
+      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+        <div class="text-center mb-10 sm:mb-14">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-[#00E0FF] border border-[#00E0FF]/30 bg-[#00E0FF]/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md shadow-[0_0_15px_rgba(0,224,255,0.2)] mb-3">
+            Contacto Directo
+          </span>
+          <h1 class="text-4xl sm:text-6xl font-extrabold text-white mb-3 tracking-tight">
+            Hablemos de Tu Negocio
+          </h1>
+          <p class="text-white/70 text-base sm:text-lg max-w-xl mx-auto">
+            Rellena el formulario o háblanos por WhatsApp para recibir una respuesta inmediata.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Formulario de Contacto */}
+          <div class="lg:col-span-7 bg-white/[0.03] border border-white/10 rounded-3xl p-6 sm:p-10 backdrop-blur-xl shadow-2xl">
+            <ContactForm client:load />
+          </div>
+
+          {/* WhatsApp Directo e Info */}
+          <div class="lg:col-span-5 space-y-6">
+            <div class="bg-gradient-to-br from-[#00261C] to-[#000E14] border border-[#25D366]/40 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-4">
+              <div class="w-12 h-12 rounded-2xl bg-[#25D366]/20 border border-[#25D366]/40 flex items-center justify-center text-2xl text-[#25D366]">
+                💬
+              </div>
+              <h2 class="text-xl font-bold text-white">
+                ¿Prefieres hablar por WhatsApp?
+              </h2>
+              <p class="text-white/70 text-xs sm:text-sm leading-relaxed">
+                Atendemos consultas al instante por WhatsApp de lunes a viernes.
+              </p>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-full py-4 rounded-2xl bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#20bd5a] hover:to-[#0f7a6e] text-white font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(37,211,102,0.4)] hover:scale-[1.02] block cursor-pointer flex items-center justify-center gap-2"
+              >
+                Abrir WhatsApp de Dalsat →
+              </a>
+            </div>
+
+            <div class="bg-white/[0.03] border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-3">
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider text-[#00E0FF]">
+                Soporte y Asistencia
+              </h3>
+              <p class="text-white/60 text-xs leading-relaxed">
+                Para clientes existentes con dudas de configuración o soporte de agentes activos, nuestro equipo técnico supervisa el sistema 24/7.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer client:visible />
+</Layout>

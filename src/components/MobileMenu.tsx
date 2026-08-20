@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+interface MobileMenuProps {
+  currentPath?: string;
+}
+
 const LINKS = [
-  { href: '#servicios', label: 'Servicios' },
-  { href: '#como-funciona', label: 'Cómo funciona' },
-  { href: '#quienes-somos', label: 'Quiénes somos' },
-  { href: '#contacto', label: 'Contacto' },
+  { href: '/servicios', label: 'Servicios' },
+  { href: '/demos', label: 'Demos' },
+  { href: '/calculadora', label: 'Calculadora' },
+  { href: '/sobre-nosotros', label: 'Sobre Nosotros' },
+  { href: '/contacto', label: 'Contacto' },
 ];
 
-export default function MobileMenu() {
+export default function MobileMenu({ currentPath = '/' }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 

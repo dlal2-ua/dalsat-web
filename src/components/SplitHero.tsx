@@ -11,25 +11,25 @@ const MESSAGES: ChatMessage[] = [
   { from: 'client', text: '¿Qué hace Dalsat?', time: '14:46' },
   {
     from: 'bot',
-    text: 'Automatiza tu negocio con IA. WhatsApp, escalado a humano y recordatorios de citas 24/7. ⚡',
+    text: 'IA para tu negocio. WhatsApp 24/7 y citas automáticas. ⚡',
     time: '14:46',
   },
-  { from: 'client', text: '¿Cuánto tarda?', time: '14:47' },
+  { from: 'client', text: '¿Tarda mucho en activarse?', time: '14:47' },
   {
     from: 'bot',
-    text: 'Listo en pocos días, adaptado a tu empresa. 🚀',
+    text: 'Listo en días, 100% a medida. 🚀',
     time: '14:47',
   },
-  { from: 'client', text: '¿Sirve para mi negocio?', time: '14:48' },
+  { from: 'client', text: '¿Sirve para mi empresa?', time: '14:48' },
   {
     from: 'bot',
-    text: 'Sí. Ahorra horas de gestión en consultas y cobros repetitivos. ✅',
+    text: 'Sí. Ahorra horas en llamadas y atiende clientes al instante. ✅',
     time: '14:48',
   },
-  { from: 'client', text: '¿Y si necesitan hablar conmigo?', time: '14:49' },
+  { from: 'client', text: '¿Y si necesitan un humano?', time: '14:49' },
   {
     from: 'bot',
-    text: 'La IA te avisa y te transfiere el chat al instante con un resumen. 🎯',
+    text: 'La IA te avisa y te pasa el chat al segundo. 🎯',
     time: '14:49',
   },
 ];
@@ -404,7 +404,7 @@ export default function SplitHero() {
             el único scroll es el de la página */}
         <div
           ref={chatRef}
-          className={`pointer-events-none relative z-20 flex w-[94vw] max-w-2xl flex-col ${
+          className={`pointer-events-none relative z-20 flex w-[94vw] max-w-4xl lg:max-w-5xl flex-col ${
             reducedMotion ? '' : 'h-[78vh]'
           }`}
           style={reducedMotion ? undefined : { opacity: 0 }}
@@ -484,16 +484,16 @@ export default function SplitHero() {
 
           {/* Barra de entrada enlazada a WhatsApp real */}
           <a
-            href="https://wa.me/34646005171"
+            href="https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20me%20interesa%20lo%20que%20hac%C3%A9is%20y%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n."
             target="_blank"
             rel="noopener noreferrer"
-            title="Escríbeme por WhatsApp: 646 00 51 71"
-            className="group flex items-center gap-3 rounded-b-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:border-[#00E0FF]/60 hover:bg-white/10 cursor-pointer"
+            title="Escríbenos por WhatsApp"
+            className="pointer-events-auto group flex items-center gap-3 rounded-b-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:border-[#00E0FF]/60 hover:bg-white/10 cursor-pointer"
           >
             <svg className="h-5 w-5 shrink-0 text-white/50 transition-colors group-hover:text-[#00E0FF]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
             </svg>
-            <span className="flex-1 select-none text-sm text-white/50 font-medium transition-colors group-hover:text-white">Escríbeme por WhatsApp (646 00 51 71)…</span>
+            <span className="flex-1 select-none text-sm text-white/50 font-medium transition-colors group-hover:text-white">Escríbenos por WhatsApp…</span>
             <svg className="h-5 w-5 shrink-0 text-white/50 transition-colors group-hover:text-[#00E0FF]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
             </svg>

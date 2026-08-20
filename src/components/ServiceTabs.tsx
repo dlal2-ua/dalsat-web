@@ -27,24 +27,24 @@ const SERVICES: ServiceNode[] = [
     colorTheme: 'from-[#25D366] via-[#10B981] to-[#059669]',
     glowColor: 'rgba(37, 211, 102, 0.35)',
     borderColor: 'border-[#25D366]/60',
-    description: 'Responde dudas, consulta catálogo y cierra ventas en segundos sin intervención humana.',
+    description: 'Atención 24/7 sin colas. Responde dudas, muestra catálogo y cierra ventas en segundos.',
     highlights: ['Latencia < 1.8s', 'Cero colas', 'Paso a humano'],
-    metrics: [{ label: 'Ventas cerradas solas', val: '+38%' }, { label: 'Horas ahorradas al día', val: '4h+' }],
+    metrics: [{ label: 'Ventas automáticas', val: '+38%' }, { label: 'Horas ahorradas/día', val: '4h+' }],
     simulatorType: 'whatsapp',
   },
   {
     id: 'escalation',
     code: 'SYS-02',
     shortName: 'Escalado Humano',
-    title: 'Escalado Inteligente a Humano',
-    subtitle: 'La IA resuelve el 90%; tú intervienes solo cuando es clave.',
+    title: 'Escalado Inteligente',
+    subtitle: 'La IA resuelve el 90%; tú intervienes si es clave.',
     category: 'Atención Híbrida',
     colorTheme: 'from-[#EC4899] via-[#F43F5E] to-[#E11D48]',
     glowColor: 'rgba(244, 63, 94, 0.35)',
     borderColor: 'border-[#F43F5E]/60',
-    description: 'Transfiere consultas de asesoramiento o dudas específicas para que tu especialista aconseje al cliente al segundo.',
-    highlights: ['Consejo experto', 'Traspaso fluido', 'Control total'],
-    metrics: [{ label: 'Dudas resueltas por IA', val: '90%' }, { label: 'Aviso a tu móvil en', val: '0.2s' }],
+    description: 'La IA filtra consultas comunes y te avisa en 0.2s si el cliente necesita consejo personal.',
+    highlights: ['Aviso instantáneo', 'Traspaso fluido', 'Control total'],
+    metrics: [{ label: 'Filtro por IA', val: '90%' }, { label: 'Aviso al móvil', val: '0.2s' }],
     simulatorType: 'escalation',
   },
   {
@@ -52,14 +52,14 @@ const SERVICES: ServiceNode[] = [
     code: 'SYS-03',
     shortName: 'Recordatorios',
     title: 'Recordatorios de Reservas',
-    subtitle: 'Avisos automáticos para que no olviden su cita.',
+    subtitle: 'Avisos automáticos que aseguran asistencia.',
     category: 'Fidelización',
     colorTheme: 'from-[#FBBF24] via-[#F59E0B] to-[#D97706]',
     glowColor: 'rgba(251, 191, 36, 0.35)',
     borderColor: 'border-[#FBBF24]/60',
-    description: 'Envía alertas por WhatsApp antes de su cita para confirmar asistencia y reducir olvidos.',
-    highlights: ['Aviso 24h/1h', 'Cero olvidos', 'Confirmación 1 clic'],
-    metrics: [{ label: 'Citas que sí asisten', val: '99%' }, { label: 'Menos olvidos', val: '-95%' }],
+    description: 'Envía confirmaciones automáticas por WhatsApp antes de cada cita para eliminar plantones.',
+    highlights: ['Aviso 24h/1h', 'Confirmación 1 clic', 'Cero olvidos'],
+    metrics: [{ label: 'Asistencia real', val: '99%' }, { label: 'Olvidos eliminados', val: '-95%' }],
     simulatorType: 'reminders',
   },
   {
@@ -67,14 +67,14 @@ const SERVICES: ServiceNode[] = [
     code: 'SYS-04',
     shortName: 'Reportes BI',
     title: 'Reportes Ejecutivos',
-    subtitle: 'Métricas clave en tu WhatsApp.',
+    subtitle: 'Tus métricas semanales directamente en WhatsApp.',
     category: 'Analítica',
     colorTheme: 'from-[#38BDF8] via-[#0EA5E9] to-[#0284C7]',
     glowColor: 'rgba(56, 189, 248, 0.35)',
     borderColor: 'border-[#38BDF8]/60',
-    description: 'Recibe cada semana un resumen con ventas cerradas por IA, horarios pico y nuevas tendencias.',
-    highlights: ['KPIs directos', 'Tendencias', 'Cálculo ROI'],
-    metrics: [{ label: 'Beneficio extra medido', val: '+24%' }, { label: 'Horas de Excel ahorradas', val: '5h/sem' }],
+    description: 'Resumen en tu móvil con ventas por IA, horas ahorradas y hábitos de tus clientes.',
+    highlights: ['KPIs directos', 'Sin Excels', 'Control ROI'],
+    metrics: [{ label: 'Rentabilidad extra', val: '+24%' }, { label: 'Horas ahorradas', val: '5h/sem' }],
     simulatorType: 'analytics',
   },
 ];
@@ -169,7 +169,7 @@ export default function ServiceTabs() {
           style={{ background: `radial-gradient(circle, ${active.glowColor} 0%, transparent 70%)` }}
         />
 
-        <div className="max-w-6xl w-full mx-auto relative z-10 flex flex-col items-center justify-center">
+        <div className="max-w-7xl lg:max-w-[1380px] w-full mx-auto relative z-10 flex flex-col items-center justify-center">
           
           {/* Cabecera */}
           <div className="text-center max-w-4xl mx-auto mb-2 sm:mb-5">
@@ -256,29 +256,11 @@ export default function ServiceTabs() {
                       />
                     ))}
                   </div>
-
-                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2.5 ml-auto order-2 sm:order-3">
-                    {active.metrics.map((m, i) => (
-                      <div 
-                        key={`${active.id}-${i}`} 
-                        className="bg-black/70 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border border-white/20 text-right shadow-lg backdrop-blur-md flex items-center gap-2 hover:scale-105 hover:border-white/40 transition-all duration-300 animate-fadeIn cursor-default group"
-                      >
-                        <span className="relative flex h-2 w-2 shrink-0">
-                          <span className={`animate-ping absolute inline-flex h-full w-full rounded-full bg-gradient-to-r ${active.colorTheme} opacity-75`} />
-                          <span className={`relative inline-flex rounded-full h-2 w-2 bg-gradient-to-r ${active.colorTheme}`} />
-                        </span>
-                        <div>
-                          <span className="text-[7px] sm:text-[9px] text-white/70 uppercase font-extrabold block tracking-wider leading-tight mb-0.5 group-hover:text-white transition-colors">{m.label}</span>
-                          <span className={`text-xs sm:text-base font-black bg-gradient-to-r ${active.colorTheme} bg-clip-text text-transparent font-mono tracking-tight block leading-none`}>{m.val}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
 
-                {/* Título y descripción */}
-                <div className="mb-1.5 sm:mb-3">
-                  <div className="flex items-center gap-2 mb-0.5 sm:mb-1">
+                {/* Título y subtítulo */}
+                <div className="mb-2 sm:mb-4">
+                  <div className="flex items-center gap-2 mb-1">
                     <span className="text-[9px] sm:text-xs font-mono font-extrabold px-1.5 py-0.5 rounded bg-[#00E0FF]/10 text-[#00E0FF] border border-[#00E0FF]/30">
                       {active.code}
                     </span>
@@ -286,22 +268,19 @@ export default function ServiceTabs() {
                       {active.category}
                     </span>
                   </div>
-                  <h3 className="text-lg sm:text-3xl md:text-4xl font-black text-white tracking-tight leading-tight mb-0.5 sm:mb-1">
+                  <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-white tracking-tight leading-tight mb-1">
                     {active.title}
                   </h3>
-                  <div className="text-xs sm:text-lg font-bold text-[#00E0FF] leading-snug">
+                  <div className="text-sm sm:text-lg font-bold text-[#00E0FF]">
                     {active.subtitle}
                   </div>
                 </div>
-                <p className="text-white/80 text-xs sm:text-sm md:text-base font-light leading-relaxed mb-3 sm:mb-5 hidden sm:block">
-                  {active.description}
-                </p>
 
                 {/* Badges */}
-                <div className="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-6">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-6">
                   {active.highlights.map((h, i) => (
-                    <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl bg-white/[0.06] border border-white/15 text-[9px] sm:text-xs font-bold text-white shadow-sm">
-                      <span className={`w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-gradient-to-r ${active.colorTheme}`} />
+                    <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl bg-white/[0.06] border border-white/15 text-[10px] sm:text-xs font-bold text-white shadow-sm">
+                      <span className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${active.colorTheme}`} />
                       {h}
                     </span>
                   ))}
@@ -407,7 +386,7 @@ export default function ServiceTabs() {
                     <div className="bg-white/10 rounded-xl p-1.5 sm:p-2 border border-amber-500/30 flex items-center justify-between text-white/90 text-[10px] sm:text-xs">
                       <span className="flex items-center gap-1.5 font-mono">
                         <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-                        <span className="font-bold text-amber-300">SISTEMA:</span> Cita médica mañana 10:15 (Dr. López)
+                        <span className="font-bold text-amber-300">SISTEMA:</span> Cita de peluquería mañana 10:15
                       </span>
                       <span className="bg-amber-500/20 px-1.5 py-0.5 rounded text-amber-200 font-bold text-[9px]">Disparador 24h</span>
                     </div>
@@ -425,10 +404,10 @@ export default function ServiceTabs() {
                       <div className="space-y-2 animate-fadeIn">
                         <div className="bg-[#005C4B] rounded-2xl rounded-tr-none p-2 sm:p-2.5 max-w-[88%] ml-auto text-white shadow border border-emerald-500/40">
                           <div className="font-bold text-emerald-300 text-[9px] mb-0.5 flex items-center justify-between">
-                            <span>🤖 Agente Dalsat IA (Clínica)</span>
+                            <span>Agente Dalsat IA (Peluquería)</span>
                             <span className="text-[8px] bg-black/30 px-1 py-0.5 rounded text-white/80 font-mono">09:00</span>
                           </div>
-                          ¡Hola Carlos! Recordatorio: consulta mañana 10:15 con el Dr. López. ¿Confirmas tu asistencia? 🦷✨
+                          ¡Hola Carlos! Recordatorio: cita mañana 10:15 en peluquería para corte y peinado. ¿Confirmas tu asistencia? ✂️✨
                           <div className="mt-2 flex gap-1.5 flex-wrap">
                             <span className="bg-emerald-600 text-white font-bold text-[10px] px-2.5 py-1 rounded-lg border border-emerald-400/50 shadow flex items-center gap-1">
                               👍 Sí, confirmo
