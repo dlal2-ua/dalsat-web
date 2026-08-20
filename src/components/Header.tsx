@@ -9,6 +9,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
     { href: '/servicios', label: 'Servicios' },
     { href: '/demos', label: 'Demos' },
     { href: '/calculadora', label: 'Calculadora' },
+    { href: '/faq', label: 'Preguntas Frecuentes' },
     { href: '/sobre-nosotros', label: 'Sobre Nosotros' },
     { href: '/contacto', label: 'Contacto' },
   ];

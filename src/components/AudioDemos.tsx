@@ -50,6 +50,7 @@ export default function AudioDemos() {
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [progress, setProgress] = useState<number>(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const playerRef = useRef<HTMLDivElement | null>(null);
 
   const current = TRACKS.find((t) => t.id === activeTrack) || TRACKS[0];
 
@@ -99,6 +100,13 @@ export default function AudioDemos() {
     } else {
       setActiveTrack(id);
       playAudio(target, playbackSpeed);
+    }
+
+    // En pantallas móviles, desplazar suavemente la vista hasta el reproductor
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setTimeout(() => {
+        playerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
     }
   };
 
@@ -205,7 +213,7 @@ export default function AudioDemos() {
           </div>
 
           {/* Tarjeta de Reproducción Visual Destacada */}
-          <div className="md:col-span-6 bg-gradient-to-b from-white/[0.1] to-white/[0.02] border border-[#00E0FF]/40 rounded-3xl p-6 sm:p-8 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] flex flex-col justify-between min-h-[320px]">
+          <div ref={playerRef} className="md:col-span-6 bg-gradient-to-b from-white/[0.1] to-white/[0.02] border border-[#00E0FF]/40 rounded-3xl p-6 sm:p-8 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] flex flex-col justify-between min-h-[320px]">
             <div>
               <div className="flex items-center justify-between text-xs font-mono text-[#00E0FF] mb-4 pb-3 border-b border-white/10">
                 <span className="flex items-center gap-2 font-bold">

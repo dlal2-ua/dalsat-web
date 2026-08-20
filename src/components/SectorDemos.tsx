@@ -74,9 +74,20 @@ export default function SectorDemos() {
   const [visibleCount, setVisibleCount] = useState<number>(1);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const timerRef = useRef<NodeJS.Timeout[]>([]);
+  const chatRef = useRef<HTMLDivElement>(null);
 
   const activeSector = SECTORS.find((s) => s.id === activeId) || SECTORS[0];
   const whatsappUrl = `https://api.whatsapp.com/send?phone=34646005171&text=${encodeURIComponent(activeSector.whatsappMessage)}`;
+
+  const handleSelectSector = (id: string) => {
+    setActiveId(id);
+    // En pantallas móviles, desplazar suavemente la vista hasta el chat simulado
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setTimeout(() => {
+        chatRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  };
 
   // Animación secuencial de mensajes saliendo uno a uno
   useEffect(() => {
@@ -156,7 +167,7 @@ export default function SectorDemos() {
               <button
                 key={sector.id}
                 type="button"
-                onClick={() => setActiveId(sector.id)}
+                onClick={() => handleSelectSector(sector.id)}
                 className={`px-4 py-3 rounded-2xl font-bold text-xs sm:text-sm transition-all duration-300 flex items-center gap-2.5 border cursor-pointer ${
                   isSelected
                     ? 'bg-gradient-to-r from-white/[0.15] to-white/[0.05] border-[#00E0FF] text-white shadow-[0_0_25px_rgba(0,224,255,0.3)] scale-105'
@@ -208,7 +219,7 @@ export default function SectorDemos() {
             </div>
 
             {/* Columna Derecha: Chat Simulado con Animación Secuencial */}
-            <div className="lg:col-span-6 bg-[#00140F] border border-[#25D366]/30 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-3 font-sans min-h-[320px] flex flex-col justify-between">
+            <div ref={chatRef} className="lg:col-span-6 bg-[#00140F] border border-[#25D366]/30 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-3 font-sans min-h-[320px] flex flex-col justify-between">
               
               {/* Cabecera del chat */}
               <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">

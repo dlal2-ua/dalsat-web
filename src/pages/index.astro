@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header';
 import SplitHero from '../components/SplitHero';
 import SatisfiedClients from '../components/SatisfiedClients';
+import FaqSection from '../components/FaqSection';
 import ContactForm from '../components/ContactForm';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import Footer from '../components/Footer';
@@ -139,6 +140,9 @@ const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=34646005171&text=Hola,
         </div>
       </div>
     </section>
+
+    {/* 6. PREGUNTAS FRECUENTES (FAQ) */}
+    <FaqSection client:visible />
 
     {/* 6. CONTACTO DIRECTO */}
     <section id="contacto" class="relative py-20 sm:py-28 bg-gradient-to-b from-[#000A18] via-[#00122E] to-[#000814] border-t border-white/10 overflow-hidden">

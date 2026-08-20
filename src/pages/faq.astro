@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header';
+import FaqSection from '../components/FaqSection';
+import Footer from '../components/Footer';
+---
+
+<Layout
+  title="Preguntas Frecuentes (FAQ) — Dalsat"
+  description="Resolvemos todas tus dudas sobre la implementación de Agentes de IA en tu empresa: WhatsApp, integración con agendas, seguridad y RGPD."
+>
+  <Header client:load currentPath="/faq" />
+
+  <main class="pt-16">
+    <FaqSection client:load />
+  </main>
+
+  <Footer client:visible />
+</Layout>
