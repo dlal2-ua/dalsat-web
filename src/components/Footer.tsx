@@ -44,19 +44,22 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-xs font-medium">
               <li>
-                <a href="#servicios" className="hover:text-[#00E0FF] transition-colors">Servicios</a>
+                <a href="/servicios" className="hover:text-[#00E0FF] transition-colors">Servicios</a>
               </li>
               <li>
-                <a href="#demos-voz" className="hover:text-[#00E0FF] transition-colors">Demos de Voz</a>
+                <a href="/demos" className="hover:text-[#00E0FF] transition-colors">Demos</a>
               </li>
               <li>
-                <a href="#calculadora" className="hover:text-[#00E0FF] transition-colors">Calculadora Ahorro</a>
+                <a href="/calculadora" className="hover:text-[#00E0FF] transition-colors">Calculadora Ahorro</a>
               </li>
               <li>
-                <a href="#como-funciona" className="hover:text-[#00E0FF] transition-colors">Cómo Funciona</a>
+                <a href="/faq" className="hover:text-[#00E0FF] transition-colors">Preguntas Frecuentes</a>
               </li>
               <li>
-                <a href="#quienes-somos" className="hover:text-[#00E0FF] transition-colors">Quiénes Somos</a>
+                <a href="/sobre-nosotros" className="hover:text-[#00E0FF] transition-colors">Sobre Nosotros</a>
+              </li>
+              <li>
+                <a href="/contacto" className="hover:text-[#00E0FF] transition-colors">Contacto</a>
               </li>
             </ul>
           </div>
