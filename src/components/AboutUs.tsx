@@ -3,8 +3,8 @@ import { useState } from 'react';
 const PILLARS = [
   {
     id: 'tech',
-    title: 'Tecnología real en producción, no demos',
-    desc: 'IA de última generación (RAG) con memoria contextual persistente y adaptada a cada cliente.',
+    title: 'Tecnología real',
+    desc: 'IA de última generación adaptada 100% a tu negocio.',
     icon: (
       <svg className="w-7 h-7 text-[#00E0FF]" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
@@ -17,8 +17,8 @@ const PILLARS = [
   },
   {
     id: 'support',
-    title: 'Soporte de ingeniero a cliente',
-    desc: 'Sin tickets interminables. Hablas por WhatsApp directamente con los ingenieros que crearon tu sistema.',
+    title: 'Soporte directo',
+    desc: 'Hablas por WhatsApp directo con los ingenieros creadores del sistema.',
     icon: (
       <svg className="w-7 h-7 text-[#10B981]" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
@@ -29,14 +29,14 @@ const PILLARS = [
     gradient: 'from-[#10B981]/20 via-transparent to-transparent',
     borderHover: 'hover:border-[#10B981]',
     action: {
-      label: 'Escribir al 646 00 51 71',
-      href: 'https://wa.me/34646005171',
+      label: 'Escribir por WhatsApp',
+      href: 'https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20me%20interesa%20lo%20que%20hac%C3%A9is%20y%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n.',
     }
   },
   {
     id: 'privacy',
-    title: 'Tus datos, en tu propio servidor',
-    desc: 'Despliegue 100% en tu servidor privado. Tus bases de datos y conversaciones jamás se comparten.',
+    title: 'Privacidad total',
+    desc: 'Despliegue privado. Tus datos jamás se comparten.',
     icon: (
       <svg className="w-7 h-7 text-[#A78BFA]" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
@@ -49,8 +49,8 @@ const PILLARS = [
   },
   {
     id: 'continuous',
-    title: 'Afinamiento y mejora continua',
-    desc: 'Revisamos conversaciones reales semanalmente para afinar el agente y elevar su precisión al máximo.',
+    title: 'Mejora semanal',
+    desc: 'Optimización constante para mantener máxima precisión.',
     icon: (
       <svg className="w-7 h-7 text-[#F59E0B]" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
@@ -64,37 +64,37 @@ const PILLARS = [
 ];
 
 const STATS = [
-  { label: 'Agentes desplegados en activo', value: '10+', color: 'from-[#00E0FF] to-[#0080FF]' },
-  { label: 'Mensajes e interacciones gestionadas', value: '50.000+', color: 'from-[#34D399] to-[#10B981]' },
-  { label: 'Disponibilidad operativa continua', value: '99,9%', color: 'from-[#F59E0B] to-[#D97706]' },
+  { label: 'Agentes activos', value: '10+', color: 'from-[#00E0FF] to-[#0080FF]' },
+  { label: 'Mensajes gestionados', value: '50.000+', color: 'from-[#34D399] to-[#10B981]' },
+  { label: 'Disponibilidad', value: '99,9%', color: 'from-[#F59E0B] to-[#D97706]' },
 ];
 
 export default function AboutUs() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
-    <section id="quienes-somos" className="relative min-h-screen flex items-center bg-[#000814] py-24 sm:py-32 border-t border-white/10 overflow-hidden">
+    <section id="quienes-somos" className="relative min-h-screen flex items-center bg-[#000814] py-20 sm:py-32 border-t border-white/10 overflow-hidden">
       {/* Iluminación de fondo atmosférica */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gradient-to-tr from-[#00E0FF]/15 via-[#7C6BD6]/10 to-transparent rounded-full blur-[160px] pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 w-full relative z-10">
+      <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         
         {/* Cabecera Principal */}
-        <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-24">
-          <div className="flex justify-center mb-6">
+        <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-20">
+          <div className="flex justify-center mb-5">
             <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/10 shadow-2xl backdrop-blur-xl">
-              <img src="/logo_sin_fondo.png" alt="Dalsat logo" className="h-16 sm:h-20 w-auto object-contain brightness-0 invert drop-shadow-[0_0_20px_rgba(0,224,255,0.4)]" />
+              <img src="/logo_sin_fondo.png" alt="Dalsat logo" className="h-14 sm:h-18 w-auto object-contain brightness-0 invert drop-shadow-[0_0_20px_rgba(0,224,255,0.4)]" />
             </div>
           </div>
 
           <span className="text-xs font-extrabold uppercase tracking-widest text-[#00E0FF] bg-[#00E0FF]/10 border border-[#00E0FF]/30 px-4 py-1.5 rounded-full inline-block shadow-[0_0_15px_rgba(0,224,255,0.2)] mb-4">
             Quiénes Somos
           </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-6">
-            Construido por ingenieros que entienden tu negocio
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
+            Ingenieros enfocados en tu rentabilidad
           </h2>
-          <p className="text-white/70 text-base sm:text-xl leading-relaxed">
-            Dalsat nació de una frustración real: ver cómo empresas brillantes pierden horas y ventas en tareas repetitivas. No vendemos humo — implantamos inteligencia artificial sólida y rentable.
+          <p className="text-white/70 text-base sm:text-lg leading-relaxed">
+            Implantamos IA sólida para que dejes de perder tiempo en tareas repetitivas.
           </p>
         </div>
 

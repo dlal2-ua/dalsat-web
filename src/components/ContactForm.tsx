@@ -105,9 +105,9 @@ export default function ContactForm() {
           <a href="mailto:dalsat.soluciones@gmail.com" className="underline font-medium hover:text-white transition-colors">
             dalsat.soluciones@gmail.com
           </a>
-          {' '}o por WhatsApp al{' '}
-          <a href="https://wa.me/34646005171" target="_blank" rel="noopener noreferrer" className="underline font-bold text-white hover:text-[#00E0FF] transition-colors">
-            646 00 51 71
+          {' '}o por WhatsApp{' '}
+          <a href="https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20me%20interesa%20lo%20que%20hac%C3%A9is%20y%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer" className="underline font-bold text-white hover:text-[#00E0FF] transition-colors">
+            haciendo clic aquí
           </a>
         </p>
       )}
