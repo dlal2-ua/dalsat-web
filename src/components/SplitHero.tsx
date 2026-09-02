@@ -36,7 +36,8 @@ const MESSAGES: ChatMessage[] = [
 
 const PAIRS = MESSAGES.length / 2;
 const SPLIT_END = 0.3; // el split ocupa el 0–30 % del scroll
-const INTRO_FADE_END = 0.12; // subtítulo y flecha desaparecen al empezar a scrollear
+const INTRO_FADE_END = 0.12; // el subtítulo se va en cuanto empiezas a scrollear
+const HINT_FADE_END = 0.3; // la indicación de scroll aguanta bastante más
 const CHAT_START = 0.22;
 const CHAT_FADE_SPAN = 0.18;
 const PAIRS_START = 0.38; // los pares de mensajes se revelan del 38 al 95 %
@@ -132,6 +133,7 @@ export default function SplitHero() {
     const apply = (p: number) => {
       const split = Math.min(1, p / SPLIT_END);
       const introOpacity = Math.max(0, 1 - p / INTRO_FADE_END);
+      const hintOpacity = Math.max(0, 1 - p / HINT_FADE_END);
       const chat = Math.max(0, Math.min(1, (p - CHAT_START) / CHAT_FADE_SPAN));
 
       const dal = dalRef.current;
@@ -147,8 +149,8 @@ export default function SplitHero() {
 
       if (introRef.current) introRef.current.style.opacity = String(introOpacity);
       if (hintRef.current) {
-        hintRef.current.style.opacity = String(introOpacity);
-        hintRef.current.style.pointerEvents = introOpacity > 0.3 ? 'auto' : 'none';
+        hintRef.current.style.opacity = String(hintOpacity);
+        hintRef.current.style.pointerEvents = hintOpacity > 0.3 ? 'auto' : 'none';
       }
 
       const chatEl = chatRef.current;
@@ -262,6 +264,15 @@ export default function SplitHero() {
         .hero-arrow {
           animation: heroArrowBounce 1.8s ease-in-out infinite;
         }
+        @keyframes heroWheel {
+          0%   { opacity: 0; transform: translateY(0); }
+          25%  { opacity: 1; }
+          75%  { opacity: 1; transform: translateY(10px); }
+          100% { opacity: 0; transform: translateY(12px); }
+        }
+        .hero-wheel {
+          animation: heroWheel 1.8s ease-in-out infinite;
+        }
         @keyframes starDriftA {
           from { transform: translate(0, 0); }
           to { transform: translate(-16vw, 10vh); }
@@ -296,7 +307,7 @@ export default function SplitHero() {
             animation: none;
             opacity: 1;
           }
-          .hero-arrow, .stars-near, .stars-far, .star-float { animation: none; }
+          .hero-arrow, .hero-wheel, .stars-near, .stars-far, .star-float { animation: none; }
           .star-twinkle { animation: none; opacity: 0.4; }
         }
       `}</style>
@@ -389,11 +400,14 @@ export default function SplitHero() {
             <button
               type="button"
               onClick={scrollToChat}
-              className="hero-hint flex min-h-[44px] cursor-pointer flex-col items-center gap-2 text-white/50 transition-colors hover:text-cian"
+              className="hero-hint flex min-h-[44px] cursor-pointer flex-col items-center gap-2.5 text-white/75 transition-colors hover:text-cian"
             >
-              <span className="text-xs font-medium tracking-wide">Mira lo que podemos quitarte de encima</span>
-              <svg className="hero-arrow h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+              <span className="text-sm font-semibold tracking-wide">Baja para ver qué hacemos</span>
+              <span className="hero-mouse relative flex h-9 w-[22px] items-center justify-center rounded-full border-2 border-current">
+                <span className="hero-wheel absolute top-1.5 h-1.5 w-1 rounded-full bg-current" />
+              </span>
+              <svg className="hero-arrow h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
               </svg>
             </button>
           </div>
