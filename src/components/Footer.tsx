@@ -77,6 +77,9 @@ export default function Footer() {
                 <a href="/servicios#catalogo" className="hover:text-cian transition-colors">Agentes de IA</a>
               </li>
               <li>
+                <a href="/servicios#plataforma" className="hover:text-cian transition-colors">Panel de gestión</a>
+              </li>
+              <li>
                 <a href="/servicios#catalogo" className="hover:text-cian transition-colors">Mapeo y automatización</a>
               </li>
               <li>
@@ -120,9 +123,23 @@ export default function Footer() {
         </div>
 
         {/* Sub-footer Copyright */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-white/40">
-          <p>© 2026 DALSAT. Todos los derechos reservados.</p>
-          <div className="flex items-center gap-4">
+        <div className="pt-8 space-y-5">
+          <nav aria-label="Información legal">
+            <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 list-none p-0 m-0 text-xs font-medium text-white/55">
+              <li>
+                <a href="/aviso-legal" className="hover:text-cian transition-colors">Aviso legal y condiciones</a>
+              </li>
+              <li>
+                <a href="/politica-privacidad" className="hover:text-cian transition-colors">Política de privacidad</a>
+              </li>
+              <li>
+                <a href="/cookies" className="hover:text-cian transition-colors">Política de cookies</a>
+              </li>
+            </ul>
+          </nav>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-white/40">
+            <p>© 2026 DALSAT. Todos los derechos reservados.</p>
             <span className="text-white/60">Toda España</span>
           </div>
         </div>

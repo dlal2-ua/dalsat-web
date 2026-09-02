@@ -1,0 +1,130 @@
+---
+import Layout from './Layout.astro';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+
+interface Props {
+  title: string;
+  description: string;
+  currentPath: string;
+  heading: string;
+  updated: string;
+}
+
+const { title, description, currentPath, heading, updated } = Astro.props;
+
+// Las tres paginas legales comparten forma: fondo crema, texto grafito y
+// titulares navy. Se monta aqui una vez para que no se desincronicen.
+const LEGALES = [
+  { href: '/aviso-legal', label: 'Aviso legal y condiciones' },
+  { href: '/politica-privacidad', label: 'Política de privacidad' },
+  { href: '/cookies', label: 'Política de cookies' },
+];
+---
+
+<Layout title={title} description={description}>
+  <Header client:load currentPath={currentPath} />
+
+  <main class="pt-16 bg-crema text-grafito">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+      <a href="/" class="inline-flex items-center gap-1.5 text-sm font-semibold text-navy/70 hover:text-navy transition-colors mb-8">
+        &larr; Volver al inicio
+      </a>
+
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-navy tracking-tight mb-3">
+        {heading}
+      </h1>
+      <p class="text-sm text-grafito/55 mb-10">Última actualización: {updated}</p>
+
+      <div class="legal space-y-8 leading-relaxed">
+        <slot />
+      </div>
+
+      <nav class="mt-14 pt-8 border-t border-navy/10" aria-label="Documentos legales">
+        <p class="text-xs font-bold uppercase tracking-widest text-grafito/50 mb-3">
+          Los otros documentos
+        </p>
+        <ul class="flex flex-wrap gap-x-6 gap-y-2 list-none p-0 m-0 text-sm font-semibold">
+          {LEGALES.filter((l) => l.href !== currentPath).map((l) => (
+            <li>
+              <a href={l.href} class="text-navy underline decoration-cian decoration-2 underline-offset-4 hover:text-cian-dark transition-colors">
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </main>
+
+  <Footer client:visible />
+</Layout>
+
+<style is:global>
+  /* Estilos del cuerpo de las paginas legales. Van aqui y no por clases en
+     cada parrafo para que el texto legal se pueda editar sin tocar el diseno. */
+  .legal h2 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #072847;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+  .legal p,
+  .legal li {
+    color: #2B2924;
+    font-size: 0.975rem;
+    line-height: 1.7;
+  }
+  .legal p + p {
+    margin-top: 0.75rem;
+  }
+  .legal ul {
+    margin-top: 0.75rem;
+    padding-left: 1.15rem;
+    list-style: disc;
+  }
+  .legal li + li {
+    margin-top: 0.4rem;
+  }
+  .legal a {
+    color: #072847;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: #14CDEC;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+  .legal a:hover {
+    color: #0FA8C4;
+  }
+  .legal .pendiente {
+    background: rgba(217, 100, 44, 0.12);
+    border: 1px dashed rgba(217, 100, 44, 0.55);
+    border-radius: 6px;
+    padding: 0.05rem 0.4rem;
+    font-weight: 700;
+    color: #B84E1C;
+  }
+  .legal table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+  }
+  .legal th,
+  .legal td {
+    border: 1px solid rgba(7, 40, 71, 0.14);
+    padding: 0.7rem 0.75rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  .legal th {
+    background: rgba(7, 40, 71, 0.05);
+    color: #072847;
+    font-weight: 700;
+  }
+  .legal .tabla-scroll {
+    overflow-x: auto;
+  }
+</style>

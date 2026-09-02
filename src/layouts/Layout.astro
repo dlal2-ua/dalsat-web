@@ -1,5 +1,5 @@
 ---
-import Analytics from '@vercel/analytics/astro';
+import CookieBanner from '../components/CookieBanner';
 
 interface Props {
   title?: string;
@@ -106,6 +106,8 @@ const schemaData = {
   </head>
   <body class="font-sans antialiased bg-crema text-grafito">
     <slot />
-    <Analytics />
+    {/* La analitica de Vercel ya no se carga aqui: la inyecta el banner solo
+        si el visitante acepta. Antes se cargaba siempre y el aviso era humo. */}
+    <CookieBanner client:load />
   </body>
 </html>
