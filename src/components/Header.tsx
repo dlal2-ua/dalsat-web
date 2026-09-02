@@ -14,6 +14,8 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
     { href: '/contacto', label: 'Contacto' },
   ];
 
+  const PANEL_URL = 'https://app.dalsats.com';
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-navy/85 backdrop-blur-md border-b border-white/10">
       <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -55,6 +57,14 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
 
         {/* Botón CTA + Menú Móvil */}
         <div className="flex items-center gap-3">
+          <a
+            href={PANEL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden lg:inline-flex items-center gap-1.5 text-sm font-medium text-white/70 transition-colors hover:text-cian"
+          >
+            Entrar al panel
+          </a>
           <a
             href="/contacto"
             className="hidden md:inline-flex bg-terracota hover:bg-terracota-dark text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(20,205,236,0.3)] hover:scale-105"
