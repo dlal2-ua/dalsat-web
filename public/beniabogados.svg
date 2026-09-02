@@ -2,9 +2,8 @@
   <title id="beniabogados-titulo">Beniabogados</title>
 
   <!--
-    Logo provisional para Beniabogados. El despacho no tiene identidad
-    propia todavia, asi que esto es un marcador digno, no una marca
-    cerrada: balanza de la justicia y logotipo en azul marino.
+    Logo de Beniabogados, dibujado por nosotros y aprobado por el despacho:
+    balanza de la justicia y logotipo en azul marino.
 
     El texto va con textLength + lengthAdjust a proposito. Un SVG cargado
     con <img> es un documento aislado: no le llega ni el CSS de la pagina
