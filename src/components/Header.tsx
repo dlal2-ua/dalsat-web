@@ -15,7 +15,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#001A3F]/85 backdrop-blur-md border-b border-white/10">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-navy/85 backdrop-blur-md border-b border-white/10">
       <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Logo de Dalsat */}
@@ -40,13 +40,13 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                 href={item.href}
                 className={`transition-colors py-1 relative ${
                   isActive
-                    ? 'text-[#00E0FF] font-semibold'
+                    ? 'text-cian font-semibold'
                     : 'text-white/70 hover:text-white'
                 }`}
               >
                 {item.label}
                 {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00E0FF] rounded-full shadow-[0_0_8px_#00E0FF]" />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-cian rounded-full shadow-[0_0_8px_#14CDEC]" />
                 )}
               </a>
             );
@@ -57,7 +57,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
         <div className="flex items-center gap-3">
           <a
             href="/contacto"
-            className="hidden md:inline-flex bg-[#00E0FF] hover:bg-white text-[#001A3F] text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(0,224,255,0.3)] hover:scale-105"
+            className="hidden md:inline-flex bg-terracota hover:bg-terracota-dark text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(20,205,236,0.3)] hover:scale-105"
           >
             Hablar con nosotros →
           </a>

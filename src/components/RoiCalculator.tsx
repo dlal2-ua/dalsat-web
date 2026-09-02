@@ -11,20 +11,20 @@ export default function RoiCalculator() {
   const moneySavedPerYear = moneySavedPerMonth * 12;
 
   return (
-    <section id="calculadora" className="relative py-20 sm:py-28 bg-[#000814] border-t border-white/10 overflow-hidden">
+    <section id="calculadora" className="relative py-20 sm:py-28 bg-navy-900 border-t border-white/10 overflow-hidden">
       {/* Resplandor ambiental de fondo */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-gradient-to-tr from-[#00E0FF]/15 via-[#7C6BD6]/15 to-transparent rounded-full blur-[170px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-gradient-to-tr from-cian/15 via-cian-dark/15 to-transparent rounded-full blur-[170px] pointer-events-none" />
 
       <div className="max-w-6xl lg:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         
         {/* Cabecera */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00E0FF]/10 border border-[#00E0FF]/30 backdrop-blur-xl shadow-[0_0_20px_rgba(0,224,255,0.25)] mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cian/10 border border-cian/30 backdrop-blur-xl shadow-[0_0_20px_rgba(20,205,236,0.25)] mb-4">
             <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00E0FF] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00E0FF]"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cian opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cian"></span>
             </span>
-            <span className="text-xs font-extrabold tracking-widest uppercase text-[#00E0FF]">
+            <span className="text-xs font-extrabold tracking-widest uppercase text-cian">
               Calculadora de Rentabilidad
             </span>
           </div>
@@ -38,7 +38,7 @@ export default function RoiCalculator() {
         </div>
 
         {/* Tarjeta de la Calculadora */}
-        <div className="bg-gradient-to-b from-white/[0.12] via-white/[0.05] to-white/[0.02] border border-[#00E0FF]/40 rounded-3xl p-6 sm:p-10 md:p-12 backdrop-blur-3xl shadow-[0_25px_70px_rgba(0,0,0,0.8)] relative overflow-hidden">
+        <div className="bg-gradient-to-b from-white/[0.12] via-white/[0.05] to-white/[0.02] border border-cian/40 rounded-3xl p-6 sm:p-10 md:p-12 backdrop-blur-3xl shadow-[0_25px_70px_rgba(0,0,0,0.8)] relative overflow-hidden">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
@@ -51,7 +51,7 @@ export default function RoiCalculator() {
                   <label htmlFor="range-messages" className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                     💬 Consultas / Mensajes al día
                   </label>
-                  <span className="text-xl sm:text-2xl font-black text-[#00E0FF] font-mono bg-[#00E0FF]/10 px-3 py-1 rounded-xl border border-[#00E0FF]/30">
+                  <span className="text-xl sm:text-2xl font-black text-cian font-mono bg-cian/10 px-3 py-1 rounded-xl border border-cian/30">
                     {messagesPerDay} <span className="text-xs font-sans font-normal text-white/70">/día</span>
                   </span>
                 </div>
@@ -63,7 +63,7 @@ export default function RoiCalculator() {
                   step="5"
                   value={messagesPerDay}
                   onChange={(e) => setMessagesPerDay(Number(e.target.value))}
-                  className="w-full h-3 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#00E0FF]"
+                  className="w-full h-3 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cian"
                 />
                 <div className="flex justify-between text-[11px] font-mono text-white/40">
                   <span>10 msgs</span>
@@ -78,7 +78,7 @@ export default function RoiCalculator() {
                   <label htmlFor="range-cost" className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                     💶 Valor estimado de tu hora (o empleado)
                   </label>
-                  <span className="text-xl sm:text-2xl font-black text-[#00E0FF] font-mono bg-[#00E0FF]/10 px-3 py-1 rounded-xl border border-[#00E0FF]/30">
+                  <span className="text-xl sm:text-2xl font-black text-cian font-mono bg-cian/10 px-3 py-1 rounded-xl border border-cian/30">
                     {hourlyCost} €<span className="text-xs font-sans font-normal text-white/70">/h</span>
                   </span>
                 </div>
@@ -90,7 +90,7 @@ export default function RoiCalculator() {
                   step="5"
                   value={hourlyCost}
                   onChange={(e) => setHourlyCost(Number(e.target.value))}
-                  className="w-full h-3 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#00E0FF]"
+                  className="w-full h-3 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cian"
                 />
                 <div className="flex justify-between text-[11px] font-mono text-white/40">
                   <span>10 €/h</span>
@@ -101,7 +101,7 @@ export default function RoiCalculator() {
 
               {/* Nota explicativa */}
               <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-xs text-white/60 leading-relaxed flex items-start gap-2.5">
-                <span className="text-[#00E0FF] font-bold text-base">ℹ️</span>
+                <span className="text-cian font-bold text-base">ℹ️</span>
                 <span>Cálculo basado en 2.8 minutos medios por atención de llamada o respuesta manual en WhatsApp. La IA de Dalsat absorbe el 90% de este volumen de forma autónoma.</span>
               </div>
 
@@ -109,10 +109,10 @@ export default function RoiCalculator() {
 
             {/* Columna Derecha: Resultados de Impacto */}
             <div className="lg:col-span-5 bg-black/50 border border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col justify-between h-full space-y-6 shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#00E0FF]/20 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-cian/20 rounded-full blur-2xl pointer-events-none" />
 
               <div>
-                <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#00E0FF] mb-4">
+                <div className="text-xs font-mono font-bold uppercase tracking-wider text-cian mb-4">
                   RESULTADO ESTIMADO DE AHORRO
                 </div>
 
@@ -123,7 +123,7 @@ export default function RoiCalculator() {
                       Horas Libres Recuperadas
                     </div>
                     <div className="text-4xl sm:text-5xl font-black text-white font-mono tracking-tight flex items-baseline gap-2">
-                      {hoursSavedPerMonth} <span className="text-base font-sans font-normal text-[#00E0FF]">horas/mes</span>
+                      {hoursSavedPerMonth} <span className="text-base font-sans font-normal text-cian">horas/mes</span>
                     </div>
                   </div>
 
@@ -131,7 +131,7 @@ export default function RoiCalculator() {
                     <div className="text-xs text-white/60 uppercase font-extrabold tracking-wider mb-1">
                       Ahorro Estimado al Mes
                     </div>
-                    <div className="text-4xl sm:text-5xl font-black bg-gradient-to-r from-[#00E0FF] to-[#34D399] bg-clip-text text-transparent font-mono tracking-tight">
+                    <div className="text-4xl sm:text-5xl font-black bg-gradient-to-r from-cian to-cian-light bg-clip-text text-transparent font-mono tracking-tight">
                       {moneySavedPerMonth.toLocaleString('es-ES')} €
                     </div>
                   </div>
@@ -140,7 +140,7 @@ export default function RoiCalculator() {
                     <div className="text-xs text-white/60 uppercase font-extrabold tracking-wider mb-1">
                       Ahorro Proyectado al Año
                     </div>
-                    <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono">
+                    <div className="text-2xl sm:text-3xl font-extrabold text-cian font-mono">
                       ~ {moneySavedPerYear.toLocaleString('es-ES')} € /año
                     </div>
                   </div>
@@ -150,7 +150,7 @@ export default function RoiCalculator() {
               {/* Botón CTA directo */}
               <a
                 href="#contacto"
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#00E0FF] to-[#00B8FF] hover:from-white hover:to-white text-[#001A3F] font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(0,224,255,0.35)] hover:scale-[1.02] block cursor-pointer"
+                className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(20,205,236,0.35)] hover:scale-[1.02] block cursor-pointer"
               >
                 Empezar a Ahorrar Ahora →
               </a>

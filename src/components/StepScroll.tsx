@@ -93,14 +93,14 @@ export default function StepScroll() {
   const currentStep = STEPS[activeIndex];
 
   return (
-    <section id="como-funciona" ref={sectionRef} className="relative h-[300vh] bg-[#000814] border-t border-white/10">
+    <section id="como-funciona" ref={sectionRef} className="relative h-[300vh] bg-navy-900 border-t border-white/10">
       {/* Contenedor pegajoso (Sticky) */}
       <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden px-4 sm:px-6">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px]" aria-hidden="true"></div>
         
         {/* Cabecera general fija */}
         <div className="absolute top-20 sm:top-24 text-center z-20">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-[#00E0FF] border border-[#00E0FF]/30 bg-[#00E0FF]/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md shadow-[0_0_15px_rgba(0,224,255,0.2)] mb-3">
+          <span className="text-xs font-extrabold uppercase tracking-widest text-cian border border-cian/30 bg-cian/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md shadow-[0_0_15px_rgba(20,205,236,0.2)] mb-3">
             Proceso Dalsat
           </span>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
@@ -118,9 +118,9 @@ export default function StepScroll() {
                 key={s.number}
                 className={`flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 border ${
                   isActive
-                    ? 'bg-[#00E0FF]/20 border-[#00E0FF] text-[#00E0FF] shadow-[0_0_15px_rgba(0,224,255,0.3)] scale-105'
+                    ? 'bg-cian/20 border-cian text-cian shadow-[0_0_15px_rgba(20,205,236,0.3)] scale-105'
                     : isDone
-                    ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300'
+                    ? 'bg-cian/20 border-cian/50 text-cian-light'
                     : 'bg-white/5 border-white/10 text-white/40'
                 }`}
               >
@@ -141,7 +141,7 @@ export default function StepScroll() {
         >
           {/* El número gigante que se encoge al hacer scroll */}
           <div
-            className="font-extrabold text-[7rem] sm:text-[11rem] leading-none select-none tracking-tighter bg-gradient-to-b from-[#00E0FF] via-[#7C6BD6] to-transparent bg-clip-text text-transparent drop-shadow-[0_10px_30px_rgba(0,224,255,0.3)] transition-transform duration-75 ease-out mb-2 sm:mb-4"
+            className="font-extrabold text-[7rem] sm:text-[11rem] leading-none select-none tracking-tighter bg-gradient-to-b from-cian via-cian-dark to-transparent bg-clip-text text-transparent drop-shadow-[0_10px_30px_rgba(20,205,236,0.3)] transition-transform duration-75 ease-out mb-2 sm:mb-4"
             style={{
               transform: `scale(${numberScale})`,
             }}
@@ -150,7 +150,7 @@ export default function StepScroll() {
           </div>
 
           {/* Etiqueta del paso */}
-          <div className="text-xs sm:text-sm font-extrabold text-[#00E0FF] tracking-widest uppercase mb-2">
+          <div className="text-xs sm:text-sm font-extrabold text-cian tracking-widest uppercase mb-2">
             {currentStep.step}
           </div>
 
@@ -165,8 +165,8 @@ export default function StepScroll() {
           </p>
 
           {/* Etiqueta de tiempo / hito */}
-          <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-extrabold text-[#00E0FF] bg-gradient-to-r from-[#00E0FF]/15 to-purple-500/15 py-2.5 px-5 rounded-2xl border border-[#00E0FF]/30 shadow-[0_0_20px_rgba(0,224,255,0.15)] backdrop-blur-md">
-            <svg className="w-4 h-4 shrink-0 text-[#00E0FF]" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+          <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-extrabold text-cian bg-gradient-to-r from-cian/15 to-cian/15 py-2.5 px-5 rounded-2xl border border-cian/30 shadow-[0_0_20px_rgba(20,205,236,0.15)] backdrop-blur-md">
+            <svg className="w-4 h-4 shrink-0 text-cian" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d={currentStep.icon} />
             </svg>
             <span>{currentStep.tag}</span>
