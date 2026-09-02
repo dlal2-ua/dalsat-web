@@ -11,6 +11,13 @@ interface FaqItem {
 const FAQS: FaqItem[] = [
   // Categoria: Servicios
   {
+    id: 'panel',
+    category: 'Servicios',
+    badge: 'Incluido',
+    question: '¿Desde dónde gestiono mi agente y mis reservas?',
+    answer: 'Desde tu panel, con tu usuario y tu contraseña, en app.dalsats.com. Ahí cambias lo que responde el agente de chat y el de voz, ves y mueves las reservas que han cogido, lees las conversaciones y tienes los números de tu negocio: cuánto se ha respondido solo, a qué horas te escriben más y cuántas horas te has ahorrado. Hace las veces de CRM para lo que pasa por el agente. Entra con lo que contrates, no se paga aparte y no hay que instalar nada.',
+  },
+  {
     id: 'que-haceis',
     category: 'Servicios',
     badge: 'Cinco servicios',

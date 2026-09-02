@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header';
 import Services from '../components/Services';
-import ServiceTabs from '../components/ServiceTabs';
+import Platform from '../components/Platform';
 import StepScroll from '../components/StepScroll';
 import FaqSection from '../components/FaqSection';
 import Footer from '../components/Footer';
@@ -35,8 +35,8 @@ import Footer from '../components/Footer';
     {/* Catálogo completo, en orden de prioridad */}
     <Services />
 
-    {/* Demo en vivo del servicio 02: agentes de IA */}
-    <ServiceTabs client:load />
+    {/* El panel desde el que se gestiona todo */}
+    <Platform />
 
     {/* Proceso en 3 Pasos */}
     <StepScroll client:load />

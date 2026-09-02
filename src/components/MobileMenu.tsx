@@ -87,7 +87,16 @@ export default function MobileMenu({ currentPath = '/' }: MobileMenuProps) {
           ))}
         </div>
 
-        <div className="border-t border-white/10 p-5">
+        <div className="border-t border-white/10 p-5 space-y-3">
+          <a
+            href="https://app.dalsats.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setOpen(false)}
+            className="flex min-h-[48px] items-center justify-center rounded-xl border border-cian/40 bg-cian/10 px-5 py-3 text-sm font-semibold text-cian transition-colors hover:bg-cian/20 hover:text-white"
+          >
+            Entrar al panel
+          </a>
           <a
             href="#contacto"
             onClick={() => setOpen(false)}

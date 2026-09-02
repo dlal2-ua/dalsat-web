@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 150" width="340" height="150" role="img" aria-labelledby="beniabogados-titulo">
+  <title id="beniabogados-titulo">Beniabogados</title>
+
+  <!--
+    Logo provisional para Beniabogados. El despacho no tiene identidad
+    propia todavia, asi que esto es un marcador digno, no una marca
+    cerrada: balanza de la justicia y logotipo en azul marino.
+
+    El texto va con textLength + lengthAdjust a proposito. Un SVG cargado
+    con <img> es un documento aislado: no le llega ni el CSS de la pagina
+    ni las fuentes web, asi que la familia se resuelve contra la del
+    visitante. Fijando el ancho, el logotipo mide siempre lo mismo
+    caiga en Georgia, en Times o en la serif que haya.
+  -->
+
+  <g fill="none" stroke="#072847" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Mastil y base -->
+    <path d="M170 26v46" />
+    <path d="M156 78h28" />
+    <path d="M160 72h20l4 6h-28z" fill="#072847" stroke="none" />
+    <circle cx="170" cy="22" r="3.4" fill="#072847" stroke="none" />
+
+    <!-- Brazo de la balanza -->
+    <path d="M132 34h76" />
+    <path d="M132 34v8" />
+    <path d="M208 34v8" />
+
+    <!-- Platillos -->
+    <path d="M119 42h26l-13 17z" />
+    <path d="M195 42h26l-13 17z" />
+  </g>
+
+  <!-- Logotipo. Ancho clavado con textLength para no depender de la fuente. -->
+  <text
+    x="170" y="112"
+    text-anchor="middle"
+    textLength="252" lengthAdjust="spacingAndGlyphs"
+    font-family="Georgia, 'Times New Roman', 'Liberation Serif', serif"
+    font-size="30" letter-spacing="1.5" fill="#072847"
+  >BENIABOGADOS</text>
+
+  <!-- Filete y bajada -->
+  <path d="M92 126h156" stroke="#072847" stroke-width="1" opacity="0.35" />
+  <text
+    x="170" y="142"
+    text-anchor="middle"
+    textLength="150" lengthAdjust="spacingAndGlyphs"
+    font-family="Georgia, 'Times New Roman', 'Liberation Serif', serif"
+    font-size="11" letter-spacing="3" fill="#072847" opacity="0.7"
+  >ABOGADOS</text>
+</svg>
