@@ -53,7 +53,7 @@ export default function MobileMenu({ currentPath = '/' }: MobileMenuProps) {
       <nav
         id="mobile-drawer"
         aria-label="Menú principal"
-        className={`fixed right-0 top-0 z-[9999] flex h-full w-72 max-w-[85vw] flex-col bg-[#000814] border-l border-white/15 shadow-2xl transition-transform duration-300 ease-out motion-reduce:transition-none ${
+        className={`fixed right-0 top-0 z-[9999] flex h-full w-72 max-w-[85vw] flex-col bg-navy-900 border-l border-white/15 shadow-2xl transition-transform duration-300 ease-out motion-reduce:transition-none ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -91,7 +91,7 @@ export default function MobileMenu({ currentPath = '/' }: MobileMenuProps) {
           <a
             href="#contacto"
             onClick={() => setOpen(false)}
-            className="flex min-h-[48px] items-center justify-center rounded-xl bg-[#00E0FF] px-5 py-3 text-sm font-semibold text-[#001A3F] transition-colors hover:bg-white shadow-[0_0_15px_rgba(0,224,255,0.3)]"
+            className="flex min-h-[48px] items-center justify-center rounded-xl bg-terracota px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-terracota-dark shadow-[0_0_15px_rgba(217,100,44,0.35)]"
           >
             Hablar con nosotros →
           </a>

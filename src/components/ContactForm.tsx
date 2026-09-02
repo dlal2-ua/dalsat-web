@@ -42,7 +42,7 @@ export default function ContactForm() {
           type="text"
           required
           placeholder="Tu nombre o empresa"
-          className="w-full px-4 py-3.5 rounded-xl border border-white/15 bg-white/5 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#00E0FF] focus:border-transparent text-white placeholder-white/30 text-sm transition-all shadow-inner"
+          className="w-full px-4 py-3.5 rounded-xl border border-white/15 bg-white/5 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-cian focus:border-transparent text-white placeholder-white/30 text-sm transition-all shadow-inner"
         />
       </div>
 
@@ -56,7 +56,7 @@ export default function ContactForm() {
           type="email"
           required
           placeholder="tu@email.com"
-          className="w-full px-4 py-3.5 rounded-xl border border-white/15 bg-white/5 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#00E0FF] focus:border-transparent text-white placeholder-white/30 text-sm transition-all shadow-inner"
+          className="w-full px-4 py-3.5 rounded-xl border border-white/15 bg-white/5 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-cian focus:border-transparent text-white placeholder-white/30 text-sm transition-all shadow-inner"
         />
       </div>
 
@@ -69,7 +69,7 @@ export default function ContactForm() {
           name="business"
           type="text"
           placeholder="Gimnasio, clínica, autoescuela…"
-          className="w-full px-4 py-3.5 rounded-xl border border-white/15 bg-white/5 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#00E0FF] focus:border-transparent text-white placeholder-white/30 text-sm transition-all shadow-inner"
+          className="w-full px-4 py-3.5 rounded-xl border border-white/15 bg-white/5 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-cian focus:border-transparent text-white placeholder-white/30 text-sm transition-all shadow-inner"
         />
       </div>
 
@@ -82,31 +82,31 @@ export default function ContactForm() {
           name="message"
           rows={3}
           placeholder="Cuéntanos sobre tu negocio o qué te gustaría automatizar"
-          className="w-full px-4 py-3.5 rounded-xl border border-white/15 bg-white/5 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#00E0FF] focus:border-transparent text-white placeholder-white/30 text-sm resize-none transition-all shadow-inner"
+          className="w-full px-4 py-3.5 rounded-xl border border-white/15 bg-white/5 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-cian focus:border-transparent text-white placeholder-white/30 text-sm resize-none transition-all shadow-inner"
         />
       </div>
 
       <button
         type="submit"
         disabled={status === 'sending'}
-        className="w-full bg-gradient-to-r from-[#00E0FF] to-[#00B8FF] hover:from-white hover:to-white text-[#001A3F] disabled:opacity-60 font-bold py-4 rounded-xl transition-all duration-300 text-sm shadow-[0_0_25px_rgba(0,224,255,0.3)] hover:shadow-[0_0_35px_rgba(255,255,255,0.6)] hover:scale-[1.02] cursor-pointer"
+        className="w-full bg-terracota hover:bg-terracota-dark text-navy disabled:opacity-60 font-bold py-4 rounded-xl transition-all duration-300 text-sm shadow-[0_0_25px_rgba(20,205,236,0.3)] hover:shadow-[0_0_35px_rgba(255,255,255,0.6)] hover:scale-[1.02] cursor-pointer"
       >
         {status === 'sending' ? 'Enviando…' : 'Empezar ahora →'}
       </button>
 
       {status === 'success' && (
-        <p className="text-center text-sm text-[#00E0FF] font-semibold bg-[#00E0FF]/10 p-3.5 rounded-xl border border-[#00E0FF]/30">
+        <p className="text-center text-sm text-cian font-semibold bg-cian/10 p-3.5 rounded-xl border border-cian/30">
           ¡Mensaje recibido! Te contactamos en menos de 24h.
         </p>
       )}
       {status === 'error' && (
-        <p className="text-center text-sm text-red-400 bg-red-500/10 p-3.5 rounded-xl border border-red-500/30 leading-relaxed">
+        <p className="text-center text-sm text-cian bg-cian/10 p-3.5 rounded-xl border border-cian/30 leading-relaxed">
           Algo fue mal. Escríbenos directamente a{' '}
           <a href="mailto:dalsat.soluciones@gmail.com" className="underline font-medium hover:text-white transition-colors">
             dalsat.soluciones@gmail.com
           </a>
           {' '}o por WhatsApp{' '}
-          <a href="https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20me%20interesa%20lo%20que%20hac%C3%A9is%20y%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer" className="underline font-bold text-white hover:text-[#00E0FF] transition-colors">
+          <a href="https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20me%20interesa%20lo%20que%20hac%C3%A9is%20y%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer" className="underline font-bold text-white hover:text-cian transition-colors">
             haciendo clic aquí
           </a>
         </p>

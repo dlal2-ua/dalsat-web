@@ -8,25 +8,25 @@ const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=34646005171&text=Hola,
 ---
 
 <Layout
-  title="Contacto — Dalsat"
-  description="Ponte en contacto con Dalsat. Hablemos de cómo automatizar la atención al cliente de tu negocio."
+  title="Contacto | DALSAT"
+  description="Cuéntanos cómo trabaja tu pyme hoy y te decimos qué se puede automatizar. Alicante y Murcia."
 >
   <Header client:load currentPath="/contacto" />
 
   <main class="pt-16">
-    <section id="contacto" class="relative min-h-[calc(100vh-64px)] flex items-center bg-gradient-to-b from-[#000A18] via-[#00122E] to-[#000814] py-16 sm:py-24 border-t border-white/10 overflow-hidden">
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#00E0FF]/15 rounded-full blur-[140px] pointer-events-none" aria-hidden="true"></div>
+    <section id="contacto" class="relative min-h-[calc(100vh-64px)] flex items-center bg-gradient-to-b from-navy-950 via-navy-800 to-navy-900 py-16 sm:py-24 border-t border-white/10 overflow-hidden">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cian/15 rounded-full blur-[140px] pointer-events-none" aria-hidden="true"></div>
       
       <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         <div class="text-center mb-10 sm:mb-14">
-          <span class="text-xs font-extrabold uppercase tracking-widest text-[#00E0FF] border border-[#00E0FF]/30 bg-[#00E0FF]/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md shadow-[0_0_15px_rgba(0,224,255,0.2)] mb-3">
-            Contacto Directo
+          <span class="text-xs font-extrabold uppercase tracking-widest text-cian border border-cian/30 bg-cian/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md shadow-[0_0_15px_rgba(20,205,236,0.2)] mb-3">
+            Contacto
           </span>
           <h1 class="text-4xl sm:text-6xl font-extrabold text-white mb-3 tracking-tight">
-            Hablemos de Tu Negocio
+            Cuéntanos cómo trabajas hoy
           </h1>
           <p class="text-white/70 text-base sm:text-lg max-w-xl mx-auto">
-            Rellena el formulario o háblanos por WhatsApp para recibir una respuesta inmediata.
+            Te decimos qué se puede automatizar, qué no merece la pena y cuánto tiempo te ahorra. Trabajamos con pymes de Alicante y Murcia.
           </p>
         </div>
 
@@ -38,9 +38,11 @@ const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=34646005171&text=Hola,
 
           {/* WhatsApp Directo e Info */}
           <div class="lg:col-span-5 space-y-6">
-            <div class="bg-gradient-to-br from-[#00261C] to-[#000E14] border border-[#25D366]/40 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-4">
-              <div class="w-12 h-12 rounded-2xl bg-[#25D366]/20 border border-[#25D366]/40 flex items-center justify-center text-2xl text-[#25D366]">
-                💬
+            <div class="bg-gradient-to-br from-navy-800 to-navy-950 border border-cian/40 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-4">
+              <div class="w-12 h-12 rounded-2xl bg-cian/20 border border-cian/40 flex items-center justify-center text-cian">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+                </svg>
               </div>
               <h2 class="text-xl font-bold text-white">
                 ¿Prefieres hablar por WhatsApp?
@@ -52,18 +54,18 @@ const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=34646005171&text=Hola,
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="w-full py-4 rounded-2xl bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#20bd5a] hover:to-[#0f7a6e] text-white font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(37,211,102,0.4)] hover:scale-[1.02] block cursor-pointer flex items-center justify-center gap-2"
+                class="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-white font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] block cursor-pointer flex items-center justify-center gap-2"
               >
-                Abrir WhatsApp de Dalsat →
+                Escríbenos por WhatsApp →
               </a>
             </div>
 
             <div class="bg-white/[0.03] border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-3">
-              <h3 class="text-sm font-bold text-white uppercase tracking-wider text-[#00E0FF]">
-                Soporte y Asistencia
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider text-cian">
+                ¿Ya eres cliente?
               </h3>
               <p class="text-white/60 text-xs leading-relaxed">
-                Para clientes existentes con dudas de configuración o soporte de agentes activos, nuestro equipo técnico supervisa el sistema 24/7.
+                Si ya tienes algo montado con nosotros y necesitas cambiar algo o tienes una duda, escríbenos por el mismo WhatsApp. Te contesta quien lo montó.
               </p>
             </div>
           </div>

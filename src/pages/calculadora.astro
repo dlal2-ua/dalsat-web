@@ -6,46 +6,46 @@ import Footer from '../components/Footer';
 ---
 
 <Layout
-  title="Calculadora de Ahorro y ROI — Dalsat"
-  description="Calcula cuánto tiempo y dinero ahorrará tu empresa al automatizar la atención al cliente con agentes de IA."
+  title="Calculadora de ahorro | DALSAT"
+  description="Calcula cuántas horas al mes recupera tu pyme al automatizar lo que hoy hacéis a mano."
 >
   <Header client:load currentPath="/calculadora" />
 
   <main class="pt-16">
     {/* Banner de Calculadora */}
-    <section class="relative py-16 sm:py-24 bg-gradient-to-b from-[#001026] via-[#000A18] to-[#000814] overflow-hidden">
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-purple-500/15 rounded-full blur-[160px] pointer-events-none"></div>
+    <section class="relative py-16 sm:py-24 bg-gradient-to-b from-navy-800 via-navy-950 to-navy-900 overflow-hidden">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cian/15 rounded-full blur-[160px] pointer-events-none"></div>
 
       <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 text-center">
-        <span class="text-xs font-extrabold uppercase tracking-widest text-[#7C6BD6] border border-[#7C6BD6]/30 bg-[#7C6BD6]/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md shadow-[0_0_15px_rgba(124,107,214,0.2)] mb-4">
-          Retorno de Inversión
+        <span class="text-xs font-extrabold uppercase tracking-widest text-cian-dark border border-cian-dark/30 bg-cian-dark/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md shadow-[0_0_15px_rgba(15,168,196,0.2)] mb-4">
+          Cuentas claras
         </span>
         <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight mb-4">
-          Calcula tu Ahorro Mensual
+          ¿Cuánto te cuesta hacerlo a mano?
         </h1>
         <p class="text-white/70 text-base sm:text-xl font-light max-w-3xl mx-auto">
-          Mueve los controles para estimar las horas libres que ganará tu equipo y el coste económico optimizado.
+          Mueve los controles y sal con una cifra: las horas que recupera tu equipo al mes y lo que eso vale.
         </p>
       </div>
     </section>
 
-    {/* Calculadora de ROI */}
+    {/* Calculadora de ahorro */}
     <RoiCalculator client:load />
 
     {/* CTA de Contacto */}
-    <section class="py-20 bg-[#000814] border-t border-white/10 text-center">
+    <section class="py-20 bg-navy-900 border-t border-white/10 text-center">
       <div class="max-w-4xl mx-auto px-4 sm:px-6">
         <h2 class="text-3xl sm:text-5xl font-extrabold text-white mb-4">
-          Empieza a ahorrar tiempo desde esta misma semana
+          ¿Te cuadran los números?
         </h2>
         <p class="text-white/70 text-base sm:text-lg mb-8">
-          Te entregamos un análisis de ROI detallado para la estructura de tu empresa.
+          Miramos tu caso concreto y te decimos qué se puede automatizar y qué no merece la pena.
         </p>
         <a
           href="/contacto"
-          class="inline-flex bg-gradient-to-r from-[#00E0FF] to-[#7C6BD6] hover:brightness-110 text-[#001A3F] font-extrabold text-base px-8 py-4 rounded-2xl transition-all shadow-[0_0_30px_rgba(0,224,255,0.4)] hover:scale-105"
+          class="inline-flex bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-base px-8 py-4 rounded-2xl transition-all shadow-[0_0_30px_rgba(20,205,236,0.4)] hover:scale-105"
         >
-          Hablar con un consultor de IA →
+          Habla con nosotros →
         </a>
       </div>
     </section>

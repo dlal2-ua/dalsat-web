@@ -124,20 +124,20 @@ export default function AudioDemos() {
   }, []);
 
   return (
-    <section id="demos-voz" className="relative py-20 sm:py-28 bg-[#00050E] border-t border-white/10 overflow-hidden">
+    <section id="demos-voz" className="relative py-20 sm:py-28 bg-navy-950 border-t border-white/10 overflow-hidden">
       {/* Resplandor ambiental de fondo */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-gradient-to-tr from-[#00E0FF]/10 via-[#7C6BD6]/10 to-transparent rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-gradient-to-tr from-cian/10 via-cian-dark/10 to-transparent rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-6xl lg:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         
         {/* Cabecera */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00E0FF]/10 border border-[#00E0FF]/30 backdrop-blur-xl shadow-[0_0_20px_rgba(0,224,255,0.2)] mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cian/10 border border-cian/30 backdrop-blur-xl shadow-[0_0_20px_rgba(20,205,236,0.2)] mb-4">
             <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00E0FF] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00E0FF]"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cian opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cian"></span>
             </span>
-            <span className="text-xs font-extrabold tracking-widest uppercase text-[#00E0FF]">
+            <span className="text-xs font-extrabold tracking-widest uppercase text-cian">
               Demo de Voz IA Real
             </span>
           </div>
@@ -165,14 +165,14 @@ export default function AudioDemos() {
                   onClick={() => togglePlay(track.id)}
                   className={`w-full text-left p-4 sm:p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-4 cursor-pointer backdrop-blur-xl ${
                     isSelected
-                      ? 'bg-gradient-to-r from-white/[0.12] to-white/[0.04] border-[#00E0FF] shadow-[0_0_30px_rgba(0,224,255,0.25)] scale-[1.02]'
+                      ? 'bg-gradient-to-r from-white/[0.12] to-white/[0.04] border-cian shadow-[0_0_30px_rgba(20,205,236,0.25)] scale-[1.02]'
                       : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.07] hover:border-white/20'
                   }`}
                 >
                   <div className="flex items-center gap-3.5">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
                       isThisPlaying
-                        ? 'bg-[#00E0FF] text-[#001026] shadow-[0_0_20px_rgba(0,224,255,0.6)]'
+                        ? 'bg-cian text-navy-800 shadow-[0_0_20px_rgba(20,205,236,0.6)]'
                         : 'bg-white/10 text-white group-hover:bg-white/20'
                     }`}>
                       {isThisPlaying ? (
@@ -187,7 +187,7 @@ export default function AudioDemos() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-white/10 text-[#00E0FF] border border-white/10">
+                        <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-white/10 text-cian border border-white/10">
                           {track.category}
                         </span>
                         <span className="text-[11px] font-mono text-white/50">{track.duration}</span>
@@ -201,10 +201,10 @@ export default function AudioDemos() {
                   {/* Icono de Ecualizador Animado si se está reproduciendo */}
                   {isThisPlaying && (
                     <div className="flex items-end gap-1 h-5 pr-2">
-                      <span className="w-1 bg-[#00E0FF] rounded-full animate-[bounce_0.6s_infinite_0.1s] h-3" />
-                      <span className="w-1 bg-[#00E0FF] rounded-full animate-[bounce_0.6s_infinite_0.3s] h-5" />
-                      <span className="w-1 bg-[#00E0FF] rounded-full animate-[bounce_0.6s_infinite_0.2s] h-4" />
-                      <span className="w-1 bg-[#00E0FF] rounded-full animate-[bounce_0.6s_infinite_0.4s] h-2" />
+                      <span className="w-1 bg-cian rounded-full animate-[bounce_0.6s_infinite_0.1s] h-3" />
+                      <span className="w-1 bg-cian rounded-full animate-[bounce_0.6s_infinite_0.3s] h-5" />
+                      <span className="w-1 bg-cian rounded-full animate-[bounce_0.6s_infinite_0.2s] h-4" />
+                      <span className="w-1 bg-cian rounded-full animate-[bounce_0.6s_infinite_0.4s] h-2" />
                     </div>
                   )}
                 </button>
@@ -213,11 +213,11 @@ export default function AudioDemos() {
           </div>
 
           {/* Tarjeta de Reproducción Visual Destacada */}
-          <div ref={playerRef} className="md:col-span-6 bg-gradient-to-b from-white/[0.1] to-white/[0.02] border border-[#00E0FF]/40 rounded-3xl p-6 sm:p-8 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] flex flex-col justify-between min-h-[320px]">
+          <div ref={playerRef} className="md:col-span-6 bg-gradient-to-b from-white/[0.1] to-white/[0.02] border border-cian/40 rounded-3xl p-6 sm:p-8 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] flex flex-col justify-between min-h-[320px]">
             <div>
-              <div className="flex items-center justify-between text-xs font-mono text-[#00E0FF] mb-4 pb-3 border-b border-white/10">
+              <div className="flex items-center justify-between text-xs font-mono text-cian mb-4 pb-3 border-b border-white/10">
                 <span className="flex items-center gap-2 font-bold">
-                  <span className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-[#00E0FF] animate-ping' : 'bg-white/40'}`} />
+                  <span className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-cian animate-ping' : 'bg-white/40'}`} />
                   REPRODUCTOR DE VOZ IA
                 </span>
                 
@@ -230,7 +230,7 @@ export default function AudioDemos() {
                       onClick={() => changeSpeed(s)}
                       className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold transition-all cursor-pointer ${
                         playbackSpeed === s
-                          ? 'bg-[#00E0FF] text-[#001026] shadow-sm'
+                          ? 'bg-cian text-navy-800 shadow-sm'
                           : 'text-white/60 hover:text-white'
                       }`}
                     >
@@ -249,9 +249,9 @@ export default function AudioDemos() {
 
               {/* Globo Transcripción de Voz */}
               <div className="bg-black/40 border border-white/15 rounded-2xl p-4 mb-6 shadow-inner">
-                <div className="text-[10px] font-mono text-[#00E0FF] uppercase mb-1 flex items-center justify-between">
+                <div className="text-[10px] font-mono text-cian uppercase mb-1 flex items-center justify-between">
                   <span>TRANSCRIPCIÓN EN TIEMPO REAL</span>
-                  {isPlaying && <span className="animate-pulse text-emerald-400">🔊 Reproduciendo ({playbackSpeed}x)...</span>}
+                  {isPlaying && <span className="animate-pulse text-cian"> Reproduciendo ({playbackSpeed}x)...</span>}
                 </div>
                 <p className="text-xs sm:text-sm text-white/90 italic font-medium leading-relaxed">
                   "{current.transcript}"
@@ -265,7 +265,7 @@ export default function AudioDemos() {
               <div className="space-y-1.5">
                 <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-[#00E0FF] to-[#7C6BD6] transition-all duration-100 shadow-[0_0_10px_#00E0FF]"
+                    className="h-full bg-gradient-to-r from-cian to-cian-dark transition-all duration-100 shadow-[0_0_10px_#14CDEC]"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -274,7 +274,7 @@ export default function AudioDemos() {
               <button
                 type="button"
                 onClick={() => togglePlay(current.id)}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#00E0FF] to-[#00B8FF] hover:from-white hover:to-white text-[#001A3F] font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(0,224,255,0.35)] hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(20,205,236,0.35)] hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2"
               >
                 {isPlaying ? (
                   <>

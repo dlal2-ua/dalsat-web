@@ -24,20 +24,20 @@ export default function BeforeAfterSlider() {
   };
 
   return (
-    <section id="comparativa" className="relative py-12 sm:py-16 bg-[#00050E] border-t border-white/10 overflow-hidden">
+    <section id="comparativa" className="relative py-12 sm:py-16 bg-navy-950 border-t border-white/10 overflow-hidden">
       {/* Resplandor ambiental de fondo */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-red-500/10 via-[#00E0FF]/15 to-transparent rounded-full blur-[170px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-cian/10 via-cian/15 to-transparent rounded-full blur-[170px] pointer-events-none" />
 
       <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         
         {/* Cabecera */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00E0FF]/10 border border-[#00E0FF]/30 backdrop-blur-xl shadow-[0_0_20px_rgba(0,224,255,0.25)] mb-3">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cian/10 border border-cian/30 backdrop-blur-xl shadow-[0_0_20px_rgba(20,205,236,0.25)] mb-3">
             <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00E0FF] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00E0FF]"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cian opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cian"></span>
             </span>
-            <span className="text-xs font-extrabold tracking-widest uppercase text-[#00E0FF]">
+            <span className="text-xs font-extrabold tracking-widest uppercase text-cian">
               Transformación Digital
             </span>
           </div>
@@ -62,15 +62,15 @@ export default function BeforeAfterSlider() {
               onTouchMove={handleTouchMove}
             >
               
-              {/* 1. LADO DERECHO (DESPUÉS: CON DALSAT) — Base de fondo */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#001D1A] via-[#000E14] to-[#000814] p-4 sm:p-6 flex flex-col justify-between">
+              {/* 1. LADO DERECHO (DESPUÉS: CON DALSAT), Base de fondo */}
+              <div className="absolute inset-0 bg-gradient-to-br from-navy-800 via-navy-950 to-navy-900 p-4 sm:p-6 flex flex-col justify-between">
                 
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/40 text-[11px] font-extrabold uppercase tracking-wider">
-                      ⚡ Con Dalsat IA (Automatizado 24/7)
+                    <span className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-whatsapp-green/20 text-whatsapp-green border border-whatsapp-green/40 text-[11px] font-extrabold uppercase tracking-wider">
+                       Con Dalsat IA (Automatizado 24/7)
                     </span>
-                    <span className="text-[11px] font-mono text-emerald-400 font-bold hidden sm:inline">
+                    <span className="text-[11px] font-mono text-cian font-bold hidden sm:inline">
                       100% Clientes Atendidos
                     </span>
                   </div>
@@ -78,9 +78,9 @@ export default function BeforeAfterSlider() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     
                     {/* Tarjeta 1 */}
-                    <div className="bg-[#002620]/80 border border-[#25D366]/40 rounded-xl p-3 shadow backdrop-blur-md">
-                      <div className="flex items-center justify-between text-[11px] text-[#25D366] font-mono font-bold mb-0.5">
-                        <span>⚡ WhatsApp Inmediato</span>
+                    <div className="bg-navy-800/80 border border-whatsapp-green/40 rounded-xl p-3 shadow backdrop-blur-md">
+                      <div className="flex items-center justify-between text-[11px] text-whatsapp-green font-mono font-bold mb-0.5">
+                        <span> WhatsApp Inmediato</span>
                         <span>2 seg</span>
                       </div>
                       <p className="text-xs text-white/90 font-medium leading-tight">
@@ -89,9 +89,9 @@ export default function BeforeAfterSlider() {
                     </div>
 
                     {/* Tarjeta 2 */}
-                    <div className="bg-[#002620]/80 border border-[#00E0FF]/40 rounded-xl p-3 shadow backdrop-blur-md">
-                      <div className="flex items-center justify-between text-[11px] text-[#00E0FF] font-mono font-bold mb-0.5">
-                        <span>📞 Llamadas 24/7</span>
+                    <div className="bg-navy-800/80 border border-cian/40 rounded-xl p-3 shadow backdrop-blur-md">
+                      <div className="flex items-center justify-between text-[11px] text-cian font-mono font-bold mb-0.5">
+                        <span> Llamadas 24/7</span>
                         <span>En vivo</span>
                       </div>
                       <p className="text-xs text-white/90 font-medium leading-tight">
@@ -100,9 +100,9 @@ export default function BeforeAfterSlider() {
                     </div>
 
                     {/* Tarjeta 3 */}
-                    <div className="bg-[#002620]/80 border border-purple-500/40 rounded-xl p-3 shadow backdrop-blur-md">
-                      <div className="flex items-center justify-between text-[11px] text-purple-300 font-mono font-bold mb-0.5">
-                        <span>📅 Recordatorios</span>
+                    <div className="bg-navy-800/80 border border-cian/40 rounded-xl p-3 shadow backdrop-blur-md">
+                      <div className="flex items-center justify-between text-[11px] text-cian-light font-mono font-bold mb-0.5">
+                        <span> Recordatorios</span>
                         <span>Auto</span>
                       </div>
                       <p className="text-xs text-white/90 font-medium leading-tight">
@@ -114,34 +114,34 @@ export default function BeforeAfterSlider() {
                 </div>
 
                 {/* Pie con indicador de paz mental */}
-                <div className="p-2.5 rounded-xl bg-black/40 border border-[#25D366]/30 flex items-center justify-between text-[11px] text-white/80 font-medium mt-2">
+                <div className="p-2.5 rounded-xl bg-black/40 border border-whatsapp-green/30 flex items-center justify-between text-[11px] text-white/80 font-medium mt-2">
                   <span className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#25D366] animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-whatsapp-green animate-pulse" />
                     Tu equipo trabaja tranquilo sin interrupciones ni estrés constante.
                   </span>
-                  <span className="font-mono text-[#25D366] font-bold">Agenda Llena 🚀</span>
+                  <span className="font-mono text-whatsapp-green font-bold">Agenda Llena </span>
                 </div>
 
               </div>
 
-              {/* 2. LADO IZQUIERDO (ANTES: SIN DALSAT) — Capa superpuesta recortada por clipPath sin deformar el texto */}
+              {/* 2. LADO IZQUIERDO (ANTES: SIN DALSAT), Capa superpuesta recortada por clipPath sin deformar el texto */}
               <div
-                className="absolute inset-0 bg-gradient-to-br from-[#1C0505] via-[#120303] to-[#0A0202] p-4 sm:p-6 flex flex-col justify-between overflow-hidden pointer-events-none"
+                className="absolute inset-0 bg-gradient-to-br from-navy-950 via-navy-950 to-navy-950 p-4 sm:p-6 flex flex-col justify-between overflow-hidden pointer-events-none"
                 style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
               >
                 <div className="w-full">
                   
                   <div className="flex items-center justify-between mb-3">
-                    <span className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-400 border border-red-500/40 text-[11px] font-extrabold uppercase tracking-wider">
-                      🔴 Sin IA (Caos Manual)
+                    <span className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-cian/20 text-cian border border-cian/40 text-[11px] font-extrabold uppercase tracking-wider">
+                       Sin IA (Caos Manual)
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     
                     {/* Tarjeta Caos 1 */}
-                    <div className="bg-[#2B0B0B]/80 border border-red-500/40 rounded-xl p-3 shadow backdrop-blur-md">
-                      <div className="flex items-center justify-between text-[11px] text-red-400 font-mono font-bold mb-0.5">
+                    <div className="bg-navy-950/80 border border-cian/40 rounded-xl p-3 shadow backdrop-blur-md">
+                      <div className="flex items-center justify-between text-[11px] text-cian font-mono font-bold mb-0.5">
                         <span>⏳ Sin responder</span>
                         <span>Hace 4h</span>
                       </div>
@@ -151,9 +151,9 @@ export default function BeforeAfterSlider() {
                     </div>
 
                     {/* Tarjeta Caos 2 */}
-                    <div className="bg-[#2B0B0B]/80 border border-amber-500/40 rounded-xl p-3 shadow backdrop-blur-md">
-                      <div className="flex items-center justify-between text-[11px] text-amber-400 font-mono font-bold mb-0.5">
-                        <span>📵 Llamada Perdida</span>
+                    <div className="bg-navy-950/80 border border-cian/40 rounded-xl p-3 shadow backdrop-blur-md">
+                      <div className="flex items-center justify-between text-[11px] text-cian font-mono font-bold mb-0.5">
+                        <span> Llamada Perdida</span>
                         <span>22:15h</span>
                       </div>
                       <p className="text-xs text-white/80 font-medium leading-tight">
@@ -162,9 +162,9 @@ export default function BeforeAfterSlider() {
                     </div>
 
                     {/* Tarjeta Caos 3 */}
-                    <div className="bg-[#2B0B0B]/80 border border-orange-500/40 rounded-xl p-3 shadow backdrop-blur-md">
-                      <div className="flex items-center justify-between text-[11px] text-orange-400 font-mono font-bold mb-0.5">
-                        <span>🚨 Plantón en Cita</span>
+                    <div className="bg-navy-950/80 border border-cian/40 rounded-xl p-3 shadow backdrop-blur-md">
+                      <div className="flex items-center justify-between text-[11px] text-cian font-mono font-bold mb-0.5">
+                        <span> Plantón en Cita</span>
                         <span>11:00h</span>
                       </div>
                       <p className="text-xs text-white/80 font-medium leading-tight">
@@ -176,22 +176,22 @@ export default function BeforeAfterSlider() {
                 </div>
 
                 {/* Pie con indicador de estrés */}
-                <div className="p-2.5 rounded-xl bg-black/40 border border-red-500/30 flex items-center justify-between text-[11px] text-white/80 font-medium w-full mt-2">
+                <div className="p-2.5 rounded-xl bg-black/40 border border-cian/30 flex items-center justify-between text-[11px] text-white/80 font-medium w-full mt-2">
                   <span className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                    <span className="w-2 h-2 rounded-full bg-cian animate-ping" />
                     Interrupciones constantes al trabajar y horas perdidas respondiendo.
                   </span>
-                  <span className="font-mono text-red-400 font-bold pr-4">Estrés Diario ⚠️</span>
+                  <span className="font-mono text-cian font-bold pr-4">Estrés Diario </span>
                 </div>
 
               </div>
 
               {/* BARRA DESLIZABLE INTERACTIVA (divisor vertical) */}
               <div
-                className="absolute top-0 bottom-0 w-1 bg-[#00E0FF] shadow-[0_0_20px_#00E0FF] pointer-events-none"
+                className="absolute top-0 bottom-0 w-1 bg-cian shadow-[0_0_20px_#14CDEC] pointer-events-none"
                 style={{ left: `${sliderPos}%` }}
               >
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#001026] border-2 border-[#00E0FF] text-[#00E0FF] flex items-center justify-center shadow-[0_0_25px_rgba(0,224,255,0.8)] font-bold text-[10px]">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-navy-800 border-2 border-cian text-cian flex items-center justify-center shadow-[0_0_25px_rgba(20,205,236,0.8)] font-bold text-[10px]">
                   ↔
                 </div>
               </div>

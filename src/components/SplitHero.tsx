@@ -8,28 +8,28 @@ interface ChatMessage {
 
 // 4 pares pregunta-respuesta: cada tramo de scroll revela un par completo
 const MESSAGES: ChatMessage[] = [
-  { from: 'client', text: '¿Qué hace Dalsat?', time: '14:46' },
+  { from: 'client', text: '¿Qué hace DALSAT?', time: '14:46' },
   {
     from: 'bot',
-    text: 'IA para tu negocio. WhatsApp 24/7 y citas automáticas. ⚡',
+    text: 'Programas a medida, agentes de IA, automatización de procesos, SEO y webs. Todo para pymes.',
     time: '14:46',
   },
-  { from: 'client', text: '¿Tarda mucho en activarse?', time: '14:47' },
+  { from: 'client', text: '¿Y a mí de qué me sirve?', time: '14:47' },
   {
     from: 'bot',
-    text: 'Listo en días, 100% a medida. 🚀',
+    text: 'Para dejar de hacer a mano lo que se repite cada semana.',
     time: '14:47',
   },
-  { from: 'client', text: '¿Sirve para mi empresa?', time: '14:48' },
+  { from: 'client', text: '¿Por dónde se empieza?', time: '14:48' },
   {
     from: 'bot',
-    text: 'Sí. Ahorra horas en llamadas y atiende clientes al instante. ✅',
+    text: 'Miramos cómo trabajas hoy y lo dibujamos paso a paso. Ahí se ve qué sobra.',
     time: '14:48',
   },
-  { from: 'client', text: '¿Y si necesitan un humano?', time: '14:49' },
+  { from: 'client', text: '¿Trabajáis en mi zona?', time: '14:49' },
   {
     from: 'bot',
-    text: 'La IA te avisa y te pasa el chat al segundo. 🎯',
+    text: 'Sí, con pymes de Alicante y Murcia. Te lo contamos sin compromiso.',
     time: '14:49',
   },
 ];
@@ -53,7 +53,7 @@ function generateStars(count: number): string {
     const opacity = (0.15 + Math.random() * 0.25).toFixed(2);
     const isCyan = Math.random() < 0.3;
     const spread = Math.random() < 0.18 ? '1.5px' : '0.5px';
-    const color = isCyan ? `rgba(0,224,255,${opacity})` : `rgba(255,255,255,${opacity})`;
+    const color = isCyan ? `rgba(20,205,236,${opacity})` : `rgba(255,255,255,${opacity})`;
     shadows.push(`${x}vw ${y}vh 0 ${spread} ${color}`);
   }
   return shadows.join(', ');
@@ -231,7 +231,7 @@ export default function SplitHero() {
     <section
       ref={sectionRef}
       id="hero"
-      className="relative bg-[#001A3F]"
+      className="relative bg-navy"
       style={{ height: reducedMotion ? 'auto' : '450vh' }}
     >
       <style>{`
@@ -314,7 +314,7 @@ export default function SplitHero() {
           aria-hidden="true"
           style={{
             background:
-              'radial-gradient(ellipse 60% 45% at 22% 28%, rgba(0,224,255,0.07), transparent 70%), radial-gradient(ellipse 55% 40% at 78% 70%, rgba(0,224,255,0.05), transparent 70%), radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,26,63,0.8), transparent 100%)',
+              'radial-gradient(ellipse 60% 45% at 22% 28%, rgba(20,205,236,0.07), transparent 70%), radial-gradient(ellipse 55% 40% at 78% 70%, rgba(20,205,236,0.05), transparent 70%), radial-gradient(ellipse 80% 60% at 50% 50%, rgba(7,40,71,0.8), transparent 100%)',
           }}
         />
 
@@ -341,9 +341,9 @@ export default function SplitHero() {
                 style={{
                   width: star.size,
                   height: star.size,
-                  background: star.cyan ? 'rgba(0,224,255,0.9)' : 'rgba(255,255,255,0.9)',
+                  background: star.cyan ? 'rgba(20,205,236,0.9)' : 'rgba(255,255,255,0.9)',
                   boxShadow: star.cyan
-                    ? '0 0 6px 1px rgba(0,224,255,0.5)'
+                    ? '0 0 6px 1px rgba(20,205,236,0.5)'
                     : '0 0 6px 1px rgba(255,255,255,0.4)',
                   ['--twinkle-duration' as string]: star.duration,
                   ['--twinkle-delay' as string]: star.delay,
@@ -358,7 +358,7 @@ export default function SplitHero() {
           <h1
             aria-label="DALSAT"
             className="flex font-display font-bold leading-none tracking-[0.12em] text-white text-[clamp(3.5rem,12vw,5rem)] md:text-[clamp(5rem,15vw,11rem)]"
-            style={{ textShadow: '0 0 40px rgba(0,224,255,0.3)' }}
+            style={{ textShadow: '0 0 40px rgba(20,205,236,0.3)' }}
           >
             <span ref={dalRef} className="inline-block will-change-transform" aria-hidden="true">
               {['D', 'A', 'L'].map((letter, i) => (
@@ -378,7 +378,7 @@ export default function SplitHero() {
 
           <div ref={introRef} className="flex flex-col items-center">
             <p className="hero-subtitle mt-6 max-w-md text-[clamp(1rem,2.5vw,1.25rem)] font-normal text-white/55">
-              Automatización inteligente para tu negocio
+              Re-digitalizamos pymes de Alicante y Murcia
             </p>
           </div>
         </div>
@@ -389,9 +389,9 @@ export default function SplitHero() {
             <button
               type="button"
               onClick={scrollToChat}
-              className="hero-hint flex min-h-[44px] cursor-pointer flex-col items-center gap-2 text-white/50 transition-colors hover:text-[#00E0FF]"
+              className="hero-hint flex min-h-[44px] cursor-pointer flex-col items-center gap-2 text-white/50 transition-colors hover:text-cian"
             >
-              <span className="text-xs font-medium tracking-wide">Descubre lo que podemos hacer</span>
+              <span className="text-xs font-medium tracking-wide">Mira lo que podemos quitarte de encima</span>
               <svg className="hero-arrow h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
               </svg>
@@ -416,7 +416,7 @@ export default function SplitHero() {
             </svg>
             <span
               className="font-display text-xl font-bold tracking-[0.2em] text-white"
-              style={{ textShadow: '0 0 20px rgba(0,224,255,0.4)' }}
+              style={{ textShadow: '0 0 20px rgba(20,205,236,0.4)' }}
             >
               DALSAT
             </span>
@@ -428,7 +428,7 @@ export default function SplitHero() {
           {/* Mensajes sobre el fondo estrellado (sin barra de scroll propia) */}
           <div
             ref={chatAreaRef}
-            className="flex-1 overflow-hidden border-x border-white/10 bg-[#001A3F]/20 backdrop-blur-[2px]"
+            className="flex-1 overflow-hidden border-x border-white/10 bg-navy/20 backdrop-blur-[2px]"
           >
             <div
               ref={listRef}
@@ -460,7 +460,7 @@ export default function SplitHero() {
                     <div
                       className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-lg sm:text-[15px] ${
                         isBot
-                          ? 'rounded-br-md bg-gradient-to-r from-[#E8704F] via-[#7C6BD6] to-[#2EC4B6] text-white shadow-[#7C6BD6]/30'
+                          ? 'rounded-br-md bg-gradient-to-r from-cian-dark via-cian-dark to-cian text-white shadow-cian-dark/30'
                           : 'rounded-bl-md bg-gray-200/95 text-gray-900 shadow-black/30'
                       }`}
                     >
@@ -470,8 +470,8 @@ export default function SplitHero() {
                   </div>
                   {isBot && (
                     <div
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#00E0FF] to-[#7C6BD6] text-[11px] font-bold text-white"
-                      style={{ boxShadow: '0 0 14px rgba(0,224,255,0.35)' }}
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-cian to-cian-dark text-[11px] font-bold text-white"
+                      style={{ boxShadow: '0 0 14px rgba(20,205,236,0.35)' }}
                     >
                       DA
                     </div>
@@ -488,20 +488,20 @@ export default function SplitHero() {
             target="_blank"
             rel="noopener noreferrer"
             title="Escríbenos por WhatsApp"
-            className="pointer-events-auto group flex items-center gap-3 rounded-b-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:border-[#00E0FF]/60 hover:bg-white/10 cursor-pointer"
+            className="pointer-events-auto group flex items-center gap-3 rounded-b-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:border-cian/60 hover:bg-white/10 cursor-pointer"
           >
-            <svg className="h-5 w-5 shrink-0 text-white/50 transition-colors group-hover:text-[#00E0FF]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
+            <svg className="h-5 w-5 shrink-0 text-white/50 transition-colors group-hover:text-cian" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
             </svg>
             <span className="flex-1 select-none text-sm text-white/50 font-medium transition-colors group-hover:text-white">Escríbenos por WhatsApp…</span>
-            <svg className="h-5 w-5 shrink-0 text-white/50 transition-colors group-hover:text-[#00E0FF]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
+            <svg className="h-5 w-5 shrink-0 text-white/50 transition-colors group-hover:text-cian" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
             </svg>
             <div
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#00E0FF] transition-transform duration-300 group-hover:scale-110"
-              style={{ boxShadow: '0 0 16px rgba(0,224,255,0.5)' }}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cian transition-transform duration-300 group-hover:scale-110"
+              style={{ boxShadow: '0 0 16px rgba(20,205,236,0.5)' }}
             >
-              <svg className="h-4 w-4 text-[#001A3F]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <svg className="h-4 w-4 text-navy" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
               </svg>
             </div>

@@ -10,21 +10,21 @@ interface PromptPreset {
 
 const PRESETS: PromptPreset[] = [
   {
-    label: '📅 Reserva de Cita',
+    label: ' Reserva de Cita',
     query: '¡Buenas! ¿Tenéis hueco libre mañana a las 16:30 para una cita?',
     intent: 'AGENDAR_CITA',
     confidence: '99.8%',
     response: '¡Hola! Sí, tenemos disponibilidad mañana a las 16:30h. ¿Te la agendamos a tu nombre?',
   },
   {
-    label: '💰 Consulta de Precios',
+    label: ' Consulta de Precios',
     query: '¿Cuánto cuesta un tratamiento completo y qué incluye el presupuesto?',
     intent: 'CONSULTA_PRECIOS',
     confidence: '98.5%',
     response: 'El presupuesto incluye valoración inicial y tratamiento completo. Te enviamos el desglose exacto en PDF.',
   },
   {
-    label: '📍 Ubicación y Horarios',
+    label: ' Ubicación y Horarios',
     query: '¿Hasta qué hora abre el local hoy y dónde puedo aparcar cerca?',
     intent: 'UBICACION_HORARIOS',
     confidence: '99.1%',
@@ -52,7 +52,7 @@ export default function AiPlayground() {
       } else {
         // Generar respuesta dinámica si el usuario escribe su propia pregunta
         setActiveOutput({
-          label: '⚡ Consulta Personalizada',
+          label: ' Consulta Personalizada',
           query: targetQuery,
           intent: 'ATENCION_CLIENTE_IA',
           confidence: '99.4%',
@@ -64,20 +64,20 @@ export default function AiPlayground() {
   };
 
   return (
-    <section id="playground" className="relative py-20 sm:py-28 bg-[#00040A] border-t border-white/10 overflow-hidden font-sans">
+    <section id="playground" className="relative py-20 sm:py-28 bg-navy-950 border-t border-white/10 overflow-hidden font-sans">
       {/* Resplandor ambiental cian/verde matriz */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[450px] bg-gradient-to-tr from-[#00E0FF]/15 via-emerald-500/10 to-transparent rounded-full blur-[180px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[450px] bg-gradient-to-tr from-cian/15 via-emerald-500/10 to-transparent rounded-full blur-[180px] pointer-events-none" />
 
       <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         
         {/* Cabecera */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00E0FF]/10 border border-[#00E0FF]/30 backdrop-blur-xl shadow-[0_0_20px_rgba(0,224,255,0.25)] mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cian/10 border border-cian/30 backdrop-blur-xl shadow-[0_0_20px_rgba(20,205,236,0.25)] mb-4">
             <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00E0FF] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00E0FF]"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cian opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cian"></span>
             </span>
-            <span className="text-xs font-extrabold tracking-widest uppercase text-[#00E0FF]">
+            <span className="text-xs font-extrabold tracking-widest uppercase text-cian">
               Sandbox Interactivo de IA
             </span>
           </div>
@@ -91,19 +91,19 @@ export default function AiPlayground() {
         </div>
 
         {/* Consola Terminal Hacker / Cyberpunk */}
-        <div className="bg-[#000D1A]/90 border border-[#00E0FF]/40 rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.9)] backdrop-blur-2xl">
+        <div className="bg-navy-950/90 border border-cian/40 rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.9)] backdrop-blur-2xl">
           
           {/* Barra superior de la consola */}
           <div className="bg-black/60 border-b border-white/10 px-5 py-3.5 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500/80" />
-              <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+              <div className="w-3 h-3 rounded-full bg-cian/80" />
+              <div className="w-3 h-3 rounded-full bg-cian/80" />
               <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
               <span className="text-xs font-mono text-white/50 ml-3 hidden sm:inline">
                 dalsat-ai-terminal ~/sandbox (v4.2-neural-engine)
               </span>
             </div>
-            <div className="flex items-center gap-3 text-[11px] font-mono text-[#00E0FF]">
+            <div className="flex items-center gap-3 text-[11px] font-mono text-cian">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               STATUS: 200 OK
             </div>
@@ -126,7 +126,7 @@ export default function AiPlayground() {
                       setInputQuery(preset.query);
                       handleRun(preset);
                     }}
-                    className="px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/15 hover:border-[#00E0FF] text-white/80 hover:text-white text-xs font-medium transition-all duration-200 cursor-pointer flex items-center gap-2"
+                    className="px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/15 hover:border-cian text-white/80 hover:text-white text-xs font-medium transition-all duration-200 cursor-pointer flex items-center gap-2"
                   >
                     <span>{preset.label}</span>
                   </button>
@@ -143,7 +143,7 @@ export default function AiPlayground() {
               className="relative flex flex-col sm:flex-row gap-3"
             >
               <div className="relative flex-grow">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#00E0FF] font-mono font-bold text-sm">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-cian font-mono font-bold text-sm">
                   &gt;
                 </span>
                 <input
@@ -151,23 +151,23 @@ export default function AiPlayground() {
                   value={inputQuery}
                   onChange={(e) => setInputQuery(e.target.value)}
                   placeholder="Escribe aquí cualquier pregunta de tu negocio..."
-                  className="w-full bg-black/50 border border-white/20 focus:border-[#00E0FF] rounded-2xl pl-9 pr-4 py-3.5 text-xs sm:text-sm text-white font-mono placeholder-white/40 focus:outline-none transition-colors shadow-inner"
+                  className="w-full bg-black/50 border border-white/20 focus:border-cian rounded-2xl pl-9 pr-4 py-3.5 text-xs sm:text-sm text-white font-mono placeholder-white/40 focus:outline-none transition-colors shadow-inner"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isAnalyzing}
-                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#00E0FF] via-[#00B4D8] to-[#7C6BD6] hover:brightness-110 text-[#001026] font-extrabold text-xs sm:text-sm transition-all duration-200 shadow-[0_0_20px_rgba(0,224,255,0.4)] flex items-center justify-center gap-2 cursor-pointer shrink-0 disabled:opacity-50"
+                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-cian via-cian to-cian-dark hover:brightness-110 text-navy-800 font-extrabold text-xs sm:text-sm transition-all duration-200 shadow-[0_0_20px_rgba(20,205,236,0.4)] flex items-center justify-center gap-2 cursor-pointer shrink-0 disabled:opacity-50"
               >
                 {isAnalyzing ? (
                   <>
-                    <span className="w-4 h-4 border-2 border-[#001026] border-t-transparent rounded-full animate-spin" />
+                    <span className="w-4 h-4 border-2 border-navy-800 border-t-transparent rounded-full animate-spin" />
                     Procesando...
                   </>
                 ) : (
                   <>
-                    ⚡ Ejecutar IA
+                     Ejecutar IA
                   </>
                 )}
               </button>
@@ -190,24 +190,24 @@ export default function AiPlayground() {
                         <span className="text-emerald-400 font-bold">
                           [INTENT: {activeOutput.intent}]
                         </span>
-                        <span className="text-cyan-400">
+                        <span className="text-cian">
                           CONFIANZA: {activeOutput.confidence}
                         </span>
                       </div>
-                      <span className="text-amber-400">
-                        ⚡ LATENCIA: {customLatency}ms
+                      <span className="text-cian">
+                         LATENCIA: {customLatency}ms
                       </span>
                     </div>
 
                     {/* Consulta enviada */}
                     <div className="text-white/60">
-                      <span className="text-[#00E0FF] font-bold">QUERY:</span> "{activeOutput.query}"
+                      <span className="text-cian font-bold">QUERY:</span> "{activeOutput.query}"
                     </div>
 
                     {/* Respuesta del Agente Dalsat */}
-                    <div className="bg-[#001A14] border border-emerald-500/40 rounded-xl p-3.5 text-emerald-300 text-xs leading-relaxed mt-2 shadow-lg">
-                      <div className="text-cyan-400 font-bold mb-1 flex items-center gap-1.5 text-[11px]">
-                        <span>🤖 DALSAT AI RESPONDER:</span>
+                    <div className="bg-navy-950 border border-emerald-500/40 rounded-xl p-3.5 text-emerald-300 text-xs leading-relaxed mt-2 shadow-lg">
+                      <div className="text-cian font-bold mb-1 flex items-center gap-1.5 text-[11px]">
+                        <span> DALSAT AI RESPONDER:</span>
                       </div>
                       "{activeOutput.response}"
                     </div>

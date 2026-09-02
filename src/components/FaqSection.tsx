@@ -9,6 +9,42 @@ interface FaqItem {
 }
 
 const FAQS: FaqItem[] = [
+  // Categoria: Servicios
+  {
+    id: 'que-haceis',
+    category: 'Servicios',
+    badge: 'Cinco servicios',
+    question: '¿Solo hacéis agentes de IA?',
+    answer: 'No. Hacemos cinco cosas: programas a medida para tu negocio, agentes de IA que atienden por WhatsApp, Instagram o dentro de tu web, mapeo y automatización de procesos, SEO para que te encuentren en Google y desarrollo web. Los agentes son la parte más visible, pero rara vez es por donde más se gana.',
+  },
+  {
+    id: 'saas-medida',
+    category: 'Servicios',
+    badge: 'SaaS a medida',
+    question: '¿Qué es eso de un programa a medida y en qué se diferencia de uno normal?',
+    answer: 'Un programa hecho para cómo trabajas tú, en vez de uno genérico donde acabas peleándote con campos que no usas y echando de menos los que necesitas. Suele sustituir a la hoja de cálculo y a los papeles: clientes, citas, presupuestos, stock. Solo lleva lo que usáis y entra tu equipo desde el móvil.',
+  },
+  {
+    id: 'mapeo',
+    category: 'Servicios',
+    badge: 'Mapeo de procesos',
+    question: '¿Qué es mapear los procesos de mi negocio?',
+    answer: 'Sentarnos contigo y dibujar cómo funciona tu negocio de verdad, paso a paso: qué entra, quién lo toca, qué se apunta y dónde. Cuando está dibujado se ve solo lo que se repite cada semana y lo que se puede quitar de en medio. Es el punto de partida de casi todo lo demás, y a veces la conclusión es que no hace falta ninguna IA.',
+  },
+  {
+    id: 'seo-web',
+    category: 'Servicios',
+    badge: 'SEO y web',
+    question: '¿También hacéis la web y el posicionamiento en Google?',
+    answer: 'Sí. Hacemos webs rápidas y pensadas para que quien entre haga algo: pedir cita, escribirte o comprar. Y trabajamos el SEO para que tu negocio salga cuando alguien de tu zona busca lo que ofreces: ficha de Google al día, contenido útil y una web que carga rápido en el móvil.',
+  },
+  {
+    id: 'zona',
+    category: 'Servicios',
+    badge: 'Alicante y Murcia',
+    question: '¿Trabajáis en mi zona?',
+    answer: 'Trabajamos con pymes de Alicante y Murcia. Podemos vernos en persona para el mapeo inicial, que es la parte que mejor sale cara a cara, y el resto lo llevamos en remoto.',
+  },
   // Categoria: WhatsApp
   {
     id: 'numero',
@@ -146,16 +182,16 @@ export default function FaqSection() {
   };
 
   return (
-    <section id="preguntas-frecuentes" className="relative py-20 sm:py-28 bg-[#000814] border-t border-white/10 overflow-hidden">
+    <section id="preguntas-frecuentes" className="relative py-20 sm:py-28 bg-navy-900 border-t border-white/10 overflow-hidden">
       {/* Resplandor ambiental de fondo */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-to-tr from-[#00E0FF]/10 via-[#7C6BD6]/10 to-[#25D366]/5 rounded-full blur-[180px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-to-tr from-cian/10 via-cian-dark/10 to-cian/5 rounded-full blur-[180px] pointer-events-none" />
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Cabecera */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00E0FF]/10 border border-[#00E0FF]/30 backdrop-blur-xl shadow-[0_0_20px_rgba(0,224,255,0.2)] mb-4">
-            <span className="text-xs font-extrabold tracking-widest uppercase text-[#00E0FF]">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cian/10 border border-cian/30 backdrop-blur-xl shadow-[0_0_20px_rgba(20,205,236,0.2)] mb-4">
+            <span className="text-xs font-extrabold tracking-widest uppercase text-cian">
               Respuestas Claras
             </span>
           </div>
@@ -175,7 +211,7 @@ export default function FaqSection() {
                 placeholder="Buscar una duda (ej. WhatsApp, voz, contrato, RGPD...)"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-white/[0.05] border border-white/20 rounded-2xl py-3.5 pl-5 pr-12 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#00E0FF] focus:bg-white/[0.08] focus:shadow-[0_0_20px_rgba(0,224,255,0.25)] transition-all"
+                className="w-full bg-white/[0.05] border border-white/20 rounded-2xl py-3.5 pl-5 pr-12 text-sm text-white placeholder-white/40 focus:outline-none focus:border-cian focus:bg-white/[0.08] focus:shadow-[0_0_20px_rgba(20,205,236,0.25)] transition-all"
               />
               {searchTerm && (
                 <button
@@ -183,7 +219,7 @@ export default function FaqSection() {
                   onClick={() => setSearchTerm('')}
                   className="absolute right-4 text-xs font-mono bg-white/10 text-white/70 hover:text-white px-2 py-1 rounded-full cursor-pointer"
                 >
-                  ✕ Borrar
+                   Borrar
                 </button>
               )}
             </div>
@@ -206,7 +242,7 @@ export default function FaqSection() {
                 }}
                 className={`px-4 py-2.5 rounded-2xl font-bold text-xs transition-all duration-300 flex items-center gap-2 border cursor-pointer ${
                   isSelected
-                    ? 'bg-gradient-to-r from-[#00E0FF] to-[#7C6BD6] text-[#001026] border-transparent shadow-[0_0_20px_rgba(0,224,255,0.35)] scale-105 font-black'
+                    ? 'bg-gradient-to-r from-cian to-cian-dark text-navy-800 border-transparent shadow-[0_0_20px_rgba(20,205,236,0.35)] scale-105 font-black'
                     : 'bg-white/[0.03] border-white/10 text-white/70 hover:bg-white/10 hover:text-white'
                 }`}
               >
@@ -227,7 +263,7 @@ export default function FaqSection() {
             <button
               type="button"
               onClick={() => { setSearchTerm(''); setActiveCategory('WhatsApp'); }}
-              className="text-xs font-bold text-[#00E0FF] hover:underline cursor-pointer"
+              className="text-xs font-bold text-cian hover:underline cursor-pointer"
             >
               ← Ver preguntas de WhatsApp
             </button>
@@ -245,7 +281,7 @@ export default function FaqSection() {
                 key={faq.id}
                 className={`rounded-2xl border transition-all duration-300 overflow-hidden backdrop-blur-xl ${
                   isOpen
-                    ? 'bg-gradient-to-b from-white/[0.1] to-white/[0.03] border-[#00E0FF]/50 shadow-[0_0_25px_rgba(0,224,255,0.15)]'
+                    ? 'bg-gradient-to-b from-white/[0.1] to-white/[0.03] border-cian/50 shadow-[0_0_25px_rgba(20,205,236,0.15)]'
                     : 'bg-white/[0.02] border-white/10 hover:border-white/20 hover:bg-white/[0.05]'
                 }`}
               >
@@ -257,17 +293,17 @@ export default function FaqSection() {
                   aria-expanded={isOpen}
                 >
                   <div className="flex items-center gap-3.5">
-                    <span className="text-xs font-mono font-bold text-[#00E0FF] bg-[#00E0FF]/10 border border-[#00E0FF]/20 px-2.5 py-1 rounded-lg shrink-0">
+                    <span className="text-xs font-mono font-bold text-cian bg-cian/10 border border-cian/20 px-2.5 py-1 rounded-lg shrink-0">
                       0{idx + 1}
                     </span>
 
                     <div>
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#00E0FF]/15 text-[#00E0FF] border border-[#00E0FF]/30 font-mono">
+                        <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-cian/15 text-cian border border-cian/30 font-mono">
                           {faq.badge}
                         </span>
                       </div>
-                      <h3 className="text-base sm:text-lg font-bold text-white leading-snug group-hover:text-[#00E0FF] transition-colors">
+                      <h3 className="text-base sm:text-lg font-bold text-white leading-snug group-hover:text-cian transition-colors">
                         {faq.question}
                       </h3>
                     </div>
@@ -276,7 +312,7 @@ export default function FaqSection() {
                   {/* Botón de Expansión Flotante */}
                   <div className={`w-8 h-8 rounded-full border flex items-center justify-center shrink-0 transition-all duration-300 ${
                     isOpen
-                      ? 'rotate-180 bg-[#00E0FF] text-[#001026] border-transparent shadow-[0_0_15px_#00E0FF]'
+                      ? 'rotate-180 bg-cian text-navy-800 border-transparent shadow-[0_0_15px_#14CDEC]'
                       : 'bg-white/5 text-white/70 border-white/20 group-hover:border-white/40'
                   }`}>
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -299,7 +335,7 @@ export default function FaqSection() {
                           onClick={() => handleReaction(faq.id)}
                           className={`px-3 py-1 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1 border text-xs ${
                             hasReacted
-                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50'
+                              ? 'bg-cian/20 text-cian-light border-cian/50'
                               : 'bg-white/5 text-white/70 border-white/15 hover:bg-white/10 hover:text-white'
                           }`}
                         >
@@ -311,7 +347,7 @@ export default function FaqSection() {
                         href={`https://api.whatsapp.com/send?phone=34646005171&text=Hola%2C%20tengo%20una%20duda%20sobre%3A%20${encodeURIComponent(faq.question)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[11px] font-bold text-[#25D366] hover:underline flex items-center gap-1 cursor-pointer"
+                        className="text-[11px] font-bold text-cian hover:underline flex items-center gap-1 cursor-pointer"
                       >
                         Preguntar por WhatsApp →
                       </a>
@@ -330,7 +366,7 @@ export default function FaqSection() {
             <button
               type="button"
               onClick={() => setActiveCategory('Todas')}
-              className="inline-flex items-center gap-2 text-xs font-bold text-white/60 hover:text-[#00E0FF] transition-colors py-2 px-4 rounded-xl border border-white/10 hover:border-[#00E0FF]/30 cursor-pointer"
+              className="inline-flex items-center gap-2 text-xs font-bold text-white/60 hover:text-cian transition-colors py-2 px-4 rounded-xl border border-white/10 hover:border-cian/30 cursor-pointer"
             >
               <span>Ver todas las demás categorías ({FAQS.length} preguntas en total) ↓</span>
             </button>
@@ -338,9 +374,9 @@ export default function FaqSection() {
         )}
 
         {/* Tarjeta Visual de Soporte Personalizado */}
-        <div className="mt-14 bg-gradient-to-r from-[#001A3F] via-[#000814] to-[#00261C] border border-[#00E0FF]/40 rounded-3xl p-8 sm:p-10 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="mt-14 bg-gradient-to-r from-navy via-navy-900 to-navy-800 border border-cian/40 rounded-3xl p-8 sm:p-10 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="space-y-2 text-center md:text-left">
-            <span className="text-[10px] font-mono font-extrabold uppercase text-[#25D366] bg-[#25D366]/10 px-3 py-1 rounded-full border border-[#25D366]/30 inline-block">
+            <span className="text-[10px] font-mono font-extrabold uppercase text-cian bg-cian/10 px-3 py-1 rounded-full border border-cian/30 inline-block">
               Soporte Directo Dalsat
             </span>
             <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
@@ -355,7 +391,7 @@ export default function FaqSection() {
             href="https://api.whatsapp.com/send?phone=34646005171&text=Hola%2C%20quisiera%20consultar%20mi%20caso%20particular%20con%20un%20especialista%20de%20Dalsat."
             target="_blank"
             rel="noopener noreferrer"
-            className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#20bd5a] hover:to-[#0f7a6e] text-white font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(37,211,102,0.3)] hover:scale-105 shrink-0 flex items-center gap-2 cursor-pointer"
+            className="px-8 py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-white font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(217,100,44,0.3)] hover:scale-105 shrink-0 flex items-center gap-2 cursor-pointer"
           >
             <span>Consultar por WhatsApp</span>
           </a>
