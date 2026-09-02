@@ -27,7 +27,7 @@ export default function Footer() {
             </a>
 
             <p className="text-white/60 text-xs sm:text-sm leading-relaxed font-light">
-              Estudio de digitalización para pymes de Alicante y Murcia. Programas a medida, agentes de IA, automatización de procesos, SEO y desarrollo web.
+              Estudio de digitalización para pymes de toda España. Programas a medida, agentes de IA, automatización de procesos, SEO y desarrollo web.
             </p>
 
             {/* Badge de estado del servicio */}
@@ -123,7 +123,7 @@ export default function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-white/40">
           <p>© 2026 DALSAT. Todos los derechos reservados.</p>
           <div className="flex items-center gap-4">
-            <span className="text-white/60">Alicante y Murcia</span>
+            <span className="text-white/60">Toda España</span>
           </div>
         </div>
 

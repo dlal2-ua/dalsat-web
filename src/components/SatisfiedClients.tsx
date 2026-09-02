@@ -117,7 +117,7 @@ export default function SatisfiedClients() {
             Resultados reales
           </h2>
           <p className="text-white/70 text-base sm:text-lg font-light">
-            Negocios de Alicante y Murcia que ya tienen parte de su trabajo automatizado.
+            Negocios de toda España que ya tienen parte de su trabajo automatizado.
           </p>
         </div>
       </div>

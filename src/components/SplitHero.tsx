@@ -29,7 +29,7 @@ const MESSAGES: ChatMessage[] = [
   { from: 'client', text: '¿Trabajáis en mi zona?', time: '14:49' },
   {
     from: 'bot',
-    text: 'Sí, con pymes de Alicante y Murcia. Te lo contamos sin compromiso.',
+    text: 'Sí, con pymes de toda España. Te lo contamos sin compromiso.',
     time: '14:49',
   },
 ];
@@ -389,7 +389,7 @@ export default function SplitHero() {
 
           <div ref={introRef} className="flex flex-col items-center">
             <p className="hero-subtitle mt-6 max-w-md text-[clamp(1rem,2.5vw,1.25rem)] font-normal text-white/55">
-              Re-digitalizamos pymes de Alicante y Murcia
+              Re-digitalizamos pymes de toda España
             </p>
           </div>
         </div>

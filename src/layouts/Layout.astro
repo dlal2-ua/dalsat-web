@@ -8,8 +8,8 @@ interface Props {
 }
 
 const {
-  title = 'DALSAT | Re-digitalización de pymes en Alicante y Murcia',
-  description = 'SaaS a medida, agentes de IA, mapeo y automatización de procesos, SEO y desarrollo web para pymes de Alicante y Murcia. Miramos cómo funciona tu negocio y automatizamos lo que se repite.',
+  title = 'DALSAT | Re-digitalización de pymes en toda España',
+  description = 'SaaS a medida, agentes de IA, mapeo y automatización de procesos, panel de gestión, SEO y desarrollo web para pymes de toda España. Miramos cómo funciona tu negocio y automatizamos lo que se repite.',
   image = '/logo_sin_fondo.png',
 } = Astro.props;
 
@@ -22,19 +22,20 @@ const schemaData = {
   "name": "DALSAT",
   "url": SITE_URL.toString(),
   "logo": new URL('/logo_sin_fondo.png', SITE_URL).toString(),
-  "description": "Estudio de digitalización para pymes de Alicante y Murcia: SaaS a medida, agentes de IA especializados por negocio, mapeo y automatización de procesos, SEO y desarrollo web.",
+  "description": "Estudio de digitalización para pymes de toda España: SaaS a medida, agentes de IA especializados por negocio, panel de gestión, mapeo y automatización de procesos, SEO y desarrollo web.",
   "email": "dalsat.soluciones@gmail.com",
   "address": {
     "@type": "PostalAddress",
     "addressCountry": "ES"
   },
-  "areaServed": [
-    { "@type": "AdministrativeArea", "name": "Alicante" },
-    { "@type": "AdministrativeArea", "name": "Murcia" }
-  ],
+  "areaServed": {
+    "@type": "Country",
+    "name": "España"
+  },
   "knowsAbout": [
     "SaaS a medida",
     "Agentes de IA para empresas",
+    "Panel de gestión de agentes y reservas",
     "Mapeo y automatización de procesos",
     "SEO y posicionamiento en Google",
     "Desarrollo web"
@@ -53,7 +54,7 @@ const schemaData = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content="saas a medida, software a medida pymes, agentes de IA para empresas, agente IA whatsapp, agente IA instagram, automatizacion de procesos, mapeo de procesos empresariales, seo Alicante, seo Murcia, desarrollo web pymes, digitalizacion pymes Alicante, digitalizacion pymes Murcia, CRM para pymes, panel de gestion de reservas, agente de voz para empresas" />
+    <meta name="keywords" content="saas a medida, software a medida pymes, agentes de IA para empresas, agente IA whatsapp, agente IA instagram, automatizacion de procesos, mapeo de procesos empresariales, seo para pymes, posicionamiento en Google, desarrollo web pymes, digitalizacion de pymes en España, CRM para pymes, ERP para pymes, panel de gestion de reservas, agente de voz para empresas" />
     <meta name="author" content="DALSAT" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href={canonicalURL} />

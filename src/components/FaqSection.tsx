@@ -48,9 +48,9 @@ const FAQS: FaqItem[] = [
   {
     id: 'zona',
     category: 'Servicios',
-    badge: 'Alicante y Murcia',
+    badge: 'Toda España',
     question: '¿Trabajáis en mi zona?',
-    answer: 'Trabajamos con pymes de Alicante y Murcia. Podemos vernos en persona para el mapeo inicial, que es la parte que mejor sale cara a cara, y el resto lo llevamos en remoto.',
+    answer: 'Trabajamos con pymes de toda España. El mapeo inicial sale mejor cara a cara, así que si estás cerca vamos en persona, y si no lo hacemos por videollamada. El resto lo llevamos en remoto sin que se note la distancia.',
   },
   // Categoria: WhatsApp
   {
