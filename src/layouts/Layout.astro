@@ -1,19 +1,30 @@
 ---
-import Analytics from '@vercel/analytics/astro';
+import CookieBanner from '../components/CookieBanner';
+import StickyMobileCta from '../components/StickyMobileCta';
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
+  /** Paginas que no deben salir en Google: 404, gracias y similares. */
+  noindex?: boolean;
 }
 
 const {
-  title = 'DALSAT | Re-digitalización de pymes en Alicante y Murcia',
-  description = 'SaaS a medida, agentes de IA, mapeo y automatización de procesos, SEO y desarrollo web para pymes de Alicante y Murcia. Miramos cómo funciona tu negocio y automatizamos lo que se repite.',
-  image = '/logo_sin_fondo.png',
+  title = 'DALSAT | Re-digitalización de pymes en toda España',
+  description = 'SaaS a medida, agentes de IA, mapeo y automatización de procesos, panel de gestión, SEO y desarrollo web para pymes de toda España. Miramos cómo funciona tu negocio y automatizamos lo que se repite.',
+  // Tarjeta 1200x630 propia. El logo suelto se recortaba en WhatsApp.
+  image = '/og-dalsat.png',
+  noindex = false,
 } = Astro.props;
 
 const SITE_URL = Astro.site || new URL('https://dalsats.com');
+
+// En contacto y gracias la barra fija del movil sobra: ya estas donde te
+// llevaria. En el resto de paginas acompana.
+const RUTA = Astro.url.pathname.replace(/\/$/, '') || '/';
+const SIN_BARRA_MOVIL = ['/contacto', '/gracias'];
+const mostrarBarraMovil = !SIN_BARRA_MOVIL.includes(RUTA);
 const canonicalURL = new URL(Astro.url.pathname, SITE_URL);
 
 const schemaData = {
@@ -21,20 +32,21 @@ const schemaData = {
   "@type": "Organization",
   "name": "DALSAT",
   "url": SITE_URL.toString(),
-  "logo": new URL('/logo_sin_fondo.png', SITE_URL).toString(),
-  "description": "Estudio de digitalización para pymes de Alicante y Murcia: SaaS a medida, agentes de IA especializados por negocio, mapeo y automatización de procesos, SEO y desarrollo web.",
+  "logo": new URL('/logo-dalsat.png', SITE_URL).toString(),
+  "description": "Estudio de digitalización para pymes de toda España: SaaS a medida, agentes de IA especializados por negocio, panel de gestión, mapeo y automatización de procesos, SEO y desarrollo web.",
   "email": "dalsat.soluciones@gmail.com",
   "address": {
     "@type": "PostalAddress",
     "addressCountry": "ES"
   },
-  "areaServed": [
-    { "@type": "AdministrativeArea", "name": "Alicante" },
-    { "@type": "AdministrativeArea", "name": "Murcia" }
-  ],
+  "areaServed": {
+    "@type": "Country",
+    "name": "España"
+  },
   "knowsAbout": [
     "SaaS a medida",
     "Agentes de IA para empresas",
+    "Panel de gestión de agentes y reservas",
     "Mapeo y automatización de procesos",
     "SEO y posicionamiento en Google",
     "Desarrollo web"
@@ -53,9 +65,14 @@ const schemaData = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content="saas a medida, software a medida pymes, agentes de IA para empresas, agente IA whatsapp, agente IA instagram, automatizacion de procesos, mapeo de procesos empresariales, seo Alicante, seo Murcia, desarrollo web pymes, digitalizacion pymes Alicante, digitalizacion pymes Murcia, CRM para pymes, panel de gestion de reservas, agente de voz para empresas" />
+    <meta name="keywords" content="saas a medida, software a medida pymes, agentes de IA para empresas, agente IA whatsapp, agente IA instagram, automatizacion de procesos, mapeo de procesos empresariales, seo para pymes, posicionamiento en Google, desarrollo web pymes, digitalizacion de pymes en España, CRM para pymes, ERP para pymes, panel de gestion de reservas, agente de voz para empresas" />
     <meta name="author" content="DALSAT" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta
+      name="robots"
+      content={noindex
+        ? 'noindex, nofollow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
+    />
     <link rel="canonical" href={canonicalURL} />
 
     <!-- OpenGraph / Facebook / WhatsApp / LinkedIn -->
@@ -64,6 +81,9 @@ const schemaData = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(image, canonicalURL)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="DALSAT: ya tienes web, redes y Google Maps. Ahora toca automatizar." />
     <meta property="og:locale" content="es_ES" />
     <meta property="og:site_name" content="DALSAT" />
 
@@ -87,6 +107,8 @@ const schemaData = {
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#072847" />
     <style is:global>
       @media (prefers-reduced-motion: no-preference) {
         html {
@@ -97,6 +119,9 @@ const schemaData = {
   </head>
   <body class="font-sans antialiased bg-crema text-grafito">
     <slot />
-    <Analytics />
+    {mostrarBarraMovil && <StickyMobileCta client:idle />}
+    {/* La analitica de Vercel ya no se carga aqui: la inyecta el banner solo
+        si el visitante acepta. Antes se cargaba siempre y el aviso era humo. */}
+    <CookieBanner client:load />
   </body>
 </html>

@@ -58,8 +58,8 @@ export default function MobileMenu({ currentPath = '/' }: MobileMenuProps) {
         }`}
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-          <a href="#hero" onClick={() => setOpen(false)} className="flex items-center gap-2.5">
-            <img src="/logo_sin_fondo.png" alt="Dalsat logo" width="36" height="36" className="h-8 w-auto object-contain brightness-0 invert" />
+          <a href="/" onClick={() => setOpen(false)} className="flex items-center gap-2.5">
+            <img src="/logo-dalsat.png" alt="" aria-hidden="true" width="36" height="36" className="h-8 w-auto object-contain brightness-0 invert" />
             <span className="font-display text-lg font-bold tracking-widest text-white">DALSAT</span>
           </a>
           <button
@@ -100,7 +100,7 @@ export default function MobileMenu({ currentPath = '/' }: MobileMenuProps) {
           <a
             href="#contacto"
             onClick={() => setOpen(false)}
-            className="flex min-h-[48px] items-center justify-center rounded-xl bg-terracota px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-terracota-dark shadow-[0_0_15px_rgba(217,100,44,0.35)]"
+            className="flex min-h-[48px] items-center justify-center rounded-xl bg-terracota px-5 py-3 text-sm font-semibold text-navy transition-colors hover:bg-terracota-dark shadow-[0_0_15px_rgba(217,100,44,0.35)]"
           >
             Hablar con nosotros →
           </a>

@@ -23,8 +23,8 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
         {/* Logo de Dalsat */}
         <a href="/" className="flex items-center gap-2.5 group">
           <img
-            src="/logo_sin_fondo.png"
-            alt="Dalsat logo"
+            src="/logo-dalsat.png"
+            alt="" aria-hidden="true"
             width="44"
             height="44"
             className="h-10 w-auto object-contain brightness-0 invert group-hover:scale-105 transition-transform"
@@ -67,7 +67,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
           </a>
           <a
             href="/contacto"
-            className="hidden md:inline-flex bg-terracota hover:bg-terracota-dark text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(20,205,236,0.3)] hover:scale-105"
+            className="hidden md:inline-flex bg-terracota hover:bg-terracota-dark text-navy text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(217,100,44,0.3)] hover:scale-105"
           >
             Hablar con nosotros →
           </a>

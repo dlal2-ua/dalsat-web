@@ -64,6 +64,32 @@ export default function Platform() {
           </p>
         </div>
 
+        {/* Captura real del panel, sobre una ventana falsa para que se lea
+            como pantallazo y no como parte de la web. Es una cuenta de
+            pruebas: ahi no hay datos de ningun cliente. */}
+        <figure className="mb-12 sm:mb-16 m-0">
+          <div className="rounded-2xl border border-white/15 bg-navy-950/60 overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
+            <div className="flex items-center gap-2 border-b border-white/10 bg-white/[0.04] px-4 py-2.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-white/20" aria-hidden="true" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white/20" aria-hidden="true" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white/20" aria-hidden="true" />
+              <span className="ml-3 truncate font-mono text-[11px] text-white/40">app.dalsats.com</span>
+            </div>
+            <img
+              src="/panel-dalsat.jpg"
+              width={1600}
+              height={771}
+              loading="lazy"
+              decoding="async"
+              alt="Pantalla de inicio del panel de DALSAT: reservas de la semana, facturación estimada, clientes únicos, mensajes atendidos por el agente y tiempo medio de respuesta."
+              className="block w-full h-auto"
+            />
+          </div>
+          <figcaption className="mt-3 text-center text-xs text-white/45">
+            Lo primero que ves al entrar. Los datos son de una cuenta de pruebas.
+          </figcaption>
+        </figure>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mb-12">
           {CAPACIDADES.map((c) => (
             <article

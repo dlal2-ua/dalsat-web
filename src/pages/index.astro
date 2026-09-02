@@ -24,7 +24,7 @@ const AHORA = [
   'Agentes que atienden y cogen reservas',
 ];
 
-// Los cinco servicios, en orden de prioridad. El catálogo entero vive en /servicios.
+// Los seis servicios, en orden de prioridad. El catálogo entero vive en /servicios.
 const SERVICIOS = [
   {
     n: '01',
@@ -40,18 +40,24 @@ const SERVICIOS = [
   },
   {
     n: '03',
+    nombre: 'Tu panel de gestión',
+    texto: 'Desde donde gestionas el agente, ves las reservas y miras los números de tu negocio.',
+    icono: 'M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z',
+  },
+  {
+    n: '04',
     nombre: 'Mapeo y automatización',
     texto: 'Dibujamos cómo funciona tu negocio paso a paso y quitamos de en medio lo que se repite.',
     icono: 'M7.5 3.75H6A2.25 2.25 0 0 0 3.75 6v1.5M16.5 3.75H18A2.25 2.25 0 0 1 20.25 6v1.5m0 9V18A2.25 2.25 0 0 1 18 20.25h-1.5m-9 0H6A2.25 2.25 0 0 1 3.75 18v-1.5M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
   },
   {
-    n: '04',
+    n: '05',
     nombre: 'SEO',
     texto: 'Que tu negocio salga cuando alguien de tu zona busca en Google lo que tú ofreces.',
     icono: 'm21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z',
   },
   {
-    n: '05',
+    n: '06',
     nombre: 'Desarrollo web',
     texto: 'Webs rápidas y claras, pensadas para que quien entre pida cita, escriba o compre.',
     icono: 'M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z',
@@ -60,8 +66,8 @@ const SERVICIOS = [
 ---
 
 <Layout
-  title="DALSAT | Re-digitalización de pymes en Alicante y Murcia"
-  description="Ya tienes web, redes y Google Maps. Ahora toca automatizar. SaaS a medida, agentes de IA, mapeo de procesos, SEO y desarrollo web para pymes de Alicante y Murcia."
+  title="DALSAT | Re-digitalización de pymes en toda España"
+  description="Ya tienes web, redes y Google Maps. Ahora toca automatizar. SaaS a medida, agentes de IA, panel de gestión, mapeo de procesos, SEO y desarrollo web para pymes de toda España."
 >
   {/* Header Reutilizable Multipágina */}
   <Header client:load currentPath="/" />
@@ -70,8 +76,8 @@ const SERVICIOS = [
     {/* 1. HERO GALÁCTICO: SPLIT + CHAT */}
     <SplitHero client:load />
 
-    {/* 2. EMPRESAS SATISFECHAS (CASOS VÍBORA STUDIO & ATRIO ASESORES) */}
-    <SatisfiedClients client:load />
+    {/* 2. NUESTROS CLIENTES: solo el carrusel de logos, sin cifras */}
+    <SatisfiedClients />
 
     {/* 2.5. RE-DIGITALIZACIÓN: EL MENSAJE CENTRAL */}
     <section id="re-digitalizacion" class="relative bg-navy border-t border-white/10 py-20 sm:py-28 overflow-hidden">
@@ -134,7 +140,7 @@ const SERVICIOS = [
       </div>
     </section>
 
-    {/* 3. LOS CINCO SERVICIOS (avance; el catálogo completo vive en /servicios) */}
+    {/* 3. LOS SEIS SERVICIOS (avance; el catálogo completo vive en /servicios) */}
     <section id="servicios" class="py-20 bg-navy-900 border-t border-white/10 relative overflow-hidden">
       <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
@@ -144,7 +150,7 @@ const SERVICIOS = [
               Qué hacemos
             </span>
             <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-              Cinco formas de quitarte trabajo de encima
+              Seis formas de quitarte trabajo de encima
             </h2>
             <p class="text-white/70 text-base sm:text-lg mt-4 max-w-2xl">
               No hace falta hacerlo todo a la vez. Empezamos por lo que más te pesa cada semana y seguimos desde ahí.
@@ -205,7 +211,7 @@ const SERVICIOS = [
           </div>
           <a
             href="/demos"
-            class="px-7 py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-white font-extrabold text-sm transition-all shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-105 shrink-0"
+            class="px-7 py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-105 shrink-0"
           >
             Probar una demo →
           </a>
@@ -230,7 +236,7 @@ const SERVICIOS = [
           </div>
           <a
             href="/calculadora"
-            class="px-7 py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-white font-extrabold text-sm transition-all shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-105 shrink-0"
+            class="px-7 py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-105 shrink-0"
           >
             Echar la cuenta →
           </a>
@@ -280,12 +286,12 @@ const SERVICIOS = [
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-white font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] block cursor-pointer flex items-center justify-center gap-2"
+                class="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] block cursor-pointer flex items-center justify-center gap-2"
               >
                 Escríbenos por WhatsApp →
               </a>
               <p class="text-white/45 text-xs text-center">
-                Trabajamos con pymes de Alicante y Murcia.
+                Trabajamos con pymes de toda España.
               </p>
             </div>
           </div>

@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 
-# Sitemaps
-Sitemap: https://dalsats.com/sitemap-index.xml
+# Paginas que no aportan nada en un buscador
+Disallow: /gracias
+
+Sitemap: https://dalsats.com/sitemap.xml
