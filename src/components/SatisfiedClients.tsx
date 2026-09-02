@@ -3,9 +3,6 @@ interface ClientLogo {
   name: string;
   logo: string;
   logoBg: string;
-  /** El despacho no tiene identidad propia. El logo es un marcador nuestro,
-   *  no su marca. Hay que sustituirlo en cuanto tengan uno de verdad. */
-  logoProvisional?: boolean;
 }
 
 // Los clientes, para el carrusel de logos. Aqui no van cifras ni testimonios:
@@ -13,13 +10,8 @@ interface ClientLogo {
 const LOGOS: ClientLogo[] = [
   { id: 'vibora-studio', name: 'Víbora Studio', logo: '/vibora-studio.png', logoBg: 'bg-navy-950' },
   { id: 'atrio-asesores', name: 'Atrio Asesores', logo: '/atrio-asesores.jpg', logoBg: 'bg-crema' },
-  {
-    id: 'beniabogados',
-    name: 'Beniabogados',
-    logo: '/beniabogados-provisional.svg',
-    logoBg: 'bg-crema',
-    logoProvisional: true,
-  },
+  // El logo lo dibujamos nosotros: el despacho no tenia uno.
+  { id: 'beniabogados', name: 'Beniabogados', logo: '/beniabogados.svg', logoBg: 'bg-crema' },
 ];
 
 // Con tres logos la tira se ve corta, asi que el juego se repite hasta llenar
@@ -93,7 +85,7 @@ export default function SatisfiedClients() {
             >
               <img
                 src={client.logo}
-                alt={client.logoProvisional ? `Logo provisional de ${client.name}` : `Logo de ${client.name}`}
+                alt={`Logo de ${client.name}`}
                 loading="lazy"
                 className="max-h-full max-w-full object-contain"
               />
