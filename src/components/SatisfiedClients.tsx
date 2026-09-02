@@ -42,8 +42,11 @@ export default function SatisfiedClients() {
           from { transform: translateX(0); }
           to   { transform: translateX(-50%); }
         }
+        /* Las piezas son mas grandes que antes, asi que la tira recorre mas
+           distancia. Se sube la duracion de 38s a 55s para que la velocidad
+           en pantalla siga siendo la misma. */
         .marquee-track {
-          animation: clientesMarquee 38s linear infinite;
+          animation: clientesMarquee 55s linear infinite;
           width: max-content;
         }
         .marquee:hover .marquee-track { animation-play-state: paused; }

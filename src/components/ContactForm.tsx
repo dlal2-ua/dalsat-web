@@ -89,7 +89,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === 'sending'}
-        className="w-full bg-terracota hover:bg-terracota-dark text-navy disabled:opacity-60 font-bold py-4 rounded-xl transition-all duration-300 text-sm shadow-[0_0_25px_rgba(20,205,236,0.3)] hover:shadow-[0_0_35px_rgba(255,255,255,0.6)] hover:scale-[1.02] cursor-pointer"
+        className="w-full bg-terracota hover:bg-terracota-dark text-white disabled:opacity-60 font-bold py-4 rounded-xl transition-all duration-300 text-sm shadow-[0_0_25px_rgba(217,100,44,0.3)] hover:shadow-[0_0_35px_rgba(217,100,44,0.5)] hover:scale-[1.02] cursor-pointer"
       >
         {status === 'sending' ? 'Enviando…' : 'Empezar ahora →'}
       </button>

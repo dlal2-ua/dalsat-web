@@ -67,7 +67,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
           </a>
           <a
             href="/contacto"
-            className="hidden md:inline-flex bg-terracota hover:bg-terracota-dark text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(20,205,236,0.3)] hover:scale-105"
+            className="hidden md:inline-flex bg-terracota hover:bg-terracota-dark text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(217,100,44,0.3)] hover:scale-105"
           >
             Hablar con nosotros →
           </a>

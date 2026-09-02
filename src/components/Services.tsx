@@ -77,23 +77,13 @@ const SERVICES: Service[] = [
 
 export default function Services() {
   return (
-    <section id="catalogo" className="relative bg-navy-900 border-t border-white/10 py-20 sm:py-28 overflow-hidden">
+    <section id="catalogo" className="relative bg-navy-900 border-t border-white/10 pb-20 sm:pb-28 pt-4 overflow-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" aria-hidden="true" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-cian/10 rounded-full blur-[160px] pointer-events-none" aria-hidden="true" />
 
+      {/* La cabecera de la seccion la pone la pagina que monta el catalogo,
+          para no repetir el mismo titular dos veces seguidas. */}
       <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-3xl mb-14 sm:mb-20">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-cian bg-cian/10 border border-cian/30 px-4 py-1.5 rounded-full inline-block mb-5">
-            Qué hacemos
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-5">
-            Seis formas de quitarte trabajo de encima
-          </h2>
-          <p className="text-white/70 text-base sm:text-lg leading-relaxed">
-            No hace falta hacerlo todo a la vez. Empezamos por lo que más te pesa cada semana y seguimos desde ahí.
-          </p>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
           {SERVICES.map((service) => (
             <article

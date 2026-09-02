@@ -274,7 +274,7 @@ export default function AudioDemos() {
               <button
                 type="button"
                 onClick={() => togglePlay(current.id)}
-                className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(20,205,236,0.35)] hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-white font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2"
               >
                 {isPlaying ? (
                   <>
