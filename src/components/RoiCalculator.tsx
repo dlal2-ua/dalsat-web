@@ -49,7 +49,7 @@ export default function RoiCalculator() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <label htmlFor="range-messages" className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                    💬 Consultas / Mensajes al día
+                     Consultas / Mensajes al día
                   </label>
                   <span className="text-xl sm:text-2xl font-black text-cian font-mono bg-cian/10 px-3 py-1 rounded-xl border border-cian/30">
                     {messagesPerDay} <span className="text-xs font-sans font-normal text-white/70">/día</span>
@@ -76,7 +76,7 @@ export default function RoiCalculator() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <label htmlFor="range-cost" className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                    💶 Valor estimado de tu hora (o empleado)
+                     Valor estimado de tu hora (o empleado)
                   </label>
                   <span className="text-xl sm:text-2xl font-black text-cian font-mono bg-cian/10 px-3 py-1 rounded-xl border border-cian/30">
                     {hourlyCost} €<span className="text-xs font-sans font-normal text-white/70">/h</span>
@@ -101,7 +101,7 @@ export default function RoiCalculator() {
 
               {/* Nota explicativa */}
               <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-xs text-white/60 leading-relaxed flex items-start gap-2.5">
-                <span className="text-cian font-bold text-base">ℹ️</span>
+                <span className="text-cian font-bold text-base">ℹ</span>
                 <span>Cálculo basado en 2.8 minutos medios por atención de llamada o respuesta manual en WhatsApp. La IA de Dalsat absorbe el 90% de este volumen de forma autónoma.</span>
               </div>
 

@@ -8,8 +8,8 @@ interface Props {
 }
 
 const {
-  title = 'Dalsat | Agentes de IA para WhatsApp y Automatización de Negocios',
-  description = 'Implantamos agentes de IA rentables para tu negocio: atención por WhatsApp 24/7, escalado inteligente a humano, recordatorios y reportes BI sin código.',
+  title = 'DALSAT | Re-digitalización de pymes en Alicante y Murcia',
+  description = 'SaaS a medida, agentes de IA, mapeo y automatización de procesos, SEO y desarrollo web para pymes de Alicante y Murcia. Miramos cómo funciona tu negocio y automatizamos lo que se repite.',
   image = '/logo_sin_fondo.png',
 } = Astro.props;
 
@@ -19,18 +19,29 @@ const canonicalURL = new URL(Astro.url.pathname, SITE_URL);
 const schemaData = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "Dalsat Soluciones IA",
+  "name": "DALSAT",
   "url": SITE_URL.toString(),
   "logo": new URL('/logo_sin_fondo.png', SITE_URL).toString(),
-  "description": "Empresa especializada en implantación de agentes de Inteligencia Artificial para automatización de WhatsApp, atención al cliente y reportes ejecutivos.",
+  "description": "Estudio de digitalización para pymes de Alicante y Murcia: SaaS a medida, agentes de IA especializados por negocio, mapeo y automatización de procesos, SEO y desarrollo web.",
   "email": "dalsat.soluciones@gmail.com",
   "address": {
     "@type": "PostalAddress",
     "addressCountry": "ES"
   },
+  "areaServed": [
+    { "@type": "AdministrativeArea", "name": "Alicante" },
+    { "@type": "AdministrativeArea", "name": "Murcia" }
+  ],
+  "knowsAbout": [
+    "SaaS a medida",
+    "Agentes de IA para empresas",
+    "Mapeo y automatización de procesos",
+    "SEO y posicionamiento en Google",
+    "Desarrollo web"
+  ],
   "offers": {
     "@type": "Offer",
-    "category": "Inteligencia Artificial para Empresas"
+    "category": "Digitalización y automatización para pymes"
   }
 };
 ---
@@ -42,8 +53,8 @@ const schemaData = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content="inteligencia artificial empresas, agentes IA whatsapp, automatizacion negocios, chatbot inteligencia artificial, atencion al cliente IA, recordatorios citas automáticos, reportes BI whatsapp" />
-    <meta name="author" content="Dalsat IA" />
+    <meta name="keywords" content="saas a medida, software a medida pymes, agentes de IA para empresas, agente IA whatsapp, agente IA instagram, automatizacion de procesos, mapeo de procesos empresariales, seo Alicante, seo Murcia, desarrollo web pymes, digitalizacion pymes Alicante, digitalizacion pymes Murcia" />
+    <meta name="author" content="DALSAT" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href={canonicalURL} />
 
@@ -54,7 +65,7 @@ const schemaData = {
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(image, canonicalURL)} />
     <meta property="og:locale" content="es_ES" />
-    <meta property="og:site_name" content="Dalsat IA" />
+    <meta property="og:site_name" content="DALSAT" />
 
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image" />

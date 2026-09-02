@@ -3,28 +3,28 @@ import { useState } from 'react';
 const PILLARS = [
   {
     id: 'tech',
-    title: 'Tecnología real',
-    desc: 'IA de última generación adaptada 100% a tu negocio.',
+    title: 'Tecnología real, no demos',
+    desc: 'Todo lo que montamos está funcionando en un negocio real, cada día. Se adapta a tu información, no a un ejemplo genérico.',
     icon: (
       <svg className="w-7 h-7 text-cian" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
       </svg>
     ),
-    badge: 'Motor IA Avanzado',
+    badge: 'Funcionando cada día',
     colSpan: 'lg:col-span-7',
     gradient: 'from-cian/20 via-transparent to-transparent',
     borderHover: 'hover:border-cian',
   },
   {
     id: 'support',
-    title: 'Soporte directo',
-    desc: 'Hablas por WhatsApp directo con los ingenieros creadores del sistema.',
+    title: 'Hablas con quien lo ha montado',
+    desc: 'Sin tickets ni centralitas. Escribes por WhatsApp a las personas que han construido tu sistema.',
     icon: (
       <svg className="w-7 h-7 text-cian" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
       </svg>
     ),
-    badge: 'Línea Directa',
+    badge: 'Trato directo',
     colSpan: 'lg:col-span-5',
     gradient: 'from-cian/20 via-transparent to-transparent',
     borderHover: 'hover:border-cian',
@@ -35,28 +35,28 @@ const PILLARS = [
   },
   {
     id: 'privacy',
-    title: 'Privacidad total',
-    desc: 'Despliegue privado. Tus datos jamás se comparten.',
+    title: 'Tus datos, en tu propio servidor',
+    desc: 'Todo se instala en tu servidor. Tus datos y tus conversaciones no salen de ahí ni se comparten con nadie.',
     icon: (
       <svg className="w-7 h-7 text-cian-light" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
       </svg>
     ),
-    badge: 'Seguridad Blindada',
+    badge: 'Tus datos son tuyos',
     colSpan: 'lg:col-span-5',
     gradient: 'from-cian-light/20 via-transparent to-transparent',
     borderHover: 'hover:border-cian-light',
   },
   {
     id: 'continuous',
-    title: 'Mejora semanal',
-    desc: 'Optimización constante para mantener máxima precisión.',
+    title: 'Lo revisamos y lo mejoramos',
+    desc: 'Cada semana miramos cómo va con casos reales y lo ajustamos. No se queda como el primer día.',
     icon: (
       <svg className="w-7 h-7 text-cian" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
       </svg>
     ),
-    badge: 'Evolución Semanal',
+    badge: 'Revisión semanal',
     colSpan: 'lg:col-span-7',
     gradient: 'from-cian/20 via-transparent to-transparent',
     borderHover: 'hover:border-cian',
@@ -64,9 +64,9 @@ const PILLARS = [
 ];
 
 const STATS = [
-  { label: 'Agentes activos', value: '10+', color: 'from-cian to-cian-dark' },
+  { label: 'Sistemas funcionando en negocios reales', value: '10+', color: 'from-cian to-cian-dark' },
   { label: 'Mensajes gestionados', value: '50.000+', color: 'from-cian-light to-cian' },
-  { label: 'Disponibilidad', value: '99,9%', color: 'from-cian to-cian-dark' },
+  { label: 'Tiempo que están funcionando', value: '99,9%', color: 'from-cian to-cian-dark' },
 ];
 
 export default function AboutUs() {

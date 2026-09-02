@@ -14,21 +14,21 @@ const SECTORS: SectorDemo[] = [
   {
     id: 'tattoo',
     name: 'Tatuajes & Estética',
-    icon: '💅',
+    icon: '',
     badge: 'Caso Víbora Studio',
     description: 'Reserva de citas, consulta de estilos, precios orientativos y disponibilidad de agenda sin interrumpir el trabajo.',
     whatsappMessage: 'Hola, me gustaría probar la demo de IA para un estudio de Tatuajes y Estética.',
     chatMessages: [
       { sender: 'user', text: '¡Buenas! Quería saber si tenéis hueco para un tatuaje pequeño en el brazo esta semana.', time: '17:40' },
       { sender: 'bot', text: '¡Hola! Sí, tenemos hueco libre este jueves a las 11:30h o el viernes a las 16:00h. ¿Cuál te viene mejor para agendar la cita?', time: '17:40' },
-      { sender: 'user', text: 'El viernes a las 16:00 me va perfecto 👍', time: '17:41' },
-      { sender: 'bot', text: '¡Genial! Cita reservada para el viernes 16:00h. Te enviamos la ubicación y recordatorio 24h antes. 💅✨', time: '17:41' },
+      { sender: 'user', text: 'El viernes a las 16:00 me va perfecto ', time: '17:41' },
+      { sender: 'bot', text: '¡Genial! Cita reservada para el viernes 16:00h. Te enviamos la ubicación y recordatorio 24h antes. ', time: '17:41' },
     ],
   },
   {
     id: 'restaurante',
     name: 'Restauración & Hostelería',
-    icon: '🍽️',
+    icon: '',
     badge: 'Restaurantes',
     description: 'Reservas de mesas en terraza/comedor, consulta de carta, alérgenos y horarios automáticos 24/7.',
     whatsappMessage: 'Hola, me gustaría probar la demo de IA para mi Restaurante u Hostelería.',
@@ -36,13 +36,13 @@ const SECTORS: SectorDemo[] = [
       { sender: 'user', text: 'Hola, me gustaría reservar una mesa para 4 personas este sábado por la noche.', time: '21:15' },
       { sender: 'bot', text: '¡Hola! Disponemos de mesa libre en comedor interior a las 21:30h o en terraza a las 22:15h. ¿En qué zona prefieres?', time: '21:15' },
       { sender: 'user', text: 'En terraza a las 22:15h por favor.', time: '21:16' },
-      { sender: 'bot', text: '¡Mesa en terraza para 4 a las 22:15h reservada a tu nombre! Nos vemos el sábado. 🍷🍽️', time: '21:16' },
+      { sender: 'bot', text: '¡Mesa en terraza para 4 a las 22:15h reservada a tu nombre! Nos vemos el sábado. ', time: '21:16' },
     ],
   },
   {
     id: 'salud',
     name: 'Clínicas & Salud',
-    icon: '🏥',
+    icon: '',
     badge: 'Clínicas & Médicos',
     description: 'Citas médicas, odontológicas o fisioterapia con recordatorios automáticos para reducir plantones a cero.',
     whatsappMessage: 'Hola, me gustaría probar la demo de IA para mi Clínica o Centro de Salud.',
@@ -50,13 +50,13 @@ const SECTORS: SectorDemo[] = [
       { sender: 'user', text: 'Hola, necesito cita con el fisioterapeuta para un dolor de espalda.', time: '10:05' },
       { sender: 'bot', text: '¡Hola! Disponemos de consulta libre mañana a las 10:15h o el jueves a las 17:00h. ¿Te agendamos la de mañana?', time: '10:05' },
       { sender: 'user', text: 'Sí, mañana a las 10:15h perfecto.', time: '10:06' },
-      { sender: 'bot', text: 'Cita confirmada para mañana a las 10:15h. Recibirás un aviso 2h antes. ¡Que te mejore la espalda! 🩺', time: '10:06' },
+      { sender: 'bot', text: 'Cita confirmada para mañana a las 10:15h. Recibirás un aviso 2h antes. ¡Que te mejore la espalda! ', time: '10:06' },
     ],
   },
   {
     id: 'asesoria',
     name: 'Asesorías & Servicios',
-    icon: '💼',
+    icon: '',
     badge: 'Caso Atrio Asesores',
     description: 'Atención de dudas sobre facturación, Renta, documentación de clientes y cita directa con el especialista.',
     whatsappMessage: 'Hola, me gustaría probar la demo de IA para mi Asesoría o Gestoría.',
@@ -64,7 +64,7 @@ const SECTORS: SectorDemo[] = [
       { sender: 'user', text: 'Buenas, ¿qué documentación necesito aportar para la campaña de la Renta?', time: '12:30' },
       { sender: 'bot', text: '¡Hola! Necesitaremos tu borrador, certificado de retenciones y datos catastrales. ¿Te agendo cita con tu asesor fiscal?', time: '12:30' },
       { sender: 'user', text: 'Sí por favor, para la semana que viene.', time: '12:31' },
-      { sender: 'bot', text: 'Te he reservado cita con tu asesor para el martes a las 11:00h. Te enviamos el listado detallado de documentos a tu email. 📄', time: '12:31' },
+      { sender: 'bot', text: 'Te he reservado cita con tu asesor para el martes a las 11:00h. Te enviamos el listado detallado de documentos a tu email. ', time: '12:31' },
     ],
   },
 ];
@@ -231,7 +231,7 @@ export default function SectorDemos() {
                     <div className="font-bold text-white text-xs sm:text-sm">Agente Dalsat ({activeSector.name})</div>
                     <div className="text-[10px] text-cian font-mono flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-cian animate-ping" />
-                      {isTyping ? 'Escribiendo respuesta...' : 'En línea — Respuesta inmediata'}
+                      {isTyping ? 'Escribiendo respuesta...' : 'En línea, Respuesta inmediata'}
                     </div>
                   </div>
                 </div>
@@ -267,7 +267,7 @@ export default function SectorDemos() {
                     >
                       {msg.text}
                       <div className={`text-[9px] font-mono mt-1 text-right ${msg.sender === 'user' ? 'text-white/40' : 'text-emerald-200'}`}>
-                        {msg.time} {msg.sender === 'bot' && <span className="text-cian-light font-bold ml-1">✓✓</span>}
+                        {msg.time} {msg.sender === 'bot' && <span className="text-cian-light font-bold ml-1"></span>}
                       </div>
                     </div>
                   </div>

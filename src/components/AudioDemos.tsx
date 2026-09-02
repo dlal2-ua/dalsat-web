@@ -251,7 +251,7 @@ export default function AudioDemos() {
               <div className="bg-black/40 border border-white/15 rounded-2xl p-4 mb-6 shadow-inner">
                 <div className="text-[10px] font-mono text-cian uppercase mb-1 flex items-center justify-between">
                   <span>TRANSCRIPCIÓN EN TIEMPO REAL</span>
-                  {isPlaying && <span className="animate-pulse text-cian">🔊 Reproduciendo ({playbackSpeed}x)...</span>}
+                  {isPlaying && <span className="animate-pulse text-cian"> Reproduciendo ({playbackSpeed}x)...</span>}
                 </div>
                 <p className="text-xs sm:text-sm text-white/90 italic font-medium leading-relaxed">
                   "{current.transcript}"

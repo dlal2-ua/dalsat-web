@@ -13,7 +13,7 @@ export default function Footer() {
           
           {/* Columna 1: Marca y Lema (lg:col-span-4) */}
           <div className="lg:col-span-4 space-y-4">
-            <a href="#hero" className="inline-flex items-center gap-3 group">
+            <a href="/" className="inline-flex items-center gap-3 group">
               <img
                 src="/logo_sin_fondo.png"
                 alt="Dalsat Logo"
@@ -27,13 +27,13 @@ export default function Footer() {
             </a>
 
             <p className="text-white/60 text-xs sm:text-sm leading-relaxed font-light">
-              Automatización inteligente con IA para empresas. Agentes de voz y WhatsApp que responden 24/7, agendan citas y ahorran cientos de horas al mes.
+              Estudio de digitalización para pymes de Alicante y Murcia. Programas a medida, agentes de IA, automatización de procesos, SEO y desarrollo web.
             </p>
 
             {/* Badge de estado del servicio */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cian/10 border border-cian/30 text-cian text-[11px] font-mono font-semibold">
               <span className="w-2 h-2 rounded-full bg-cian animate-ping" />
-              <span>Sistemas operando 24/7</span>
+              <span>Sistemas funcionando ahora mismo</span>
             </div>
           </div>
 
@@ -67,20 +67,20 @@ export default function Footer() {
           {/* Columna 3: Soluciones (lg:col-span-3) */}
           <div className="lg:col-span-3 space-y-3">
             <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
-              Soluciones IA
+              Servicios
             </h4>
             <ul className="space-y-2 text-xs font-medium">
               <li>
-                <a href="#servicios" className="hover:text-cian transition-colors">Agentes de WhatsApp 24/7</a>
+                <a href="/servicios#catalogo" className="hover:text-cian transition-colors">SaaS a medida</a>
               </li>
               <li>
-                <a href="#demos-voz" className="hover:text-cian transition-colors">Agentes de Voz Inteligentes</a>
+                <a href="/servicios#catalogo" className="hover:text-cian transition-colors">Agentes de IA</a>
               </li>
               <li>
-                <a href="#servicios" className="hover:text-cian transition-colors">Recordatorios de Citas</a>
+                <a href="/servicios#catalogo" className="hover:text-cian transition-colors">Mapeo y automatización</a>
               </li>
               <li>
-                <a href="#servicios" className="hover:text-cian transition-colors">Escalado Humano en Tiempo Real</a>
+                <a href="/servicios#catalogo" className="hover:text-cian transition-colors">SEO y desarrollo web</a>
               </li>
             </ul>
           </div>
@@ -123,7 +123,7 @@ export default function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-white/40">
           <p>© 2026 DALSAT. Todos los derechos reservados.</p>
           <div className="flex items-center gap-4">
-            <span className="text-white/60">Soluciones de IA en España 🇪🇸</span>
+            <span className="text-white/60">Alicante y Murcia</span>
           </div>
         </div>
 

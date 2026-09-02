@@ -20,61 +20,61 @@ const SERVICES: ServiceNode[] = [
   {
     id: 'whatsapp',
     code: 'SYS-01',
-    shortName: 'WhatsApp IA',
-    title: 'Agente WhatsApp 24/7',
-    subtitle: 'Atención y ventas autónomas por chat.',
-    category: 'IA Conversacional',
+    shortName: 'Atención por WhatsApp',
+    title: 'Responde por WhatsApp día y noche',
+    subtitle: 'Atiende y vende por chat sin que nadie esté pendiente.',
+    category: 'Atención automática',
     colorTheme: 'from-cian via-cian to-cian-dark',
     glowColor: 'rgba(37, 211, 102, 0.35)',
     borderColor: 'border-cian/60',
-    description: 'Atención 24/7 sin colas. Responde dudas, muestra catálogo y cierra ventas en segundos.',
-    highlights: ['Latencia < 1.8s', 'Cero colas', 'Paso a humano'],
-    metrics: [{ label: 'Ventas automáticas', val: '+38%' }, { label: 'Horas ahorradas/día', val: '4h+' }],
+    description: 'Responde dudas, enseña el catálogo y cierra ventas en segundos, a cualquier hora y sin que nadie espere.',
+    highlights: ['Responde al momento', 'Sin esperas', 'Pasa a una persona si hace falta'],
+    metrics: [{ label: 'Ventas cerradas solas', val: '+38%' }, { label: 'Horas que te ahorras al día', val: '4h+' }],
     simulatorType: 'whatsapp',
   },
   {
     id: 'escalation',
     code: 'SYS-02',
-    shortName: 'Escalado Humano',
-    title: 'Escalado Inteligente',
-    subtitle: 'La IA resuelve el 90%; tú intervienes si es clave.',
-    category: 'Atención Híbrida',
+    shortName: 'Pasar a una persona',
+    title: 'Avisa a tu equipo cuando hace falta',
+    subtitle: 'La IA resuelve casi todo; una persona atiende lo importante.',
+    category: 'Ayuda de un experto',
     colorTheme: 'from-cian-light via-cian to-cian-dark',
     glowColor: 'rgba(20, 205, 236, 0.35)',
     borderColor: 'border-cian/60',
-    description: 'La IA filtra consultas comunes y te avisa en 0.2s si el cliente necesita consejo personal.',
-    highlights: ['Aviso instantáneo', 'Traspaso fluido', 'Control total'],
-    metrics: [{ label: 'Filtro por IA', val: '90%' }, { label: 'Aviso al móvil', val: '0.2s' }],
+    description: 'Si el cliente necesita el consejo de un experto, la IA avisa a tu equipo al instante para que le atienda en persona.',
+    highlights: ['Aviso al instante', 'Sin cortes en la conversación', 'Tú tienes el control'],
+    metrics: [{ label: 'Dudas resueltas por la IA', val: '90%' }, { label: 'Aviso a tu móvil en', val: '0.2s' }],
     simulatorType: 'escalation',
   },
   {
     id: 'reminders',
     code: 'SYS-03',
-    shortName: 'Recordatorios',
-    title: 'Recordatorios de Reservas',
-    subtitle: 'Avisos automáticos que aseguran asistencia.',
-    category: 'Fidelización',
+    shortName: 'Recordar citas',
+    title: 'Avisa antes de cada cita',
+    subtitle: 'Avisos automáticos para que no se olviden de la cita.',
+    category: 'Menos olvidos',
     colorTheme: 'from-cian-light via-cian to-cian-dark',
     glowColor: 'rgba(20, 205, 236, 0.35)',
     borderColor: 'border-cian-light/60',
-    description: 'Envía confirmaciones automáticas por WhatsApp antes de cada cita para eliminar plantones.',
-    highlights: ['Aviso 24h/1h', 'Confirmación 1 clic', 'Cero olvidos'],
-    metrics: [{ label: 'Asistencia real', val: '99%' }, { label: 'Olvidos eliminados', val: '-95%' }],
+    description: 'Manda un recordatorio por WhatsApp antes de cada cita, y el cliente confirma con un toque. Se acabaron los plantones.',
+    highlights: ['Aviso el día antes', 'Confirma con un toque', 'Casi cero olvidos'],
+    metrics: [{ label: 'Citas a las que sí vienen', val: '99%' }, { label: 'Olvidos que desaparecen', val: '-95%' }],
     simulatorType: 'reminders',
   },
   {
     id: 'analytics',
     code: 'SYS-04',
-    shortName: 'Reportes BI',
-    title: 'Reportes Ejecutivos',
-    subtitle: 'Tus métricas semanales directamente en WhatsApp.',
-    category: 'Analítica',
+    shortName: 'Resumen semanal',
+    title: 'Recibe un resumen cada semana',
+    subtitle: 'Los números de tu negocio, directos a tu WhatsApp.',
+    category: 'Resultados fáciles de leer',
     colorTheme: 'from-cian via-cian-dark to-cian-dark',
     glowColor: 'rgba(20, 205, 236, 0.35)',
     borderColor: 'border-cian/60',
-    description: 'Resumen en tu móvil con ventas por IA, horas ahorradas y hábitos de tus clientes.',
-    highlights: ['KPIs directos', 'Sin Excels', 'Control ROI'],
-    metrics: [{ label: 'Rentabilidad extra', val: '+24%' }, { label: 'Horas ahorradas', val: '5h/sem' }],
+    description: 'Cada semana te llega al móvil un resumen: qué se ha vendido solo, cuánto tiempo te has ahorrado y a qué horas te escriben más.',
+    highlights: ['Números claros', 'Sin hojas de cálculo', 'Ves lo que te ahorras'],
+    metrics: [{ label: 'Beneficio extra medido', val: '+24%' }, { label: 'Horas que te ahorras', val: '5h/sem' }],
     simulatorType: 'analytics',
   },
 ];
@@ -157,7 +157,7 @@ export default function ServiceTabs() {
   }, [activeTab]);
 
   return (
-    <section id="servicios" ref={containerRef} className="relative min-h-screen md:h-[550vh] bg-navy-900 border-b border-white/10 py-12 md:py-0">
+    <section id="demo-agente" ref={containerRef} className="relative min-h-screen md:h-[550vh] bg-navy-900 border-b border-white/10 py-12 md:py-0">
       
       {/* Contenedor Sticky en PC, normal en Móvil */}
       <div className="relative md:sticky md:top-0 min-h-screen md:h-screen w-full flex flex-col justify-center items-center overflow-hidden px-3 sm:px-6 py-4">
@@ -179,12 +179,12 @@ export default function ServiceTabs() {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-cian"></span>
               </span>
               <span className="text-[10px] sm:text-xs font-extrabold tracking-widest uppercase text-cian">
-                Simulador IA En Vivo
+                Servicio 02 · Agentes de IA
               </span>
             </div>
 
             <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-1 sm:mb-2 pointer-events-none">
-              Centro de Mando <span className="bg-gradient-to-r from-cian via-cian-dark to-cian-light bg-clip-text text-transparent">En Vivo</span>
+Mira cómo <span className="bg-gradient-to-r from-cian via-cian-dark to-cian-light bg-clip-text text-transparent">responde tu agente</span>
             </h2>
             
             {/* Pestañas de selección rápida arriba para no obligar a hacer scroll */}
@@ -234,7 +234,7 @@ export default function ServiceTabs() {
                       <div className="w-2.5 h-2.5 rounded-full bg-cian" />
                     </div>
                     <span className="text-xs sm:text-sm font-mono font-black tracking-widest text-cian bg-cian/10 px-3 py-1 rounded-lg border border-cian/30 shadow-[0_0_15px_rgba(20,205,236,0.25)]">
-                      SISTEMA ACTIVO // {activeTab + 1} DE 4
+                      Ejemplo {activeTab + 1} de 4
                     </span>
                   </div>
 
@@ -292,9 +292,9 @@ export default function ServiceTabs() {
                 <div className="flex items-center justify-between text-[9px] sm:text-xs font-mono uppercase tracking-wider text-white/40 mb-2.5 pb-2 border-b border-white/5">
                   <span className="flex items-center gap-1.5 text-cian font-bold">
                     <span className="w-1.5 h-1.5 rounded-full bg-cian animate-ping" />
-                    SIMULACIÓN EN VIVO
+                    Así respondería tu agente
                   </span>
-                  <span>LATENCIA: 11ms</span>
+                  <span>Respuesta instantánea</span>
                 </div>
 
                 {/* 1. WHATSAPP SIMULADOR */}
@@ -320,12 +320,12 @@ export default function ServiceTabs() {
                     ) : (
                       <div className="bg-whatsapp-incoming rounded-2xl rounded-tr-none p-2 sm:p-2.5 max-w-[88%] ml-auto text-white shadow border border-emerald-500/40 animate-fadeIn">
                         <div className="font-bold text-emerald-300 text-[9px] mb-0.5 flex items-center justify-between">
-                          <span>🤖 Agente Dalsat IA</span>
+                          <span> Agente Dalsat IA</span>
                           <span className="text-[8px] bg-black/30 px-1 py-0.5 rounded text-white/80 font-mono">0.4s</span>
                         </div>
-                        ¡Hola Carlos! Sí, queda la última mesa en terraza exterior a las 22:00. Reservada a tu nombre. ¡Te esperamos! 🍽️✨
+                        ¡Hola Carlos! Sí, queda la última mesa en terraza exterior a las 22:00. Reservada a tu nombre. ¡Te esperamos! 
                         <div className="text-[9px] text-emerald-200 mt-1 text-right flex items-center justify-end gap-1 font-mono">
-                          WhatsApp API <span className="text-cian-light font-extrabold text-xs">✓✓</span>
+                          WhatsApp API <span className="text-cian-light font-extrabold text-xs"></span>
                         </div>
                       </div>
                     )}
@@ -346,22 +346,22 @@ export default function ServiceTabs() {
                     <div className="bg-cian/20 rounded-xl p-1 sm:p-2 border border-cian/40 text-cian-light text-[9px] sm:text-xs font-mono flex items-center justify-between">
                       <span className="flex items-center gap-1">
                         <span className="w-1.5 h-1.5 rounded-full bg-cian animate-ping" />
-                        <span className="font-bold text-cian-light">⚡ TRASPASO IA:</span> Asesoramiento personalizado.
+                        <span className="font-bold text-cian-light"> TRASPASO IA:</span> Asesoramiento personalizado.
                       </span>
                       <span className="bg-cian/30 px-1 py-0.5 rounded text-white font-bold text-[8px] sm:text-[9px]">Aviso Esteticista</span>
                     </div>
 
                     <div className="bg-whatsapp-incoming rounded-2xl rounded-tr-none p-1.5 sm:p-2.5 max-w-[88%] ml-auto text-white shadow border border-emerald-500/40">
                       <div className="font-bold text-emerald-300 text-[8px] sm:text-[9px] mb-0.5 flex items-center justify-between">
-                        <span>🤖 Agente Dalsat IA</span>
+                        <span> Agente Dalsat IA</span>
                         <span className="text-[8px] bg-black/30 px-1 py-0.5 rounded text-white/80 font-mono">0.2s</span>
                       </div>
-                      ¡Hola! Para recomendarte lo ideal para tu tipo de piel, le paso tu mensaje a Laura (Esteticista). Te aconseja ahora 👇
+                      ¡Hola! Para recomendarte lo ideal para tu tipo de piel, le paso tu mensaje a Laura (Esteticista). Te aconseja ahora 
                     </div>
 
                     {isTyping ? (
                       <div className="bg-gradient-to-r from-cian-dark to-cian-dark rounded-2xl rounded-tr-none p-1.5 sm:p-2 max-w-[70%] ml-auto text-white shadow border border-cian/50 flex items-center gap-1.5 justify-end animate-fadeIn">
-                        <span className="text-[9px] sm:text-[10px] font-mono text-cian-light">🌸 Laura aconsejando...</span>
+                        <span className="text-[9px] sm:text-[10px] font-mono text-cian-light"> Laura aconsejando...</span>
                         <span className="flex gap-1">
                           <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" />
                           <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:0.2s]" />
@@ -371,10 +371,10 @@ export default function ServiceTabs() {
                     ) : (
                       <div className="bg-gradient-to-r from-cian-dark to-cian-dark rounded-2xl rounded-tr-none p-1.5 sm:p-2.5 max-w-[88%] ml-auto text-white shadow border border-cian/50 animate-fadeIn">
                         <div className="font-bold text-cian-light text-[8px] sm:text-[9px] mb-0.5 flex items-center justify-between">
-                          <span className="flex items-center gap-1">🌸 Laura <span className="bg-cian/20 text-cian-light px-1 py-0.5 rounded text-[8px] font-mono">Esteticista</span></span>
+                          <span className="flex items-center gap-1"> Laura <span className="bg-cian/20 text-cian-light px-1 py-0.5 rounded text-[8px] font-mono">Esteticista</span></span>
                           <span className="text-[8px] bg-black/30 px-1 py-0.5 rounded text-white/80 font-mono">Ahora</span>
                         </div>
-                        ¡Hola! Para piel sensible te recomiendo sin duda el hidratante con aloe. Te dejará la cara súper luminosa y suave sin irritar nada. ¡Te va a encantar! ✨
+                        ¡Hola! Para piel sensible te recomiendo sin duda el hidratante con aloe. Te dejará la cara súper luminosa y suave sin irritar nada. ¡Te va a encantar! 
                       </div>
                     )}
                   </div>
@@ -407,24 +407,24 @@ export default function ServiceTabs() {
                             <span>Agente Dalsat IA (Peluquería)</span>
                             <span className="text-[8px] bg-black/30 px-1 py-0.5 rounded text-white/80 font-mono">09:00</span>
                           </div>
-                          ¡Hola Carlos! Recordatorio: cita mañana 10:15 en peluquería para corte y peinado. ¿Confirmas tu asistencia? ✂️✨
+                          ¡Hola Carlos! Recordatorio: cita mañana 10:15 en peluquería para corte y peinado. ¿Confirmas tu asistencia? 
                           <div className="mt-2 flex gap-1.5 flex-wrap">
                             <span className="bg-emerald-600 text-white font-bold text-[10px] px-2.5 py-1 rounded-lg border border-emerald-400/50 shadow flex items-center gap-1">
-                              👍 Sí, confirmo
+                               Sí, confirmo
                             </span>
                             <span className="bg-white/10 text-white/80 font-medium text-[10px] px-2 py-1 rounded-lg border border-white/15">
-                              🔄 Reagendar
+                               Reagendar
                             </span>
                           </div>
                           <div className="text-[9px] text-emerald-200 mt-1 text-right flex items-center justify-end gap-1 font-mono">
-                            WhatsApp API <span className="text-cian-light font-extrabold text-xs">✓✓</span>
+                            WhatsApp API <span className="text-cian-light font-extrabold text-xs"></span>
                           </div>
                         </div>
 
                         <div className="bg-white/10 rounded-2xl rounded-tl-none p-2 sm:p-2.5 max-w-[75%] text-white border border-white/10 shadow flex gap-2 items-center animate-fadeIn">
                           <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-cian to-cian shrink-0 flex items-center justify-center font-bold text-black text-[10px]">C</div>
                           <div className="text-xs">
-                            👍 <span className="font-bold text-cian-light">Carlos:</span> Sí, confirmo
+                             <span className="font-bold text-cian-light">Carlos:</span> Sí, confirmo
                           </div>
                         </div>
                       </div>

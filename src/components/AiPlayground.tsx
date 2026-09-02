@@ -10,21 +10,21 @@ interface PromptPreset {
 
 const PRESETS: PromptPreset[] = [
   {
-    label: '📅 Reserva de Cita',
+    label: ' Reserva de Cita',
     query: '¡Buenas! ¿Tenéis hueco libre mañana a las 16:30 para una cita?',
     intent: 'AGENDAR_CITA',
     confidence: '99.8%',
     response: '¡Hola! Sí, tenemos disponibilidad mañana a las 16:30h. ¿Te la agendamos a tu nombre?',
   },
   {
-    label: '💰 Consulta de Precios',
+    label: ' Consulta de Precios',
     query: '¿Cuánto cuesta un tratamiento completo y qué incluye el presupuesto?',
     intent: 'CONSULTA_PRECIOS',
     confidence: '98.5%',
     response: 'El presupuesto incluye valoración inicial y tratamiento completo. Te enviamos el desglose exacto en PDF.',
   },
   {
-    label: '📍 Ubicación y Horarios',
+    label: ' Ubicación y Horarios',
     query: '¿Hasta qué hora abre el local hoy y dónde puedo aparcar cerca?',
     intent: 'UBICACION_HORARIOS',
     confidence: '99.1%',
@@ -52,7 +52,7 @@ export default function AiPlayground() {
       } else {
         // Generar respuesta dinámica si el usuario escribe su propia pregunta
         setActiveOutput({
-          label: '⚡ Consulta Personalizada',
+          label: ' Consulta Personalizada',
           query: targetQuery,
           intent: 'ATENCION_CLIENTE_IA',
           confidence: '99.4%',
@@ -167,7 +167,7 @@ export default function AiPlayground() {
                   </>
                 ) : (
                   <>
-                    ⚡ Ejecutar IA
+                     Ejecutar IA
                   </>
                 )}
               </button>
@@ -195,7 +195,7 @@ export default function AiPlayground() {
                         </span>
                       </div>
                       <span className="text-cian">
-                        ⚡ LATENCIA: {customLatency}ms
+                         LATENCIA: {customLatency}ms
                       </span>
                     </div>
 
@@ -207,7 +207,7 @@ export default function AiPlayground() {
                     {/* Respuesta del Agente Dalsat */}
                     <div className="bg-navy-950 border border-emerald-500/40 rounded-xl p-3.5 text-emerald-300 text-xs leading-relaxed mt-2 shadow-lg">
                       <div className="text-cian font-bold mb-1 flex items-center gap-1.5 text-[11px]">
-                        <span>🤖 DALSAT AI RESPONDER:</span>
+                        <span> DALSAT AI RESPONDER:</span>
                       </div>
                       "{activeOutput.response}"
                     </div>

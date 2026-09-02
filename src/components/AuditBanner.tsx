@@ -11,7 +11,7 @@ export default function AuditBanner() {
       desc: 'Simulación real de tu agente de IA.',
     },
     {
-      title: 'Estimación ROI',
+      title: 'Lo que te ahorras',
       desc: 'Cálculo exacto de horas ahorradas.',
     },
   ];
@@ -68,7 +68,7 @@ export default function AuditBanner() {
             <div className="lg:col-span-5 bg-black/40 border border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-center text-center space-y-5 shadow-2xl relative overflow-hidden">
               
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cian to-cian-dark flex items-center justify-center text-2xl shadow-[0_0_30px_rgba(20,205,236,0.4)]">
-                ⚡
+                
               </div>
 
               <div>

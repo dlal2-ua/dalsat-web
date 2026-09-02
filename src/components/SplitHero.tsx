@@ -8,28 +8,28 @@ interface ChatMessage {
 
 // 4 pares pregunta-respuesta: cada tramo de scroll revela un par completo
 const MESSAGES: ChatMessage[] = [
-  { from: 'client', text: '¿Qué hace Dalsat?', time: '14:46' },
+  { from: 'client', text: '¿Qué hace DALSAT?', time: '14:46' },
   {
     from: 'bot',
-    text: 'IA para tu negocio. WhatsApp 24/7 y citas automáticas. ⚡',
+    text: 'Programas a medida, agentes de IA, automatización de procesos, SEO y webs. Todo para pymes.',
     time: '14:46',
   },
-  { from: 'client', text: '¿Tarda mucho en activarse?', time: '14:47' },
+  { from: 'client', text: '¿Y a mí de qué me sirve?', time: '14:47' },
   {
     from: 'bot',
-    text: 'Listo en días, 100% a medida. 🚀',
+    text: 'Para dejar de hacer a mano lo que se repite cada semana.',
     time: '14:47',
   },
-  { from: 'client', text: '¿Sirve para mi empresa?', time: '14:48' },
+  { from: 'client', text: '¿Por dónde se empieza?', time: '14:48' },
   {
     from: 'bot',
-    text: 'Sí. Ahorra horas en llamadas y atiende clientes al instante. ✅',
+    text: 'Miramos cómo trabajas hoy y lo dibujamos paso a paso. Ahí se ve qué sobra.',
     time: '14:48',
   },
-  { from: 'client', text: '¿Y si necesitan un humano?', time: '14:49' },
+  { from: 'client', text: '¿Trabajáis en mi zona?', time: '14:49' },
   {
     from: 'bot',
-    text: 'La IA te avisa y te pasa el chat al segundo. 🎯',
+    text: 'Sí, con pymes de Alicante y Murcia. Te lo contamos sin compromiso.',
     time: '14:49',
   },
 ];
@@ -378,7 +378,7 @@ export default function SplitHero() {
 
           <div ref={introRef} className="flex flex-col items-center">
             <p className="hero-subtitle mt-6 max-w-md text-[clamp(1rem,2.5vw,1.25rem)] font-normal text-white/55">
-              Automatización inteligente para tu negocio
+              Re-digitalizamos pymes de Alicante y Murcia
             </p>
           </div>
         </div>
@@ -391,7 +391,7 @@ export default function SplitHero() {
               onClick={scrollToChat}
               className="hero-hint flex min-h-[44px] cursor-pointer flex-col items-center gap-2 text-white/50 transition-colors hover:text-cian"
             >
-              <span className="text-xs font-medium tracking-wide">Descubre lo que podemos hacer</span>
+              <span className="text-xs font-medium tracking-wide">Mira lo que podemos quitarte de encima</span>
               <svg className="hero-arrow h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
               </svg>

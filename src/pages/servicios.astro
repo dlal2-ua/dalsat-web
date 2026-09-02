@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header';
+import Services from '../components/Services';
 import ServiceTabs from '../components/ServiceTabs';
 import StepScroll from '../components/StepScroll';
 import FaqSection from '../components/FaqSection';
@@ -8,8 +9,8 @@ import Footer from '../components/Footer';
 ---
 
 <Layout
-  title="Servicios de Automatización IA — Dalsat"
-  description="Descubre los agentes de IA de Dalsat: atención en WhatsApp, gestión de recordatorios y escalado inteligente a humano."
+  title="Servicios | SaaS a medida, agentes de IA, automatización, SEO y web"
+  description="Los cinco servicios de DALSAT para pymes de Alicante y Murcia: programas a medida, agentes de IA por WhatsApp, Instagram y web, mapeo y automatización de procesos, SEO y desarrollo web."
 >
   <Header client:load currentPath="/servicios" />
 
@@ -20,18 +21,21 @@ import Footer from '../components/Footer';
 
       <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 text-center">
         <span class="text-xs font-extrabold uppercase tracking-widest text-cian border border-cian/30 bg-cian/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md shadow-[0_0_15px_rgba(20,205,236,0.2)] mb-4">
-          Nuestras Soluciones
+          Qué hacemos
         </span>
         <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight mb-4">
-          Soluciones de IA Adaptadas a Tu Negocio
+          Cinco formas de quitarte trabajo de encima
         </h1>
         <p class="text-white/70 text-base sm:text-xl font-light max-w-3xl mx-auto">
-          Automatiza la atención de tus clientes 24/7 sin perder el toque humano ni la cercanía de tu empresa.
+          No hace falta hacerlo todo a la vez. Empezamos por lo que más te pesa cada semana y seguimos desde ahí.
         </p>
       </div>
     </section>
 
-    {/* Centro de Mando de Servicios */}
+    {/* Catálogo completo, en orden de prioridad */}
+    <Services />
+
+    {/* Demo en vivo del servicio 02: agentes de IA */}
     <ServiceTabs client:load />
 
     {/* Proceso en 3 Pasos */}
@@ -44,16 +48,16 @@ import Footer from '../components/Footer';
     <section class="py-20 bg-navy-900 border-t border-white/10 text-center">
       <div class="max-w-4xl mx-auto px-4 sm:px-6">
         <h2 class="text-3xl sm:text-5xl font-extrabold text-white mb-4">
-          ¿Listo para automatizar tu negocio?
+          ¿Por dónde empezarías tú?
         </h2>
         <p class="text-white/70 text-base sm:text-lg mb-8">
-          Configuramos tu agente de IA a medida en cuestión de días. Sin complicaciones.
+          Cuéntanos cómo trabajas hoy y te decimos qué se puede quitar de en medio. Sin compromiso.
         </p>
         <a
           href="/contacto"
           class="inline-flex bg-terracota hover:bg-terracota-dark text-white font-extrabold text-base px-8 py-4 rounded-2xl transition-all shadow-[0_0_30px_rgba(20,205,236,0.4)] hover:scale-105"
         >
-          Solicitar demostración sin compromiso →
+          Habla con nosotros →
         </a>
       </div>
     </section>

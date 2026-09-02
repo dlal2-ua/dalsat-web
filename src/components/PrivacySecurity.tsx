@@ -8,7 +8,7 @@ export default function PrivacySecurity() {
       ),
       title: 'Servidores Privados en España',
       subtitle: 'Alojamiento 100% europeo en infraestructuras privadas y seguras.',
-      tag: '🇪🇸 Servidores España',
+      tag: ' Servidores España',
     },
     {
       icon: (
@@ -96,7 +96,7 @@ export default function PrivacySecurity() {
 
               <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-cian">
                 <span>PROTECCIÓN DALSAT</span>
-                <span className="font-bold">VERIFICADO ✓</span>
+                <span className="font-bold">VERIFICADO </span>
               </div>
             </div>
           ))}
@@ -106,7 +106,7 @@ export default function PrivacySecurity() {
         <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-navy via-navy-800 to-navy border border-cian/40 backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,0,0,0.6)] flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-cian/20 border border-cian/50 shrink-0 flex items-center justify-center text-2xl">
-              🛡️
+              
             </div>
             <div>
               <h4 className="text-lg font-bold text-white leading-tight">

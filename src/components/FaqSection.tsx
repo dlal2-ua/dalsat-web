@@ -9,6 +9,42 @@ interface FaqItem {
 }
 
 const FAQS: FaqItem[] = [
+  // Categoria: Servicios
+  {
+    id: 'que-haceis',
+    category: 'Servicios',
+    badge: 'Cinco servicios',
+    question: '¿Solo hacéis agentes de IA?',
+    answer: 'No. Hacemos cinco cosas: programas a medida para tu negocio, agentes de IA que atienden por WhatsApp, Instagram o dentro de tu web, mapeo y automatización de procesos, SEO para que te encuentren en Google y desarrollo web. Los agentes son la parte más visible, pero rara vez es por donde más se gana.',
+  },
+  {
+    id: 'saas-medida',
+    category: 'Servicios',
+    badge: 'SaaS a medida',
+    question: '¿Qué es eso de un programa a medida y en qué se diferencia de uno normal?',
+    answer: 'Un programa hecho para cómo trabajas tú, en vez de uno genérico donde acabas peleándote con campos que no usas y echando de menos los que necesitas. Suele sustituir a la hoja de cálculo y a los papeles: clientes, citas, presupuestos, stock. Solo lleva lo que usáis y entra tu equipo desde el móvil.',
+  },
+  {
+    id: 'mapeo',
+    category: 'Servicios',
+    badge: 'Mapeo de procesos',
+    question: '¿Qué es mapear los procesos de mi negocio?',
+    answer: 'Sentarnos contigo y dibujar cómo funciona tu negocio de verdad, paso a paso: qué entra, quién lo toca, qué se apunta y dónde. Cuando está dibujado se ve solo lo que se repite cada semana y lo que se puede quitar de en medio. Es el punto de partida de casi todo lo demás, y a veces la conclusión es que no hace falta ninguna IA.',
+  },
+  {
+    id: 'seo-web',
+    category: 'Servicios',
+    badge: 'SEO y web',
+    question: '¿También hacéis la web y el posicionamiento en Google?',
+    answer: 'Sí. Hacemos webs rápidas y pensadas para que quien entre haga algo: pedir cita, escribirte o comprar. Y trabajamos el SEO para que tu negocio salga cuando alguien de tu zona busca lo que ofreces: ficha de Google al día, contenido útil y una web que carga rápido en el móvil.',
+  },
+  {
+    id: 'zona',
+    category: 'Servicios',
+    badge: 'Alicante y Murcia',
+    question: '¿Trabajáis en mi zona?',
+    answer: 'Trabajamos con pymes de Alicante y Murcia. Podemos vernos en persona para el mapeo inicial, que es la parte que mejor sale cara a cara, y el resto lo llevamos en remoto.',
+  },
   // Categoria: WhatsApp
   {
     id: 'numero',
@@ -183,7 +219,7 @@ export default function FaqSection() {
                   onClick={() => setSearchTerm('')}
                   className="absolute right-4 text-xs font-mono bg-white/10 text-white/70 hover:text-white px-2 py-1 rounded-full cursor-pointer"
                 >
-                  ✕ Borrar
+                   Borrar
                 </button>
               )}
             </div>

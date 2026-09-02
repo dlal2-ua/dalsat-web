@@ -62,13 +62,13 @@ export default function BeforeAfterSlider() {
               onTouchMove={handleTouchMove}
             >
               
-              {/* 1. LADO DERECHO (DESPUÉS: CON DALSAT) — Base de fondo */}
+              {/* 1. LADO DERECHO (DESPUÉS: CON DALSAT), Base de fondo */}
               <div className="absolute inset-0 bg-gradient-to-br from-navy-800 via-navy-950 to-navy-900 p-4 sm:p-6 flex flex-col justify-between">
                 
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-whatsapp-green/20 text-whatsapp-green border border-whatsapp-green/40 text-[11px] font-extrabold uppercase tracking-wider">
-                      ⚡ Con Dalsat IA (Automatizado 24/7)
+                       Con Dalsat IA (Automatizado 24/7)
                     </span>
                     <span className="text-[11px] font-mono text-cian font-bold hidden sm:inline">
                       100% Clientes Atendidos
@@ -80,7 +80,7 @@ export default function BeforeAfterSlider() {
                     {/* Tarjeta 1 */}
                     <div className="bg-navy-800/80 border border-whatsapp-green/40 rounded-xl p-3 shadow backdrop-blur-md">
                       <div className="flex items-center justify-between text-[11px] text-whatsapp-green font-mono font-bold mb-0.5">
-                        <span>⚡ WhatsApp Inmediato</span>
+                        <span> WhatsApp Inmediato</span>
                         <span>2 seg</span>
                       </div>
                       <p className="text-xs text-white/90 font-medium leading-tight">
@@ -91,7 +91,7 @@ export default function BeforeAfterSlider() {
                     {/* Tarjeta 2 */}
                     <div className="bg-navy-800/80 border border-cian/40 rounded-xl p-3 shadow backdrop-blur-md">
                       <div className="flex items-center justify-between text-[11px] text-cian font-mono font-bold mb-0.5">
-                        <span>📞 Llamadas 24/7</span>
+                        <span> Llamadas 24/7</span>
                         <span>En vivo</span>
                       </div>
                       <p className="text-xs text-white/90 font-medium leading-tight">
@@ -102,7 +102,7 @@ export default function BeforeAfterSlider() {
                     {/* Tarjeta 3 */}
                     <div className="bg-navy-800/80 border border-cian/40 rounded-xl p-3 shadow backdrop-blur-md">
                       <div className="flex items-center justify-between text-[11px] text-cian-light font-mono font-bold mb-0.5">
-                        <span>📅 Recordatorios</span>
+                        <span> Recordatorios</span>
                         <span>Auto</span>
                       </div>
                       <p className="text-xs text-white/90 font-medium leading-tight">
@@ -119,12 +119,12 @@ export default function BeforeAfterSlider() {
                     <span className="w-2 h-2 rounded-full bg-whatsapp-green animate-pulse" />
                     Tu equipo trabaja tranquilo sin interrupciones ni estrés constante.
                   </span>
-                  <span className="font-mono text-whatsapp-green font-bold">Agenda Llena 🚀</span>
+                  <span className="font-mono text-whatsapp-green font-bold">Agenda Llena </span>
                 </div>
 
               </div>
 
-              {/* 2. LADO IZQUIERDO (ANTES: SIN DALSAT) — Capa superpuesta recortada por clipPath sin deformar el texto */}
+              {/* 2. LADO IZQUIERDO (ANTES: SIN DALSAT), Capa superpuesta recortada por clipPath sin deformar el texto */}
               <div
                 className="absolute inset-0 bg-gradient-to-br from-navy-950 via-navy-950 to-navy-950 p-4 sm:p-6 flex flex-col justify-between overflow-hidden pointer-events-none"
                 style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
@@ -133,7 +133,7 @@ export default function BeforeAfterSlider() {
                   
                   <div className="flex items-center justify-between mb-3">
                     <span className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-cian/20 text-cian border border-cian/40 text-[11px] font-extrabold uppercase tracking-wider">
-                      🔴 Sin IA (Caos Manual)
+                       Sin IA (Caos Manual)
                     </span>
                   </div>
 
@@ -153,7 +153,7 @@ export default function BeforeAfterSlider() {
                     {/* Tarjeta Caos 2 */}
                     <div className="bg-navy-950/80 border border-cian/40 rounded-xl p-3 shadow backdrop-blur-md">
                       <div className="flex items-center justify-between text-[11px] text-cian font-mono font-bold mb-0.5">
-                        <span>📵 Llamada Perdida</span>
+                        <span> Llamada Perdida</span>
                         <span>22:15h</span>
                       </div>
                       <p className="text-xs text-white/80 font-medium leading-tight">
@@ -164,7 +164,7 @@ export default function BeforeAfterSlider() {
                     {/* Tarjeta Caos 3 */}
                     <div className="bg-navy-950/80 border border-cian/40 rounded-xl p-3 shadow backdrop-blur-md">
                       <div className="flex items-center justify-between text-[11px] text-cian font-mono font-bold mb-0.5">
-                        <span>🚨 Plantón en Cita</span>
+                        <span> Plantón en Cita</span>
                         <span>11:00h</span>
                       </div>
                       <p className="text-xs text-white/80 font-medium leading-tight">
@@ -181,7 +181,7 @@ export default function BeforeAfterSlider() {
                     <span className="w-2 h-2 rounded-full bg-cian animate-ping" />
                     Interrupciones constantes al trabajar y horas perdidas respondiendo.
                   </span>
-                  <span className="font-mono text-cian font-bold pr-4">Estrés Diario ⚠️</span>
+                  <span className="font-mono text-cian font-bold pr-4">Estrés Diario </span>
                 </div>
 
               </div>
