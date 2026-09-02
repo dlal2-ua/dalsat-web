@@ -49,6 +49,10 @@ export default function AudioDemos() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [progress, setProgress] = useState<number>(0);
+  // Un mp3 tarda en descargarse. Sin esto, entre el clic y el sonido no
+  // pasaba nada visible y parecia que el boton no funcionaba.
+  const [cargando, setCargando] = useState<boolean>(false);
+  const [fallo, setFallo] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const playerRef = useRef<HTMLDivElement | null>(null);
 
@@ -61,10 +65,13 @@ export default function AudioDemos() {
     }
     setIsPlaying(false);
     setProgress(0);
+    setCargando(false);
   };
 
   const playAudio = (track: AudioTrack, speed: number = playbackSpeed) => {
     stopAudio();
+    setFallo(false);
+    setCargando(true);
 
     const audio = new Audio(track.audioUrl);
     audio.playbackRate = speed;
@@ -84,12 +91,17 @@ export default function AudioDemos() {
     audio.onerror = () => {
       setIsPlaying(false);
       setProgress(0);
+      setCargando(false);
+      setFallo(true);
     };
 
     audio.play().then(() => {
+      setCargando(false);
       setIsPlaying(true);
     }).catch(() => {
+      setCargando(false);
       setIsPlaying(false);
+      setFallo(true);
     });
   };
 
@@ -251,6 +263,7 @@ export default function AudioDemos() {
               <div className="bg-black/40 border border-white/15 rounded-2xl p-4 mb-6 shadow-inner">
                 <div className="text-[10px] font-mono text-cian uppercase mb-1 flex items-center justify-between">
                   <span>TRANSCRIPCIÓN EN TIEMPO REAL</span>
+                  {cargando && <span className="animate-pulse text-white/70">Cargando el audio…</span>}
                   {isPlaying && <span className="animate-pulse text-cian"> Reproduciendo ({playbackSpeed}x)...</span>}
                 </div>
                 <p className="text-xs sm:text-sm text-white/90 italic font-medium leading-relaxed">
@@ -274,9 +287,18 @@ export default function AudioDemos() {
               <button
                 type="button"
                 onClick={() => togglePlay(current.id)}
-                className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-white font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2"
+                disabled={cargando}
+                className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark disabled:cursor-wait disabled:opacity-70 disabled:hover:bg-terracota disabled:hover:scale-100 text-white font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2"
               >
-                {isPlaying ? (
+                {cargando ? (
+                  <>
+                    <span
+                      className="h-4 w-4 shrink-0 rounded-full border-2 border-white/30 border-t-white animate-spin"
+                      aria-hidden="true"
+                    />
+                    Cargando el audio…
+                  </>
+                ) : isPlaying ? (
                   <>
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
@@ -292,6 +314,18 @@ export default function AudioDemos() {
                   </>
                 )}
               </button>
+
+              {fallo && (
+                <p role="alert" className="flex items-start gap-2 rounded-xl border border-white/50 bg-white/[0.09] p-3.5 text-xs font-semibold leading-relaxed text-white">
+                  <svg className="mt-px h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                  </svg>
+                  <span>
+                    No se ha podido reproducir el audio. Vuelve a intentarlo, y si sigue igual
+                    escríbenos y te lo mandamos por WhatsApp.
+                  </span>
+                </p>
+              )}
             </div>
           </div>
 
