@@ -20,9 +20,9 @@ const FAQS: FaqItem[] = [
   {
     id: 'que-haceis',
     category: 'Servicios',
-    badge: 'Cinco servicios',
+    badge: 'Seis servicios',
     question: '¿Solo hacéis agentes de IA?',
-    answer: 'No. Hacemos cinco cosas: programas a medida para tu negocio, agentes de IA que atienden por WhatsApp, Instagram o dentro de tu web, mapeo y automatización de procesos, SEO para que te encuentren en Google y desarrollo web. Los agentes son la parte más visible, pero rara vez es por donde más se gana.',
+    answer: 'No. Hacemos seis cosas: programas a medida para tu negocio, agentes de IA que atienden por WhatsApp, Instagram o dentro de tu web, el panel desde el que gestionas todo eso, mapeo y automatización de procesos, SEO para que te encuentren en Google y desarrollo web. Los agentes son la parte más visible, pero rara vez es por donde más se gana.',
   },
   {
     id: 'saas-medida',
