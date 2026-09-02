@@ -160,7 +160,7 @@ export default function ServiceTabs() {
     <section id="demo-agente" ref={containerRef} className="relative min-h-screen md:h-[550vh] bg-navy-900 border-b border-white/10 py-12 md:py-0">
       
       {/* Contenedor Sticky en PC, normal en Móvil */}
-      <div className="relative md:sticky md:top-0 min-h-screen md:h-screen w-full flex flex-col justify-center items-center overflow-hidden px-3 sm:px-6 py-4">
+      <div className="relative md:sticky md:top-0 min-h-screen md:h-screen w-full flex flex-col justify-center items-center overflow-hidden px-3 sm:px-6 py-4 pt-20 md:pt-20">
         
         {/* Malla y luz de fondo reactiva al servicio actual */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:36px_36px] pointer-events-none" />
