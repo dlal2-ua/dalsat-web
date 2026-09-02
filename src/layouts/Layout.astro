@@ -13,14 +13,15 @@ const {
   image = '/logo_sin_fondo.png',
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://dalsat.ai');
+const SITE_URL = Astro.site || new URL('https://dalsats.com');
+const canonicalURL = new URL(Astro.url.pathname, SITE_URL);
 
 const schemaData = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Dalsat Soluciones IA",
-  "url": "https://dalsat.ai",
-  "logo": "https://dalsat.ai/logo_sin_fondo.png",
+  "url": SITE_URL.toString(),
+  "logo": new URL('/logo_sin_fondo.png', SITE_URL).toString(),
   "description": "Empresa especializada en implantación de agentes de Inteligencia Artificial para automatización de WhatsApp, atención al cliente y reportes ejecutivos.",
   "email": "dalsat.soluciones@gmail.com",
   "address": {

@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://dalsat.ai/sitemap-index.xml
+Sitemap: https://dalsats.com/sitemap-index.xml

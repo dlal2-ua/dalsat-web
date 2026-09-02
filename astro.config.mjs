@@ -4,7 +4,7 @@ import tailwind from '@astrojs/tailwind';
 import vercel from '@astrojs/vercel/static';
 
 export default defineConfig({
-  site: 'https://dalsat.ai',
+  site: 'https://dalsats.com',
   output: 'static',
   adapter: vercel(),
   integrations: [react(), tailwind()],
