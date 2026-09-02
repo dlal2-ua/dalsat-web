@@ -5,12 +5,15 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  /** Paginas que no deben salir en Google: 404, gracias y similares. */
+  noindex?: boolean;
 }
 
 const {
   title = 'DALSAT | Re-digitalización de pymes en toda España',
   description = 'SaaS a medida, agentes de IA, mapeo y automatización de procesos, panel de gestión, SEO y desarrollo web para pymes de toda España. Miramos cómo funciona tu negocio y automatizamos lo que se repite.',
   image = '/logo_sin_fondo.png',
+  noindex = false,
 } = Astro.props;
 
 const SITE_URL = Astro.site || new URL('https://dalsats.com');
@@ -56,7 +59,12 @@ const schemaData = {
     <meta name="description" content={description} />
     <meta name="keywords" content="saas a medida, software a medida pymes, agentes de IA para empresas, agente IA whatsapp, agente IA instagram, automatizacion de procesos, mapeo de procesos empresariales, seo para pymes, posicionamiento en Google, desarrollo web pymes, digitalizacion de pymes en España, CRM para pymes, ERP para pymes, panel de gestion de reservas, agente de voz para empresas" />
     <meta name="author" content="DALSAT" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta
+      name="robots"
+      content={noindex
+        ? 'noindex, nofollow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
+    />
     <link rel="canonical" href={canonicalURL} />
 
     <!-- OpenGraph / Facebook / WhatsApp / LinkedIn -->
