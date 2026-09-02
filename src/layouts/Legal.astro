@@ -9,9 +9,12 @@ interface Props {
   currentPath: string;
   heading: string;
   updated: string;
+  /** Para las paginas legales a las que todavia les faltan los datos
+   *  fiscales del titular: existen y se pueden leer, pero no se indexan. */
+  noindex?: boolean;
 }
 
-const { title, description, currentPath, heading, updated } = Astro.props;
+const { title, description, currentPath, heading, updated, noindex = false } = Astro.props;
 
 // Las tres paginas legales comparten forma: fondo crema, texto grafito y
 // titulares navy. Se monta aqui una vez para que no se desincronicen.
@@ -22,7 +25,7 @@ const LEGALES = [
 ];
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} noindex={noindex}>
   <Header client:load currentPath={currentPath} />
 
   <main class="pt-16 bg-crema text-grafito">
@@ -97,14 +100,6 @@ const LEGALES = [
   }
   .legal a:hover {
     color: #0FA8C4;
-  }
-  .legal .pendiente {
-    background: rgba(217, 100, 44, 0.12);
-    border: 1px dashed rgba(217, 100, 44, 0.55);
-    border-radius: 6px;
-    padding: 0.05rem 0.4rem;
-    font-weight: 700;
-    color: #B84E1C;
   }
   .legal table {
     width: 100%;

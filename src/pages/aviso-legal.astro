@@ -8,14 +8,24 @@ import Legal from '../layouts/Legal.astro';
   currentPath="/aviso-legal"
   heading="Aviso legal y condiciones de uso"
   updated="2 de septiembre de 2026"
+  noindex={true}
 >
+  {/* PENDIENTE: en cuanto este constituida la sociedad hay que poner aqui
+      razon social, NIF/CIF y domicilio, y quitar el parrafo de "en
+      constitucion". Hasta entonces esta pagina va con noindex y fuera del
+      sitemap, porque un aviso legal sin identificar al titular no deberia
+      indexarse. Ver tambien /politica-privacidad. */}
   <div>
     <h2>1. Quién está detrás de esta web</h2>
     <p>
-      Titular: <span class="pendiente">razón social por completar</span>, que opera bajo la marca DALSAT.<br />
-      NIF/CIF: <span class="pendiente">por completar</span>.<br />
-      Domicilio: <span class="pendiente">por completar</span>.<br />
-      Correo de contacto: <a href="mailto:dalsat.soluciones@gmail.com">dalsat.soluciones@gmail.com</a>.<br />
+      DALSAT es la marca con la que trabajamos. La sociedad está en proceso de constitución, así que
+      todavía no hay razón social, NIF ni domicilio social que publicar. En cuanto se complete el alta,
+      esos datos figurarán aquí.
+    </p>
+    <p>
+      Mientras tanto, el contacto es:<br />
+      Correo: <a href="mailto:dalsat.soluciones@gmail.com">dalsat.soluciones@gmail.com</a>.<br />
+      Teléfono y WhatsApp: 646 00 51 71.<br />
       Sitio web: <a href="https://dalsats.com">dalsats.com</a>.
     </p>
   </div>

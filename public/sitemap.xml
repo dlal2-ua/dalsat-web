@@ -43,18 +43,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dalsats.com/aviso-legal/</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://dalsats.com/politica-privacidad/</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  <url>
     <loc>https://dalsats.com/cookies/</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>yearly</changefreq>
