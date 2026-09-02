@@ -164,11 +164,11 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === 'sending'}
-        className="w-full flex items-center justify-center gap-2.5 bg-terracota hover:bg-terracota-dark text-white disabled:cursor-wait disabled:opacity-70 disabled:hover:bg-terracota font-bold py-4 rounded-xl transition-all duration-300 text-sm shadow-[0_0_25px_rgba(217,100,44,0.3)] hover:shadow-[0_0_35px_rgba(217,100,44,0.5)] hover:scale-[1.02] disabled:hover:scale-100 cursor-pointer"
+        className="w-full flex items-center justify-center gap-2.5 bg-terracota hover:bg-terracota-dark text-navy disabled:cursor-wait disabled:opacity-70 disabled:hover:bg-terracota font-bold py-4 rounded-xl transition-all duration-300 text-sm shadow-[0_0_25px_rgba(217,100,44,0.3)] hover:shadow-[0_0_35px_rgba(217,100,44,0.5)] hover:scale-[1.02] disabled:hover:scale-100 cursor-pointer"
       >
         {status === 'sending' && (
           <span
-            className="h-4 w-4 shrink-0 rounded-full border-2 border-white/30 border-t-white animate-spin"
+            className="h-4 w-4 shrink-0 rounded-full border-2 border-navy/25 border-t-navy animate-spin"
             aria-hidden="true"
           />
         )}

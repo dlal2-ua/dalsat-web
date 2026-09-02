@@ -32,7 +32,7 @@ export default function RoiCalculator() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <label htmlFor="range-messages" className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                     Consultas / Mensajes al día
+                     Mensajes y llamadas al día
                   </label>
                   <span className="text-xl sm:text-2xl font-black text-cian font-mono bg-cian/10 px-3 py-1 rounded-xl border border-cian/30">
                     {messagesPerDay} <span className="text-xs font-sans font-normal text-white/70">/día</span>
@@ -59,7 +59,7 @@ export default function RoiCalculator() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <label htmlFor="range-cost" className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                     Valor estimado de tu hora (o empleado)
+                     Lo que vale una hora de tu equipo
                   </label>
                   <span className="text-xl sm:text-2xl font-black text-cian font-mono bg-cian/10 px-3 py-1 rounded-xl border border-cian/30">
                     {hourlyCost} €<span className="text-xs font-sans font-normal text-white/70">/h</span>
@@ -85,7 +85,7 @@ export default function RoiCalculator() {
               {/* Nota explicativa */}
               <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-xs text-white/60 leading-relaxed flex items-start gap-2.5">
                 <span className="text-cian font-bold text-base">ℹ</span>
-                <span>Cálculo basado en 2.8 minutos medios por atención de llamada o respuesta manual en WhatsApp. La IA de Dalsat absorbe el 90% de este volumen de forma autónoma.</span>
+                <span>La cuenta sale de 2,8 minutos por mensaje o llamada atendidos a mano, y de que el agente resuelve solo la mayor parte. Es una estimación para hacerte una idea, no una promesa: lo que ahorre tu negocio se ve mirando tu caso.</span>
               </div>
 
             </div>
@@ -133,9 +133,9 @@ export default function RoiCalculator() {
               {/* Botón CTA directo */}
               <a
                 href="#contacto"
-                className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-white font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] block cursor-pointer"
+                className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] block cursor-pointer"
               >
-                Empezar a Ahorrar Ahora →
+                Ver qué se puede automatizar →
               </a>
 
             </div>

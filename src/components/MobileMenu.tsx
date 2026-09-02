@@ -100,7 +100,7 @@ export default function MobileMenu({ currentPath = '/' }: MobileMenuProps) {
           <a
             href="#contacto"
             onClick={() => setOpen(false)}
-            className="flex min-h-[48px] items-center justify-center rounded-xl bg-terracota px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-terracota-dark shadow-[0_0_15px_rgba(217,100,44,0.35)]"
+            className="flex min-h-[48px] items-center justify-center rounded-xl bg-terracota px-5 py-3 text-sm font-semibold text-navy transition-colors hover:bg-terracota-dark shadow-[0_0_15px_rgba(217,100,44,0.35)]"
           >
             Hablar con nosotros →
           </a>

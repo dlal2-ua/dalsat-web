@@ -34,7 +34,7 @@ export default function FloatingWhatsApp() {
         rel="noopener noreferrer"
         aria-label="Abrir chat de WhatsApp"
         onMouseEnter={() => setShowTooltip(true)}
-        className="group relative flex h-14 w-14 items-center justify-center rounded-2xl bg-terracota text-white shadow-[0_0_25px_rgba(217,100,44,0.4)] transition-all duration-300 hover:scale-110 hover:bg-terracota-dark hover:shadow-[0_0_40px_rgba(217,100,44,0.65)] active:scale-95 cursor-pointer"
+        className="group relative flex h-14 w-14 items-center justify-center rounded-2xl bg-terracota text-navy shadow-[0_0_25px_rgba(217,100,44,0.4)] transition-all duration-300 hover:scale-110 hover:bg-terracota-dark hover:shadow-[0_0_40px_rgba(217,100,44,0.65)] active:scale-95 cursor-pointer"
       >
         {/* Anillo de pulso neón */}
         <span className="absolute -inset-1 rounded-2xl bg-terracota/30 animate-pulse group-hover:bg-terracota/60 transition-colors pointer-events-none" />

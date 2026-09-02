@@ -401,7 +401,7 @@ export default function SplitHero() {
             <div className="hero-cta mt-7 flex flex-col items-center gap-3 sm:flex-row">
               <a
                 href="/contacto"
-                className="inline-flex items-center justify-center rounded-2xl bg-terracota px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_0_25px_rgba(217,100,44,0.35)] transition-all hover:scale-105 hover:bg-terracota-dark"
+                className="inline-flex items-center justify-center rounded-2xl bg-terracota px-7 py-3.5 text-sm font-extrabold text-navy shadow-[0_0_25px_rgba(217,100,44,0.35)] transition-all hover:scale-105 hover:bg-terracota-dark"
               >
                 Cuéntanos cómo trabajas
               </a>

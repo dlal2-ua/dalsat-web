@@ -133,7 +133,7 @@ export default function Services() {
                 {service.link && (
                   <a
                     href={service.link.href}
-                    className="mt-6 inline-flex items-center gap-2 self-start text-sm font-bold text-terracota hover:text-terracota-light transition-colors"
+                    className="mt-6 inline-flex items-center gap-2 self-start text-sm font-bold text-cian hover:text-cian-light transition-colors"
                   >
                     {service.link.label}
                     <span aria-hidden="true">&rarr;</span>

@@ -288,12 +288,12 @@ export default function AudioDemos() {
                 type="button"
                 onClick={() => togglePlay(current.id)}
                 disabled={cargando}
-                className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark disabled:cursor-wait disabled:opacity-70 disabled:hover:bg-terracota disabled:hover:scale-100 text-white font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark disabled:cursor-wait disabled:opacity-70 disabled:hover:bg-terracota disabled:hover:scale-100 text-navy font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2"
               >
                 {cargando ? (
                   <>
                     <span
-                      className="h-4 w-4 shrink-0 rounded-full border-2 border-white/30 border-t-white animate-spin"
+                      className="h-4 w-4 shrink-0 rounded-full border-2 border-navy/25 border-t-navy animate-spin"
                       aria-hidden="true"
                     />
                     Cargando el audio…

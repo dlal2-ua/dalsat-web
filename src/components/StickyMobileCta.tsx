@@ -30,7 +30,7 @@ export default function StickyMobileCta() {
         <a
           href="/contacto"
           tabIndex={visible ? undefined : -1}
-          className="flex-1 rounded-xl bg-terracota px-4 py-3.5 text-center text-sm font-extrabold text-white transition-colors hover:bg-terracota-dark"
+          className="flex-1 rounded-xl bg-terracota px-4 py-3.5 text-center text-sm font-extrabold text-navy transition-colors hover:bg-terracota-dark"
         >
           Hablar con nosotros
         </a>
