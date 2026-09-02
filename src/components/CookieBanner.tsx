@@ -58,9 +58,9 @@ export default function CookieBanner() {
       className="fixed inset-x-0 bottom-0 z-[60] p-3 sm:p-4"
     >
       <div className="mx-auto flex max-w-4xl flex-col gap-4 rounded-2xl border border-white/15 bg-navy-950/95 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-xl sm:flex-row sm:items-center sm:gap-6 sm:p-6">
-        <p className="flex-1 text-sm leading-relaxed text-white/80">
-          Usamos una cookie técnica para recordar esta respuesta y, si nos dejas, estadísticas de
-          visitas para saber qué páginas se miran. No hay publicidad ni seguimiento entre webs.{' '}
+        <p className="flex-1 text-[13px] sm:text-sm leading-relaxed text-white/80">
+          Una cookie técnica para recordar esta respuesta y, si nos dejas, estadísticas de visitas.
+          Ni publicidad ni seguimiento entre webs.{' '}
           <a
             href="/cookies"
             className="font-semibold text-cian underline underline-offset-2 hover:text-cian-light"

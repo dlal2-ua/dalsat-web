@@ -257,6 +257,10 @@ export default function SplitHero() {
           opacity: 0;
           animation: heroFadeIn 0.9s ease-out 0.8s forwards;
         }
+        .hero-cta {
+          opacity: 0;
+          animation: heroFadeIn 0.9s ease-out 1.1s forwards;
+        }
         .hero-hint {
           opacity: 0;
           animation: heroFadeIn 0.9s ease-out 1.3s forwards;
@@ -303,7 +307,7 @@ export default function SplitHero() {
           animation: starFloat var(--float-duration, 35s) ease-in-out infinite alternate;
         }
         @media (prefers-reduced-motion: reduce) {
-          .hero-letter, .hero-subtitle, .hero-hint {
+          .hero-letter, .hero-subtitle, .hero-cta, .hero-hint {
             animation: none;
             opacity: 1;
           }
@@ -391,6 +395,23 @@ export default function SplitHero() {
             <p className="hero-subtitle mt-6 max-w-md text-[clamp(1rem,2.5vw,1.25rem)] font-normal text-white/55">
               Re-digitalizamos pymes de toda España
             </p>
+
+            {/* La primera pantalla no tenia ninguna accion: habia que scrollear
+                o subir a la cabecera. Ahora se puede escribir desde aqui. */}
+            <div className="hero-cta mt-7 flex flex-col items-center gap-3 sm:flex-row">
+              <a
+                href="/contacto"
+                className="inline-flex items-center justify-center rounded-2xl bg-terracota px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_0_25px_rgba(217,100,44,0.35)] transition-all hover:scale-105 hover:bg-terracota-dark"
+              >
+                Cuéntanos cómo trabajas
+              </a>
+              <a
+                href="/servicios"
+                className="inline-flex items-center justify-center rounded-2xl border border-white/25 px-7 py-3.5 text-sm font-bold text-white/80 transition-colors hover:border-cian/60 hover:text-cian"
+              >
+                Ver qué hacemos
+              </a>
+            </div>
           </div>
         </div>
 

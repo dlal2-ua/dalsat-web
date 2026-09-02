@@ -1,5 +1,6 @@
 ---
 import CookieBanner from '../components/CookieBanner';
+import StickyMobileCta from '../components/StickyMobileCta';
 
 interface Props {
   title?: string;
@@ -17,6 +18,12 @@ const {
 } = Astro.props;
 
 const SITE_URL = Astro.site || new URL('https://dalsats.com');
+
+// En contacto y gracias la barra fija del movil sobra: ya estas donde te
+// llevaria. En el resto de paginas acompana.
+const RUTA = Astro.url.pathname.replace(/\/$/, '') || '/';
+const SIN_BARRA_MOVIL = ['/contacto', '/gracias'];
+const mostrarBarraMovil = !SIN_BARRA_MOVIL.includes(RUTA);
 const canonicalURL = new URL(Astro.url.pathname, SITE_URL);
 
 const schemaData = {
@@ -106,6 +113,7 @@ const schemaData = {
   </head>
   <body class="font-sans antialiased bg-crema text-grafito">
     <slot />
+    {mostrarBarraMovil && <StickyMobileCta client:idle />}
     {/* La analitica de Vercel ya no se carga aqui: la inyecta el banner solo
         si el visitante acepta. Antes se cargaba siempre y el aviso era humo. */}
     <CookieBanner client:load />

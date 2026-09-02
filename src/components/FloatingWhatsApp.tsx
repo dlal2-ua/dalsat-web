@@ -11,7 +11,9 @@ export default function FloatingWhatsApp() {
   }, []);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+    // En movil no sale: ahi el contacto lo lleva la barra fija de abajo y
+    // dos botones flotantes en la misma esquina se pisan.
+    <div className="fixed bottom-6 right-6 z-50 hidden md:flex items-center gap-3">
       {/* Tooltip emergente de atención */}
       <div
         className={`hidden sm:flex items-center gap-2 bg-navy-800/90 text-white text-xs font-bold px-4 py-2.5 rounded-2xl border border-terracota/40 backdrop-blur-xl shadow-[0_10px_25px_rgba(0,0,0,0.5)] transition-all duration-500 pointer-events-none ${
