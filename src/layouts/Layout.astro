@@ -13,7 +13,8 @@ interface Props {
 const {
   title = 'DALSAT | Re-digitalización de pymes en toda España',
   description = 'SaaS a medida, agentes de IA, mapeo y automatización de procesos, panel de gestión, SEO y desarrollo web para pymes de toda España. Miramos cómo funciona tu negocio y automatizamos lo que se repite.',
-  image = '/logo_sin_fondo.png',
+  // Tarjeta 1200x630 propia. El logo suelto se recortaba en WhatsApp.
+  image = '/og-dalsat.png',
   noindex = false,
 } = Astro.props;
 
@@ -31,7 +32,7 @@ const schemaData = {
   "@type": "Organization",
   "name": "DALSAT",
   "url": SITE_URL.toString(),
-  "logo": new URL('/logo_sin_fondo.png', SITE_URL).toString(),
+  "logo": new URL('/logo-dalsat.png', SITE_URL).toString(),
   "description": "Estudio de digitalización para pymes de toda España: SaaS a medida, agentes de IA especializados por negocio, panel de gestión, mapeo y automatización de procesos, SEO y desarrollo web.",
   "email": "dalsat.soluciones@gmail.com",
   "address": {
@@ -80,6 +81,9 @@ const schemaData = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(image, canonicalURL)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="DALSAT: ya tienes web, redes y Google Maps. Ahora toca automatizar." />
     <meta property="og:locale" content="es_ES" />
     <meta property="og:site_name" content="DALSAT" />
 
@@ -103,6 +107,8 @@ const schemaData = {
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#072847" />
     <style is:global>
       @media (prefers-reduced-motion: no-preference) {
         html {

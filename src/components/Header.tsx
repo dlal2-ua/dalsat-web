@@ -23,8 +23,8 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
         {/* Logo de Dalsat */}
         <a href="/" className="flex items-center gap-2.5 group">
           <img
-            src="/logo_sin_fondo.png"
-            alt="Dalsat logo"
+            src="/logo-dalsat.png"
+            alt="" aria-hidden="true"
             width="44"
             height="44"
             className="h-10 w-auto object-contain brightness-0 invert group-hover:scale-105 transition-transform"

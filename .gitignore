@@ -4,3 +4,7 @@ dist/
 .env.*
 !.env.example
 .vercel
+
+# Video de demo del panel: lleva numeros de telefono de clientes y una URL
+# de vinculacion de WhatsApp. No entra nunca en el repositorio.
+public/plataforma.mp4

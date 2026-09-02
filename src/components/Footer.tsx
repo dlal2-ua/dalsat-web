@@ -15,8 +15,8 @@ export default function Footer() {
           <div className="lg:col-span-4 space-y-4">
             <a href="/" className="inline-flex items-center gap-3 group">
               <img
-                src="/logo_sin_fondo.png"
-                alt="Dalsat Logo"
+                src="/logo-dalsat.png"
+                alt="" aria-hidden="true"
                 width={40}
                 height={40}
                 className="h-10 w-auto object-contain brightness-0 invert transition-transform duration-300 group-hover:scale-110"

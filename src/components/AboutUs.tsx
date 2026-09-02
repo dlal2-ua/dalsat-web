@@ -83,7 +83,7 @@ export default function AboutUs() {
         <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-20">
           <div className="flex justify-center mb-5">
             <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/10 shadow-2xl backdrop-blur-xl">
-              <img src="/logo_sin_fondo.png" alt="Dalsat logo" className="h-14 sm:h-18 w-auto object-contain brightness-0 invert drop-shadow-[0_0_20px_rgba(20,205,236,0.4)]" />
+              <img src="/logo-dalsat.png" alt="Logotipo de DALSAT" className="h-14 sm:h-18 w-auto object-contain brightness-0 invert drop-shadow-[0_0_20px_rgba(20,205,236,0.4)]" />
             </div>
           </div>
 
