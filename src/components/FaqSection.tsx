@@ -11,6 +11,20 @@ interface FaqItem {
 const FAQS: FaqItem[] = [
   // Categoria: Servicios
   {
+    id: 'empezar',
+    category: 'Servicios',
+    badge: 'Primer paso',
+    question: '¿Por dónde se empieza?',
+    answer: 'Por una reunión de media hora en la que nos cuentas cómo trabajas hoy: qué haces cada día, quién lo hace y dónde se apunta. De ahí sale el mapa de tu negocio y la lista de lo que se puede quitar de en medio. Si vemos que no hay nada que te compense, te lo decimos y no pasa nada.',
+  },
+  {
+    id: 'ya-tengo-web',
+    category: 'Servicios',
+    badge: 'Re-digitalización',
+    question: 'Ya tengo web, redes y ficha en Google. ¿Esto para qué me sirve?',
+    answer: 'Todo eso sirve para que te encuentren, y sigue haciendo falta. Lo que no hace es quitarte trabajo: las llamadas, los mensajes de WhatsApp, las citas y los apuntes a mano siguen siendo tuyos. La re-digitalización es la parte de después: mirar cómo funciona tu negocio de verdad y hacer que lo que se repite cada semana se haga solo.',
+  },
+  {
     id: 'panel',
     category: 'Servicios',
     badge: 'Incluido',
@@ -58,35 +72,35 @@ const FAQS: FaqItem[] = [
     category: 'WhatsApp',
     badge: 'Sin cambio de número',
     question: '¿Tengo que cambiar el número de WhatsApp de mi empresa?',
-    answer: 'No. El Agente de IA de Dalsat se conecta directamente a tu número actual de WhatsApp Business o línea telefónica existente. Mantienes tu lista de contactos, historial y perfil de empresa sin interrumpir el servicio.',
+    answer: 'No. El agente se conecta al número de WhatsApp Business que ya usas. Mantienes tus contactos, tu historial y tu perfil de empresa, y tus clientes no notan ningún cambio.',
   },
   {
     id: 'multimedia',
     category: 'WhatsApp',
     badge: 'Archivos & Multimedia',
     question: '¿El agente de WhatsApp puede enviar catálogos, imágenes o documentos PDF?',
-    answer: 'Sí. El agente puede adjuntar catálogos de productos en PDF, fotos de servicios, listas de precios y ubicaciones de Google Maps al instante según lo que solicite el cliente.',
+    answer: 'Sí. Manda catálogos en PDF, fotos de tus servicios, listas de precios o la ubicación en Google Maps, según lo que le pida el cliente.',
   },
   {
     id: 'pagos',
     category: 'WhatsApp',
     badge: 'Cobros automáticos',
     question: '¿Puede el agente de WhatsApp enviar enlaces de pago o señal de reserva?',
-    answer: 'Sí. Nos integramos con pasarelas de pago como Stripe, Bizum o Redsys para que el agente envíe un enlace seguro de cobro o señal antes de confirmar la cita en la agenda.',
+    answer: 'Sí. Lo conectamos con Stripe, Bizum o Redsys para que el agente mande un enlace de cobro seguro y no confirme la cita hasta que esté pagada la señal.',
   },
   {
     id: 'notas_voz',
     category: 'WhatsApp',
     badge: 'Notas de voz',
     question: '¿Qué ocurre si un cliente envía un audio de WhatsApp en lugar de escribir?',
-    answer: 'El agente transcribe automáticamente la nota de voz del cliente en milisegundos, comprende la petición y le responde de manera fluida ya sea por texto o con otra nota de voz generada por IA.',
+    answer: 'Lo escucha, entiende lo que le piden y contesta al momento, por escrito o con otra nota de voz.',
   },
   {
     id: 'limite',
     category: 'WhatsApp',
     badge: 'Sin esperas',
     question: '¿Hay algún límite en el número de clientes atendidos simultáneamente?',
-    answer: 'Ninguno. A diferencia de un equipo humano, el agente de IA puede mantener cientos de conversaciones simultáneas en WhatsApp a la misma hora sin ralentizarse ni hacer esperar a ningún cliente.',
+    answer: 'Ninguno. Lleva cientos de conversaciones a la vez sin ir más lento y sin dejar a nadie esperando.',
   },
 
   // Categoria: Agentes de Voz
@@ -95,21 +109,21 @@ const FAQS: FaqItem[] = [
     category: 'Agentes de Voz',
     badge: 'Voz Natural',
     question: '¿Cómo suena la voz de las llamadas telefónicas?',
-    answer: 'Utilizamos tecnología de locución con entonación natural en español de España, pausas orgánicas y fluidez conversacional. En la sección de Demos de nuestra web puedes escuchar muestras de voz reales en directo.',
+    answer: 'Suena a persona: español de España, con sus pausas y su entonación. En la página de demos puedes escuchar muestras reales y juzgarlo tú.',
   },
   {
     id: 'llamadas_salientes',
     category: 'Agentes de Voz',
     badge: 'Llamadas automáticas',
     question: '¿Puede el agente realizar llamadas salientes para recordar citas?',
-    answer: 'Sí. El agente puede realizar llamadas automáticas de confirmación 24 o 48 horas antes de la cita, permitiendo al cliente confirmar o reagendar en la propia llamada para reducir plantones a cero.',
+    answer: 'Sí. Llama uno o dos días antes para confirmar, y el cliente puede confirmar o cambiar la cita en esa misma llamada. Así se te quedan muchos menos huecos sin avisar.',
   },
   {
     id: 'horario_voz',
     category: 'Agentes de Voz',
     badge: 'Atención 24/7',
     question: '¿El agente telefónico atiende fuera del horario comercial?',
-    answer: 'Sí, opera las 24 horas del día, los 365 días del año. Si entra una llamada de madrugada o en fin de semana, el agente toma nota, agenda la cita o resuelve la duda de inmediato.',
+    answer: 'Sí, las 24 horas y todos los días del año. Si te llaman de madrugada o un domingo, el agente coge el recado, da la cita o resuelve la duda.',
   },
 
   // Categoria: Integraciones
@@ -118,14 +132,14 @@ const FAQS: FaqItem[] = [
     category: 'Integraciones',
     badge: 'Citas automáticas',
     question: '¿Se conecta a mi agenda actual (Google Calendar, Booksy, etc.)?',
-    answer: 'Sí. El agente consulta en tiempo real la disponibilidad en Google Calendar, Outlook, Booksy, Calendly, Shopify o tu CRM (HubSpot, Salesforce) y guarda las citas automáticamente sin generar reservas dobles.',
+    answer: 'Sí. Mira los huecos libres en Google Calendar, Outlook, Booksy o Calendly antes de dar una cita, y la guarda ahí mismo. No coge dos citas para la misma hora.',
   },
   {
     id: 'crm',
     category: 'Integraciones',
     badge: 'CRM & ERP',
     question: '¿Se puede integrar con mi programa de facturación o sistema propio?',
-    answer: 'Sí, disponemos de integración mediante API y webhooks con sistemas propios, softwares de gestión clínica, restauración y gestorías para sincronizar datos de clientes automáticamente.',
+    answer: 'Sí. Nos conectamos con tu programa de facturación, tu software de gestión o el que uses en tu sector, para que los datos de un cliente no haya que meterlos dos veces.',
   },
 
   // Categoria: Seguridad & RGPD
@@ -134,42 +148,50 @@ const FAQS: FaqItem[] = [
     category: 'Seguridad & RGPD',
     badge: 'Traspaso a humano',
     question: '¿Qué ocurre si la IA no sabe responder una consulta o el cliente requiere atención personalizada?',
-    answer: 'Nuestros agentes cuentan con Traspaso Inteligente a Humano. Cuando la IA detecta que la consulta requiere criterio personal o atención especializada, notifica al instante a tu equipo enviando el resumen completo para que podáis tomar el control.',
+    answer: 'Te lo pasa a ti. Cuando la consulta se sale de lo que sabe o hace falta el criterio de una persona, avisa a tu equipo con el resumen de lo hablado y seguís vosotros desde ahí. No se inventa una respuesta para salir del paso.',
   },
   {
     id: 'rgpd',
     category: 'Seguridad & RGPD',
     badge: 'RGPD Europeo',
     question: '¿Cumple con la Ley de Protección de Datos (RGPD)?',
-    answer: 'Sí, al 100%. Todos los datos viajan cifrados de extremo a extremo y se alojan en servidores seguros europeos. Garantizamos la confidencialidad absoluta y los datos de tus clientes nunca se comparten ni se usan para entrenar modelos públicos.',
+    answer: 'Sí. Los datos van cifrados y se guardan en servidores europeos. Los de tus clientes no se comparten con nadie ni se usan para entrenar modelos públicos.',
   },
 
   // Categoria: Contrato & Tiempos
+  {
+    id: 'precio',
+    category: 'Contrato & Tiempos',
+    badge: 'Precio',
+    question: '¿Cuánto cuesta?',
+    answer: 'Depende de lo que montemos: no cuesta lo mismo un agente de WhatsApp que un programa a medida para tu negocio. Miramos tu caso, te decimos qué merece la pena y qué no, y te pasamos un precio cerrado antes de empezar. La primera reunión no se cobra y no te compromete a nada.',
+  },
   {
     id: 'tiempo',
     category: 'Contrato & Tiempos',
     badge: '48-72 Horas',
     question: '¿En cuánto tiempo queda instalado y funcionando?',
-    answer: 'En solo 48 a 72 horas laborables. Nos encargamos de todo el proceso de configuración: entrenamos la IA con tus tarifas, horarios y catálogo de servicios, realizamos las pruebas de seguridad y te lo entregamos listo para operar.',
+    answer: 'Un agente, entre 48 y 72 horas laborables. Lo montamos nosotros: le enseñamos tus precios, tus horarios y tus servicios, lo probamos y te lo entregamos funcionando. Un programa a medida o una web llevan más, y te decimos el plazo antes de empezar.',
   },
   {
     id: 'permanencia',
     category: 'Contrato & Tiempos',
     badge: 'Sin permanencia',
     question: '¿Existe algún tipo de contrato o permanencia obligatoria?',
-    answer: 'No. Operamos mes a mes sin compromisos de permanencia ni penalizaciones por cancelación. Confiamos en el rendimiento de la automatización para que continúes voluntariamente.',
+    answer: 'No. Vamos mes a mes, sin permanencia y sin penalización si lo dejas. Si no te compensa, avisas y se acaba.',
   },
 ];
 
 export default function FaqSection() {
-  const [openId, setOpenId] = useState<string>('numero');
-  // Por defecto se muestra la categoría 'WhatsApp' para no abrumar con todas las preguntas de golpe
-  const [activeCategory, setActiveCategory] = useState<string>('WhatsApp');
+  const [openId, setOpenId] = useState<string>('empezar');
+  // Se abre en 'Servicios', que es lo que hacemos entero. Los agentes son uno
+  // de los seis, asi que abrir en 'WhatsApp' daba una idea equivocada.
+  const [activeCategory, setActiveCategory] = useState<string>('Servicios');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [reactions, setReactions] = useState<Record<string, boolean>>({});
 
   const categories = Array.from(new Set(FAQS.map((f) => f.category)));
-  const allCategories = ['WhatsApp', ...categories.filter((c) => c !== 'WhatsApp'), 'Todas'];
+  const allCategories = ['Servicios', ...categories.filter((c) => c !== 'Servicios'), 'Todas'];
 
   const filteredFaqs = FAQS.filter((faq) => {
     const matchesCategory = activeCategory === 'Todas' || faq.category === activeCategory;
@@ -269,10 +291,10 @@ export default function FaqSection() {
             <p className="text-white/60 text-xs sm:text-sm mb-6">Prueba con otras palabras o escríbenos directamente por WhatsApp.</p>
             <button
               type="button"
-              onClick={() => { setSearchTerm(''); setActiveCategory('WhatsApp'); }}
+              onClick={() => { setSearchTerm(''); setActiveCategory('Servicios'); }}
               className="text-xs font-bold text-cian hover:underline cursor-pointer"
             >
-              ← Ver preguntas de WhatsApp
+              ← Ver las preguntas sobre servicios
             </button>
           </div>
         )}
@@ -301,7 +323,7 @@ export default function FaqSection() {
                 >
                   <div className="flex items-center gap-3.5">
                     <span className="text-xs font-mono font-bold text-cian bg-cian/10 border border-cian/20 px-2.5 py-1 rounded-lg shrink-0">
-                      0{idx + 1}
+                      {String(idx + 1).padStart(2, '0')}
                     </span>
 
                     <div>
