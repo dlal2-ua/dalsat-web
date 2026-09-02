@@ -11,31 +11,14 @@ export default function RoiCalculator() {
   const moneySavedPerYear = moneySavedPerMonth * 12;
 
   return (
-    <section id="calculadora" className="relative py-20 sm:py-28 bg-navy-900 border-t border-white/10 overflow-hidden">
+    <section id="calculadora" className="relative pb-20 sm:pb-28 pt-4 bg-navy-900 border-t border-white/10 overflow-hidden">
       {/* Resplandor ambiental de fondo */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-gradient-to-tr from-cian/15 via-cian-dark/15 to-transparent rounded-full blur-[170px] pointer-events-none" />
 
       <div className="max-w-6xl lg:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         
-        {/* Cabecera */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cian/10 border border-cian/30 backdrop-blur-xl shadow-[0_0_20px_rgba(20,205,236,0.25)] mb-4">
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cian opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-cian"></span>
-            </span>
-            <span className="text-xs font-extrabold tracking-widest uppercase text-cian">
-              Calculadora de Rentabilidad
-            </span>
-          </div>
-
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3">
-            ¿Cuánto Ahorrarás con IA?
-          </h2>
-          <p className="text-white/70 text-base sm:text-lg font-light">
-            Mueve los controles para calcular las horas y el dinero que recuperarás cada mes.
-          </p>
-        </div>
+        {/* El titular lo pone la pagina: aqui repetido salian dos cabeceras
+            seguidas diciendo lo mismo. */}
 
         {/* Tarjeta de la Calculadora */}
         <div className="bg-gradient-to-b from-white/[0.12] via-white/[0.05] to-white/[0.02] border border-cian/40 rounded-3xl p-6 sm:p-10 md:p-12 backdrop-blur-3xl shadow-[0_25px_70px_rgba(0,0,0,0.8)] relative overflow-hidden">
