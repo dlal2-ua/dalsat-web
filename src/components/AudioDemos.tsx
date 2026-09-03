@@ -1,3 +1,5 @@
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
 import { useState, useRef, useEffect } from 'react';
 
 interface AudioTrack {
@@ -44,7 +46,17 @@ const TRACKS: AudioTrack[] = [
   },
 ];
 
-export default function AudioDemos() {
+interface Props {
+  idioma?: Idioma;
+}
+
+export default function AudioDemos({ idioma = IDIOMA_POR_DEFECTO }: Props) {
+  const t = contenido(idioma).audio;
+  const PISTAS = TRACKS.map((pista) => {
+    const textos = t.lista.find((x) => x.id === pista.id);
+    return { ...pista, ...textos };
+  });
+
   const [activeTrack, setActiveTrack] = useState<string>(TRACKS[0].id);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
@@ -56,7 +68,7 @@ export default function AudioDemos() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const playerRef = useRef<HTMLDivElement | null>(null);
 
-  const current = TRACKS.find((t) => t.id === activeTrack) || TRACKS[0];
+  const current = PISTAS.find((p) => p.id === activeTrack) || PISTAS[0];
 
   const stopAudio = () => {
     if (audioRef.current) {
@@ -150,15 +162,18 @@ export default function AudioDemos() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cian"></span>
             </span>
             <span className="text-xs font-extrabold tracking-widest uppercase text-cian">
-              Demo de Voz IA Real
+              {t.etiqueta}
             </span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3">
-            Escucha cómo habla tu Agente
+            {t.titulo}
           </h2>
           <p className="text-white/70 text-base sm:text-lg font-light">
-            Locución en voz alta con entonación natural en español.
+            {t.entradilla}
+            {t.avisoIdioma && (
+              <span className="mt-2 block text-sm text-white/50">{t.avisoIdioma}</span>
+            )}
           </p>
         </div>
 
@@ -167,7 +182,7 @@ export default function AudioDemos() {
           
           {/* Lista de Pistas de Audio */}
           <div className="md:col-span-6 space-y-3">
-            {TRACKS.map((track) => {
+            {PISTAS.map((track) => {
               const isSelected = track.id === activeTrack;
               const isThisPlaying = isSelected && isPlaying;
               return (
@@ -263,11 +278,17 @@ export default function AudioDemos() {
               <div className="bg-black/40 border border-white/15 rounded-2xl p-4 mb-6 shadow-inner">
                 <div className="text-[10px] font-mono text-cian uppercase mb-1 flex items-center justify-between">
                   <span>TRANSCRIPCIÓN EN TIEMPO REAL</span>
-                  {cargando && <span className="animate-pulse text-white/70">Cargando el audio…</span>}
+                  {cargando && <span className="animate-pulse text-white/70">{t.cargando}</span>}
                   {isPlaying && <span className="animate-pulse text-cian"> Reproduciendo ({playbackSpeed}x)...</span>}
                 </div>
                 <p className="text-xs sm:text-sm text-white/90 italic font-medium leading-relaxed">
                   "{current.transcript}"
+                  {t.etiquetaTraduccion && current.traduccion && (
+                    <span className="mt-3 block not-italic text-white/55">
+                      <span className="mr-1.5 font-bold text-cian/70">{t.etiquetaTraduccion}</span>
+                      {current.traduccion}
+                    </span>
+                  )}
                 </p>
               </div>
             </div>
@@ -296,7 +317,7 @@ export default function AudioDemos() {
                       className="h-4 w-4 shrink-0 rounded-full border-2 border-navy/25 border-t-navy animate-spin"
                       aria-hidden="true"
                     />
-                    Cargando el audio…
+                    {t.cargando}
                   </>
                 ) : isPlaying ? (
                   <>
@@ -310,7 +331,7 @@ export default function AudioDemos() {
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z" />
                     </svg>
-                    Escuchar Muestra de Voz
+                    {t.escuchar}
                   </>
                 )}
               </button>
