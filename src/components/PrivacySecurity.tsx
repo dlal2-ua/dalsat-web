@@ -120,7 +120,7 @@ export default function PrivacySecurity() {
 
           <a
             href="#contacto"
-            className="shrink-0 px-6 py-3 rounded-xl bg-terracota hover:bg-terracota-dark text-navy font-bold text-xs sm:text-sm transition-all duration-300 shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:scale-105"
+            className="shrink-0 px-6 py-3 rounded-xl bg-terracota hover:bg-terracota-dark text-navy font-bold text-xs sm:text-sm transition-all duration-300 shadow-[0_0_20px_rgba(217,100,44,0.3)] hover:scale-105"
           >
             Consultar Normativa →
           </a>

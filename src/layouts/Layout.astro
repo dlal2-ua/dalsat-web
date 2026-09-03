@@ -120,6 +120,27 @@ const schemaData = {
         html {
           scroll-behavior: smooth;
         }
+
+        /* Revelado al entrar en pantalla, para todo el sitio. Se esconde solo
+           si hay JS (.js lo pone el script de arriba) y si el visitante no ha
+           pedido menos movimiento.
+
+           Se desplaza con `translate`, no con `transform`: muchas tarjetas ya
+           usan hover:-translate-y-1, que compila a transform, y un transform
+           aqui se lo comeria por especificidad. Son propiedades
+           independientes, asi que componen en vez de pisarse. */
+        html.js [data-reveal] {
+          opacity: 0;
+          translate: 0 18px;
+        }
+
+        html.js [data-reveal].se-ve {
+          opacity: 1;
+          translate: none;
+          transition:
+            opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+            translate 0.55s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+        }
       }
     </style>
   </head>
@@ -129,5 +150,50 @@ const schemaData = {
     {/* La analitica de Vercel ya no se carga aqui: la inyecta el banner solo
         si el visitante acepta. Antes se cargaba siempre y el aviso era humo. */}
     <CookieBanner client:load />
+
+    {/* Revelado al hacer scroll para todo el sitio. Sin libreria de animacion:
+        IntersectionObserver y una clase. El escalonado lo pone cada elemento
+        con --reveal-delay, no un timer en JS.
+
+        Lleva MutationObserver porque las islas de React (Platform, FaqSection,
+        AboutUs...) se hidratan despues de que corra este script: sin el, sus
+        [data-reveal] se quedarian escondidos para siempre. */}
+    <script>
+      const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const SIN_SOPORTE = !('IntersectionObserver' in window);
+
+      const observador =
+        REDUCE || SIN_SOPORTE
+          ? null
+          : new IntersectionObserver(
+              (entradas) => {
+                for (const entrada of entradas) {
+                  if (!entrada.isIntersecting) continue;
+                  entrada.target.classList.add('se-ve');
+                  observador?.unobserve(entrada.target);
+                }
+              },
+              { rootMargin: '0px 0px -10% 0px', threshold: 0.12 }
+            );
+
+      function registrar(raiz: ParentNode) {
+        const objetivos = raiz.querySelectorAll<HTMLElement>('[data-reveal]:not(.se-ve)');
+        for (const el of objetivos) {
+          if (observador) observador.observe(el);
+          else el.classList.add('se-ve');
+        }
+      }
+
+      registrar(document);
+
+      // Las islas aparecen mas tarde. Solo miramos subarboles nuevos.
+      new MutationObserver((mutaciones) => {
+        for (const m of mutaciones) {
+          for (const nodo of m.addedNodes) {
+            if (nodo instanceof HTMLElement) registrar(nodo.parentNode ?? document);
+          }
+        }
+      }).observe(document.body, { childList: true, subtree: true });
+    </script>
   </body>
 </html>
