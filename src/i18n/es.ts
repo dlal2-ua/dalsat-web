@@ -38,7 +38,7 @@ export const es = {
         'Cuéntanos cómo trabajas hoy. Te decimos qué se puede automatizar, qué no merece la pena y cuánto tiempo te ahorra.',
       cta: 'Hablar con nosotros',
     },
-    servicios: {
+      servicios: {
       titulo: '¿Por dónde empezarías tú?',
       texto:
         'Cuéntanos cómo trabajas hoy y te decimos qué se puede quitar de en medio. Sin compromiso.',
@@ -122,6 +122,40 @@ export const es = {
       texto:
         'Una web rápida y clara, pensada para que quien entre haga algo: pedir cita, escribirte o comprar. Y conectada con las herramientas que ya usas.',
       puntos: ['Carga rápido en el móvil', 'Pensada para que te escriban', 'Conectada a tu agente'],
+    },
+  },
+
+  plataforma: {
+    etiqueta: 'Tu panel',
+    titulo: 'No te dejamos con una caja negra',
+    texto:
+      'Todo lo que montamos se gestiona desde un mismo sitio, con tu usuario y tu contraseña. Entras desde el móvil o desde el ordenador y ves qué está pasando en tu negocio sin llamar a nadie.',
+    pieCaptura: 'Lo primero que ves al entrar. Los datos son de una cuenta de pruebas.',
+    altCaptura:
+      'Pantalla de inicio del panel de DALSAT: reservas de la semana, facturación estimada, clientes únicos, mensajes atendidos por el agente y tiempo medio de respuesta.',
+    incluido: 'El panel entra con lo que contrates. No se paga aparte ni hay que instalar nada.',
+    entrar: 'Ya soy cliente, entrar al panel',
+    capacidades: {
+      chat: {
+        titulo: 'Tu agente de chat',
+        texto:
+          'Cambias lo que responde, sus precios y sus horarios cuando quieras. Y lees las conversaciones que ha tenido.',
+      },
+      voz: {
+        titulo: 'Tu agente de voz',
+        texto:
+          'El que coge el teléfono. Eliges su voz, qué puede decir y cuándo tiene que pasarte la llamada a ti.',
+      },
+      reservas: {
+        titulo: 'Las reservas',
+        texto:
+          'Todas las citas que ha cogido el agente, en un calendario. Puedes moverlas, cancelarlas o meter una a mano.',
+      },
+      metricas: {
+        titulo: 'Los números de tu negocio',
+        texto:
+          'Cuánto se ha respondido solo, a qué horas te escriben más y cuántas horas te has ahorrado esta semana.',
+      },
     },
   },
 

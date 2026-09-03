@@ -1,41 +1,39 @@
-interface Capacidad {
-  id: string;
-  titulo: string;
-  texto: string;
-  icono: string;
-}
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
 
-// Lo que se hace desde el panel. Se habla de lo que resuelve, no de como se
-// llama por dentro: el dueno de una peluqueria no busca "un CRM", busca ver
-// las reservas de la semana.
-const CAPACIDADES: Capacidad[] = [
+// Solo el icono de cada capacidad: el texto vive en src/i18n porque cambia
+// con el idioma. El orden de este array es el orden en pantalla.
+const ICONOS: { id: 'chat' | 'voz' | 'reservas' | 'metricas'; icono: string }[] = [
   {
-    id: 'agente-chat',
-    titulo: 'Tu agente de chat',
-    texto: 'Cambias lo que responde, sus precios y sus horarios cuando quieras. Y lees las conversaciones que ha tenido.',
-    icono: 'M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z',
+    id: 'chat',
+    icono:
+      'M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z',
   },
   {
-    id: 'agente-voz',
-    titulo: 'Tu agente de voz',
-    texto: 'El que coge el teléfono. Eliges su voz, qué puede decir y cuándo tiene que pasarte la llamada a ti.',
-    icono: 'M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z',
+    id: 'voz',
+    icono:
+      'M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z',
   },
   {
     id: 'reservas',
-    titulo: 'Las reservas',
-    texto: 'Todas las citas que ha cogido el agente, en un calendario. Puedes moverlas, cancelarlas o meter una a mano.',
-    icono: 'M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5',
+    icono:
+      'M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5',
   },
   {
     id: 'metricas',
-    titulo: 'Los números de tu negocio',
-    texto: 'Cuánto se ha respondido solo, a qué horas te escriben más y cuántas horas te has ahorrado esta semana.',
-    icono: 'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z',
+    icono:
+      'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z',
   },
 ];
 
-export default function Platform() {
+interface Props {
+  idioma?: Idioma;
+}
+
+export default function Platform({ idioma = IDIOMA_POR_DEFECTO }: Props) {
+  const t = contenido(idioma);
+  const CAPACIDADES = ICONOS.map((i) => ({ ...i, ...t.plataforma.capacidades[i.id] }));
+
   return (
     <section
       id="plataforma"
@@ -53,14 +51,13 @@ export default function Platform() {
       <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-3xl mb-12 sm:mb-16">
           <span className="text-xs font-extrabold uppercase tracking-widest text-cian bg-cian/10 border border-cian/30 px-4 py-1.5 rounded-full inline-block mb-5">
-            Tu panel
+            {t.plataforma.etiqueta}
           </span>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-5">
-            No te dejamos con una caja negra
+            {t.plataforma.titulo}
           </h2>
           <p className="text-white/75 text-base sm:text-lg leading-relaxed">
-            Todo lo que montamos se gestiona desde un mismo sitio, con tu usuario y tu contraseña. Entras
-            desde el móvil o desde el ordenador y ves qué está pasando en tu negocio sin llamar a nadie.
+            {t.plataforma.texto}
           </p>
         </div>
 
@@ -81,12 +78,12 @@ export default function Platform() {
               height={771}
               loading="lazy"
               decoding="async"
-              alt="Pantalla de inicio del panel de DALSAT: reservas de la semana, facturación estimada, clientes únicos, mensajes atendidos por el agente y tiempo medio de respuesta."
+              alt={t.plataforma.altCaptura}
               className="block w-full h-auto"
             />
           </div>
           <figcaption className="mt-3 text-center text-xs text-white/45">
-            Lo primero que ves al entrar. Los datos son de una cuenta de pruebas.
+            {t.plataforma.pieCaptura}
           </figcaption>
         </figure>
 
@@ -115,7 +112,7 @@ export default function Platform() {
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 rounded-3xl border border-white/15 bg-white/[0.04] p-6 sm:p-8 backdrop-blur-xl">
           <p className="text-white/80 text-sm sm:text-base flex-1">
-            El panel entra con lo que contrates. No se paga aparte ni hay que instalar nada.
+            {t.plataforma.incluido}
           </p>
           <a
             href="https://app.dalsats.com"
@@ -123,7 +120,7 @@ export default function Platform() {
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 shrink-0 px-6 py-3 rounded-xl border border-cian/40 bg-cian/10 text-cian font-bold text-sm transition-colors hover:bg-cian/20 hover:text-white"
           >
-            Ya soy cliente, entrar al panel
+            {t.plataforma.entrar}
             <span aria-hidden="true">&rarr;</span>
           </a>
         </div>

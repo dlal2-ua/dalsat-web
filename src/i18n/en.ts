@@ -41,7 +41,7 @@ export const en: Contenido = {
         'Tell us how you work today. We will tell you what can be automated, what is not worth it, and how much time it saves you.',
       cta: 'Talk to us',
     },
-    servicios: {
+      servicios: {
       titulo: 'Where would you start?',
       texto:
         'Tell us how you work today and we will tell you what can be taken off your hands. No strings attached.',
@@ -122,6 +122,40 @@ export const en: Contenido = {
       texto:
         'A fast, clear site built so that whoever lands on it does something: book, write to you, or buy. And connected to the tools you already use.',
       puntos: ['Loads fast on mobile', 'Built to get you messages', 'Connected to your agent'],
+    },
+  },
+
+  plataforma: {
+    etiqueta: 'Your panel',
+    titulo: 'We do not leave you with a black box',
+    texto:
+      'Everything we build is run from one place, with your own username and password. You log in from your phone or your desk and see what is happening in your business without calling anyone.',
+    pieCaptura: 'The first thing you see on logging in. The data is from a test account.',
+    altCaptura:
+      "Home screen of the DALSAT panel: the week's bookings, estimated revenue, unique customers, messages handled by the agent and average response time.",
+    incluido: 'The panel is included with whatever you take on. No separate charge and nothing to install.',
+    entrar: 'Already a customer? Log in to the panel',
+    capacidades: {
+      chat: {
+        titulo: 'Your chat agent',
+        texto:
+          'Change what it answers, its prices and its opening hours whenever you like. And read the conversations it has had.',
+      },
+      voz: {
+        titulo: 'Your voice agent',
+        texto:
+          'The one that picks up the phone. You choose its voice, what it may say, and when it has to hand the call to you.',
+      },
+      reservas: {
+        titulo: 'Bookings',
+        texto:
+          'Every appointment the agent has taken, on a calendar. You can move them, cancel them or add one by hand.',
+      },
+      metricas: {
+        titulo: 'Your numbers',
+        texto:
+          'How much was answered without you, when people message you most, and how many hours you saved this week.',
+      },
     },
   },
 
