@@ -176,11 +176,17 @@ const schemaData = {
               { rootMargin: '0px 0px -10% 0px', threshold: 0.12 }
             );
 
+      function encolar(el: HTMLElement) {
+        if (observador) observador.observe(el);
+        else el.classList.add('se-ve');
+      }
+
       function registrar(raiz: ParentNode) {
-        const objetivos = raiz.querySelectorAll<HTMLElement>('[data-reveal]:not(.se-ve)');
-        for (const el of objetivos) {
-          if (observador) observador.observe(el);
-          else el.classList.add('se-ve');
+        if (raiz instanceof HTMLElement && raiz.matches('[data-reveal]:not(.se-ve)')) {
+          encolar(raiz);
+        }
+        for (const el of raiz.querySelectorAll<HTMLElement>('[data-reveal]:not(.se-ve)')) {
+          encolar(el);
         }
       }
 
@@ -190,7 +196,7 @@ const schemaData = {
       new MutationObserver((mutaciones) => {
         for (const m of mutaciones) {
           for (const nodo of m.addedNodes) {
-            if (nodo instanceof HTMLElement) registrar(nodo.parentNode ?? document);
+            if (nodo instanceof HTMLElement) registrar(nodo);
           }
         }
       }).observe(document.body, { childList: true, subtree: true });
