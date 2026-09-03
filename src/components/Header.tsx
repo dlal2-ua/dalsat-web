@@ -1,17 +1,24 @@
 import MobileMenu from './MobileMenu';
+import SelectorIdioma from './SelectorIdioma';
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
 
 interface HeaderProps {
+  /** Ruta actual sin prefijo de idioma: '/servicios', no '/en/servicios'. */
   currentPath?: string;
+  idioma?: Idioma;
 }
 
-export default function Header({ currentPath = '/' }: HeaderProps) {
+export default function Header({ currentPath = '/', idioma = IDIOMA_POR_DEFECTO }: HeaderProps) {
+  const t = contenido(idioma);
+
   const NAV_ITEMS = [
-    { href: '/servicios', label: 'Servicios' },
-    { href: '/demos', label: 'Demos' },
-    { href: '/calculadora', label: 'Calculadora' },
-    { href: '/faq', label: 'Preguntas Frecuentes' },
-    { href: '/sobre-nosotros', label: 'Sobre Nosotros' },
-    { href: '/contacto', label: 'Contacto' },
+    { href: '/servicios', label: t.nav.servicios },
+    { href: '/demos', label: t.nav.demos },
+    { href: '/calculadora', label: t.nav.calculadora },
+    { href: '/faq', label: t.nav.faq },
+    { href: '/sobre-nosotros', label: t.nav.sobreNosotros },
+    { href: '/contacto', label: t.nav.contacto },
   ];
 
   const PANEL_URL = 'https://app.dalsats.com';
@@ -21,7 +28,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
       <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Logo de Dalsat */}
-        <a href="/" className="flex items-center gap-2.5 group">
+        <a href={ruta('/', idioma)} className="flex items-center gap-2.5 group">
           <img
             src="/logo-dalsat.png"
             alt="" aria-hidden="true"
@@ -33,13 +40,13 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
         </a>
 
         {/* Menú de Navegación de Escritorio */}
-        <nav className="hidden md:flex items-center gap-7 text-sm font-medium" aria-label="Menú principal">
+        <nav className="hidden md:flex items-center gap-7 text-sm font-medium" aria-label={t.nav.principal}>
           {NAV_ITEMS.map((item) => {
             const isActive = currentPath === item.href;
             return (
               <a
                 key={item.href}
-                href={item.href}
+                href={ruta(item.href, idioma)}
                 className={`transition-colors py-1 relative ${
                   isActive
                     ? 'text-cian font-semibold'
@@ -63,15 +70,18 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
             rel="noopener noreferrer"
             className="hidden lg:inline-flex items-center gap-1.5 text-sm font-medium text-white/70 transition-colors hover:text-cian"
           >
-            Entrar al panel
+            {t.nav.panel}
           </a>
           <a
-            href="/contacto"
+            href={ruta('/contacto', idioma)}
             className="hidden md:inline-flex bg-terracota hover:bg-terracota-dark text-navy text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(217,100,44,0.3)] hover:scale-105"
           >
-            Hablar con nosotros →
+            {t.nav.cta} →
           </a>
-          <MobileMenu currentPath={currentPath} />
+          <div className="hidden md:block">
+            <SelectorIdioma idioma={idioma} rutaActual={currentPath} />
+          </div>
+          <MobileMenu currentPath={currentPath} idioma={idioma} />
         </div>
 
       </div>

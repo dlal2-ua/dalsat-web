@@ -1,20 +1,26 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import SelectorIdioma from './SelectorIdioma';
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
 
 interface MobileMenuProps {
   currentPath?: string;
+  idioma?: Idioma;
 }
 
-const LINKS = [
-  { href: '/servicios', label: 'Servicios' },
-  { href: '/demos', label: 'Demos' },
-  { href: '/calculadora', label: 'Calculadora' },
-  { href: '/faq', label: 'Preguntas Frecuentes' },
-  { href: '/sobre-nosotros', label: 'Sobre Nosotros' },
-  { href: '/contacto', label: 'Contacto' },
-];
+export default function MobileMenu({ currentPath = '/', idioma = IDIOMA_POR_DEFECTO }: MobileMenuProps) {
+  const t = contenido(idioma);
 
-export default function MobileMenu({ currentPath = '/' }: MobileMenuProps) {
+  const LINKS = [
+    { href: '/servicios', label: t.nav.servicios },
+    { href: '/demos', label: t.nav.demos },
+    { href: '/calculadora', label: t.nav.calculadora },
+    { href: '/faq', label: t.nav.faq },
+    { href: '/sobre-nosotros', label: t.nav.sobreNosotros },
+    { href: '/contacto', label: t.nav.contacto },
+  ];
+
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -52,19 +58,19 @@ export default function MobileMenu({ currentPath = '/' }: MobileMenuProps) {
       {/* Drawer lateral */}
       <nav
         id="mobile-drawer"
-        aria-label="Menú principal"
+        aria-label={t.nav.principal}
         className={`fixed right-0 top-0 z-[9999] flex h-full w-72 max-w-[85vw] flex-col bg-navy-900 border-l border-white/15 shadow-2xl transition-transform duration-300 ease-out motion-reduce:transition-none ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-          <a href="/" onClick={() => setOpen(false)} className="flex items-center gap-2.5">
+          <a href={ruta('/', idioma)} onClick={() => setOpen(false)} className="flex items-center gap-2.5">
             <img src="/logo-dalsat.png" alt="" aria-hidden="true" width="36" height="36" className="h-8 w-auto object-contain brightness-0 invert" />
             <span className="font-display text-lg font-bold tracking-widest text-white">DALSAT</span>
           </a>
           <button
             type="button"
-            aria-label="Cerrar menú"
+            aria-label={t.nav.cerrarMenu}
             onClick={() => setOpen(false)}
             className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           >
@@ -78,7 +84,7 @@ export default function MobileMenu({ currentPath = '/' }: MobileMenuProps) {
           {LINKS.map((link) => (
             <a
               key={link.href}
-              href={link.href}
+              href={ruta(link.href, idioma)}
               onClick={() => setOpen(false)}
               className="rounded-xl px-4 py-3.5 text-base font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
             >
@@ -95,15 +101,16 @@ export default function MobileMenu({ currentPath = '/' }: MobileMenuProps) {
             onClick={() => setOpen(false)}
             className="flex min-h-[48px] items-center justify-center rounded-xl border border-cian/40 bg-cian/10 px-5 py-3 text-sm font-semibold text-cian transition-colors hover:bg-cian/20 hover:text-white"
           >
-            Entrar al panel
+            {t.nav.panel}
           </a>
           <a
-            href="#contacto"
+            href={ruta('/contacto', idioma)}
             onClick={() => setOpen(false)}
             className="flex min-h-[48px] items-center justify-center rounded-xl bg-terracota px-5 py-3 text-sm font-semibold text-navy transition-colors hover:bg-terracota-dark shadow-[0_0_15px_rgba(217,100,44,0.35)]"
           >
-            Hablar con nosotros →
+            {t.nav.cta} →
           </a>
+          <SelectorIdioma idioma={idioma} rutaActual={currentPath} variante="movil" />
         </div>
       </nav>
     </div>
@@ -113,7 +120,7 @@ export default function MobileMenu({ currentPath = '/' }: MobileMenuProps) {
     <div className="md:hidden">
       <button
         type="button"
-        aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+        aria-label={open ? t.nav.cerrarMenu : t.nav.abrirMenu}
         aria-expanded={open}
         aria-controls="mobile-drawer"
         onClick={() => setOpen(!open)}

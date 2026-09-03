@@ -73,7 +73,7 @@ export default function SectorDemos() {
   const [activeId, setActiveId] = useState<string>(SECTORS[0].id);
   const [visibleCount, setVisibleCount] = useState<number>(1);
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const timerRef = useRef<NodeJS.Timeout[]>([]);
+  const timerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const chatRef = useRef<HTMLDivElement>(null);
 
   const activeSector = SECTORS.find((s) => s.id === activeId) || SECTORS[0];

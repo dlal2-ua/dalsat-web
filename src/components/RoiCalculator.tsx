@@ -132,7 +132,7 @@ export default function RoiCalculator() {
 
               {/* Botón CTA directo */}
               <a
-                href="#contacto"
+                href="/contacto"
                 className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] block cursor-pointer"
               >
                 Ver qué se puede automatizar →

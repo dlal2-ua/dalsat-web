@@ -8,7 +8,12 @@ import { useEffect, useState } from 'react';
 
 const UMBRAL = 900;
 
-export default function VolverArriba() {
+interface Props {
+  /** Texto del aria-label. Lo pasa el Layout ya traducido. */
+  etiqueta?: string;
+}
+
+export default function VolverArriba({ etiqueta = 'Volver arriba' }: Props) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -27,11 +32,12 @@ export default function VolverArriba() {
     <button
       type="button"
       onClick={subir}
-      aria-label="Volver arriba"
+      aria-label={etiqueta}
       // Sale de pantalla en vez de desmontarse, para que la salida tambien se
-      // vea. `hidden` de accesibilidad va con inert para que no se pueda
-      // tabular hasta un boton que no esta.
-      inert={!visible ? true : undefined}
+      // vea. Mientras esta invisible no se puede tabular hasta el ni lo
+      // anuncia un lector de pantalla.
+      tabIndex={visible ? 0 : -1}
+      aria-hidden={!visible}
       className={`fixed bottom-6 left-4 z-40 flex h-11 w-11 items-center justify-center rounded-2xl border border-white/15 bg-navy-900/80 text-cian shadow-lg backdrop-blur-md transition-all duration-300 hover:border-cian/50 hover:text-white sm:bottom-8 sm:left-8 ${
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0'
       }`}

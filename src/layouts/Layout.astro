@@ -3,6 +3,15 @@ import CookieBanner from '../components/CookieBanner';
 import StickyMobileCta from '../components/StickyMobileCta';
 import VolverArriba from '../components/VolverArriba';
 import { ClientRouter } from 'astro:transitions';
+import { contenido } from '../i18n';
+import {
+  ETIQUETA_HTML,
+  IDIOMAS,
+  IDIOMA_POR_DEFECTO,
+  idiomaDeUrl,
+  ruta,
+  rutaSinIdioma,
+} from '../i18n/config';
 
 interface Props {
   title?: string;
@@ -22,9 +31,15 @@ const {
 
 const SITE_URL = Astro.site || new URL('https://dalsats.com');
 
+const idioma = idiomaDeUrl(Astro.url);
+const t = contenido(idioma);
+// Ruta sin prefijo: es lo que necesitan el selector de idioma, el estado
+// activo del menu y los hreflang.
+const RUTA_NEUTRA = rutaSinIdioma(Astro.url.pathname);
+
 // En contacto y gracias la barra fija del movil sobra: ya estas donde te
 // llevaria. En el resto de paginas acompana.
-const RUTA = Astro.url.pathname.replace(/\/$/, '') || '/';
+const RUTA = RUTA_NEUTRA.replace(/\/$/, '') || '/';
 const SIN_BARRA_MOVIL = ['/contacto', '/gracias'];
 const mostrarBarraMovil = !SIN_BARRA_MOVIL.includes(RUTA);
 const canonicalURL = new URL(Astro.url.pathname, SITE_URL);
@@ -61,7 +76,7 @@ const schemaData = {
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={ETIQUETA_HTML[idioma]}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -77,6 +92,22 @@ const schemaData = {
     />
     <link rel="canonical" href={canonicalURL} />
 
+    {/* hreflang: le dice a Google que estas paginas son la misma en dos
+        idiomas, y cual servir si no encaja ninguna. Sin esto las dos versiones
+        compiten entre si por la misma busqueda. */}
+    {IDIOMAS.map((codigo) => (
+      <link
+        rel="alternate"
+        hreflang={ETIQUETA_HTML[codigo]}
+        href={new URL(ruta(RUTA_NEUTRA, codigo), SITE_URL)}
+      />
+    ))}
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(ruta(RUTA_NEUTRA, IDIOMA_POR_DEFECTO), SITE_URL)}
+    />
+
     <!-- OpenGraph / Facebook / WhatsApp / LinkedIn -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
@@ -86,7 +117,7 @@ const schemaData = {
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="DALSAT: ya tienes web, redes y Google Maps. Ahora toca automatizar." />
-    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale" content={idioma === 'es' ? 'es_ES' : 'en'} />
     <meta property="og:site_name" content="DALSAT" />
 
     <!-- Twitter Cards -->
@@ -151,7 +182,7 @@ const schemaData = {
   </head>
   <body class="font-sans antialiased bg-crema text-grafito">
     <slot />
-    <VolverArriba client:idle />
+    <VolverArriba client:idle etiqueta={t.comun.volverArriba} />
     {mostrarBarraMovil && <StickyMobileCta client:idle />}
     {/* La analitica de Vercel ya no se carga aqui: la inyecta el banner solo
         si el visitante acepta. Antes se cargaba siempre y el aviso era humo. */}
