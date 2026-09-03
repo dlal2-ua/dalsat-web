@@ -1,3 +1,5 @@
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
 import { useEffect, useState } from 'react';
 
 const WHATSAPP_URL =
@@ -7,7 +9,13 @@ const WHATSAPP_URL =
 // partir de md y el flotante de WhatsApp es un icono suelto. Esta barra
 // aparece en cuanto se pasa la primera pantalla, para que la acción esté
 // siempre a un dedo sin tapar el hero nada más entrar.
-export default function StickyMobileCta() {
+interface Props {
+  idioma?: Idioma;
+}
+
+export default function StickyMobileCta({ idioma = IDIOMA_POR_DEFECTO }: Props) {
+  const t = contenido(idioma);
+
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -28,18 +36,18 @@ export default function StickyMobileCta() {
     >
       <div className="flex items-center gap-2.5 border-t border-white/12 bg-navy-950/95 px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl">
         <a
-          href="/contacto"
+          href={ruta('/contacto', idioma)}
           tabIndex={visible ? undefined : -1}
           className="flex-1 rounded-xl bg-terracota px-4 py-3.5 text-center text-sm font-extrabold text-navy transition-colors hover:bg-terracota-dark"
         >
-          Hablar con nosotros
+          {t.barraMovil.cta}
         </a>
         <a
           href={WHATSAPP_URL}
           target="_blank"
           rel="noopener noreferrer"
           tabIndex={visible ? undefined : -1}
-          aria-label="Escribirnos por WhatsApp"
+          aria-label={t.barraMovil.whatsapp}
           className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-xl border border-cian/40 bg-cian/10 text-cian transition-colors hover:bg-cian/20"
         >
           <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">

@@ -66,6 +66,65 @@ export const en: Contenido = {
     entradilla: 'Each with its own: bookings, enquiries and handovers to the team.',
   },
 
+  cookies: {
+    aviso: 'Cookie notice',
+    texto:
+      'One technical cookie to remember this answer and, if you let us, visit statistics. No advertising and no tracking across sites.',
+    verPolitica: 'See the cookie policy',
+    rechazar: 'Reject',
+    aceptar: 'Accept',
+  },
+
+  barraMovil: {
+    cta: 'Talk to us',
+    whatsapp: 'Message us on WhatsApp',
+  },
+
+  servicios: {
+    saas: {
+      nombre: 'Custom software',
+      titulo: 'The tool your business actually needs, built for you',
+      texto:
+        'No more fighting spreadsheets and off-the-shelf software where nothing quite fits. We build your tool: customers, appointments, quotes, stock, or whatever you handle by hand today.',
+      puntos: ['Only what you use', 'Your team works from their phones', 'Grows with you'],
+    },
+    agentes: {
+      nombre: 'AI agents',
+      titulo: 'Agents that field enquiries for you, each one for its own job',
+      texto:
+        'An agent that knows your business and answers the way you would. On WhatsApp, on Instagram or inside your own site. It settles questions, takes bookings and calls in your team when a person is needed.',
+      puntos: ['WhatsApp and Instagram', 'An agent inside your site', 'Enquiries and bookings'],
+    },
+    panel: {
+      nombre: 'Your management panel',
+      titulo: 'One place you run all of it from',
+      texto:
+        'The panel where you change what your chat and voice agents say, see and move bookings, read the conversations and look at your numbers. It acts as a CRM for everything that passes through the agent.',
+      puntos: ['Agent, bookings and metrics', 'From your phone or your desk', 'Included with whatever you take on'],
+    },
+    procesos: {
+      nombre: 'Process mapping and automation',
+      titulo: 'First we understand how you work, then we automate it',
+      texto:
+        'We sit down with you and draw how your business really runs, step by step. That is where the weekly repetition becomes visible. That is what we take out of the way.',
+      puntos: ['A map of your business', 'You see where time goes', 'Tasks that run themselves'],
+    },
+    seo: {
+      nombre: 'SEO',
+      titulo: 'Get found when people look for you',
+      texto:
+        'We work so your business shows up when someone nearby searches Google for what you offer. Your Google listing, content worth reading, and a site that loads fast.',
+      puntos: ['Searches in your area', 'Google listing kept current', 'No tricks'],
+    },
+    web: {
+      nombre: 'Web development',
+      titulo: 'Sites that work, not brochures',
+      texto:
+        'A fast, clear site built so that whoever lands on it does something: book, write to you, or buy. And connected to the tools you already use.',
+      puntos: ['Loads fast on mobile', 'Built to get you messages', 'Connected to your agent'],
+    },
+  },
+
   footer: {
     descripcion:
       'A digitalisation studio for small businesses across Spain. Custom software, AI agents, process automation, SEO and web development.',

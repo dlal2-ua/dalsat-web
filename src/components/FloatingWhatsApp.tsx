@@ -1,8 +1,16 @@
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
 import { useState, useEffect } from 'react';
 
 const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20me%20interesa%20lo%20que%20hac%C3%A9is%20y%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n.';
 
-export default function FloatingWhatsApp() {
+interface Props {
+  idioma?: Idioma;
+}
+
+export default function FloatingWhatsApp({ idioma = IDIOMA_POR_DEFECTO }: Props) {
+  const t = contenido(idioma);
+
   const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
@@ -24,7 +32,7 @@ export default function FloatingWhatsApp() {
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-terracota opacity-75"></span>
           <span className="relative inline-flex rounded-full h-2 w-2 bg-terracota"></span>
         </span>
-        <span>¿Hablamos por WhatsApp?</span>
+        <span>{t.comun.hablarWhatsApp}</span>
       </div>
 
       {/* Botón Flotante Neón */}

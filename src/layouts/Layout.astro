@@ -183,10 +183,10 @@ const schemaData = {
   <body class="font-sans antialiased bg-crema text-grafito">
     <slot />
     <VolverArriba client:idle etiqueta={t.comun.volverArriba} />
-    {mostrarBarraMovil && <StickyMobileCta client:idle />}
+    {mostrarBarraMovil && <StickyMobileCta client:idle idioma={idioma} />}
     {/* La analitica de Vercel ya no se carga aqui: la inyecta el banner solo
         si el visitante acepta. Antes se cargaba siempre y el aviso era humo. */}
-    <CookieBanner client:load />
+    <CookieBanner client:load idioma={idioma} />
 
     {/* Revelado al hacer scroll para todo el sitio. Sin libreria de animacion:
         IntersectionObserver y una clase. El escalonado lo pone cada elemento

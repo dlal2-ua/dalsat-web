@@ -66,6 +66,65 @@ export const es = {
     entradilla: 'Cada uno con lo suyo: reservas, consultas y avisos al equipo.',
   },
 
+  cookies: {
+    aviso: 'Aviso de cookies',
+    texto:
+      'Una cookie técnica para recordar esta respuesta y, si nos dejas, estadísticas de visitas. Ni publicidad ni seguimiento entre webs.',
+    verPolitica: 'Ver la política de cookies',
+    rechazar: 'Rechazar',
+    aceptar: 'Aceptar',
+  },
+
+  barraMovil: {
+    cta: 'Hablar con nosotros',
+    whatsapp: 'Escribirnos por WhatsApp',
+  },
+
+  servicios: {
+    saas: {
+      nombre: 'SaaS a medida',
+      titulo: 'El programa que tu negocio necesita, hecho para ti',
+      texto:
+        'Dejas de pelearte con hojas de cálculo y con programas genéricos donde nada encaja. Construimos tu herramienta: clientes, citas, presupuestos, stock o lo que hoy llevas a mano.',
+      puntos: ['Solo lo que usas', 'Tu equipo entra desde el móvil', 'Crece contigo'],
+    },
+    agentes: {
+      nombre: 'Agentes de IA',
+      titulo: 'Agentes que atienden por ti, cada uno para lo suyo',
+      texto:
+        'Un agente que conoce tu negocio y responde como responderías tú. Por WhatsApp, por Instagram o dentro de tu propia web. Resuelve dudas, coge reservas y avisa a tu equipo cuando hace falta una persona.',
+      puntos: ['WhatsApp e Instagram', 'Agente dentro de tu web', 'Atención y reservas'],
+    },
+    panel: {
+      nombre: 'Tu panel de gestión',
+      titulo: 'Un sitio desde el que lo llevas todo',
+      texto:
+        'El panel donde cambias lo que responde tu agente de chat y el de voz, ves y mueves las reservas, lees las conversaciones y miras los números de tu negocio. Hace de CRM para todo lo que pasa por el agente.',
+      puntos: ['Agente, reservas y métricas', 'Desde el móvil o el ordenador', 'Entra con lo que contrates'],
+    },
+    procesos: {
+      nombre: 'Mapeo y automatización',
+      titulo: 'Primero entendemos cómo trabajas, después lo automatizamos',
+      texto:
+        'Nos sentamos contigo y dibujamos cómo funciona tu negocio de verdad, paso a paso. Ahí se ve solo lo que se repite cada semana. Eso es lo que quitamos de en medio.',
+      puntos: ['Mapa de tu negocio', 'Se ve dónde se pierde el tiempo', 'Tareas que se hacen solas'],
+    },
+    seo: {
+      nombre: 'SEO',
+      titulo: 'Que te encuentren cuando te buscan',
+      texto:
+        'Trabajamos para que tu negocio aparezca cuando alguien de tu zona busca en Google lo que tú ofreces. Ficha de Google, contenido útil y una web que carga rápido.',
+      puntos: ['Búsquedas de tu zona', 'Ficha de Google al día', 'Sin trucos raros'],
+    },
+    web: {
+      nombre: 'Desarrollo web',
+      titulo: 'Webs que trabajan, no folletos',
+      texto:
+        'Una web rápida y clara, pensada para que quien entre haga algo: pedir cita, escribirte o comprar. Y conectada con las herramientas que ya usas.',
+      puntos: ['Carga rápido en el móvil', 'Pensada para que te escriban', 'Conectada a tu agente'],
+    },
+  },
+
   footer: {
     descripcion:
       'Estudio de digitalización para pymes de toda España. Programas a medida, agentes de IA, automatización de procesos, SEO y desarrollo web.',
