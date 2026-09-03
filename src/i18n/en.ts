@@ -563,6 +563,15 @@ export const en: Contenido = {
     },
   },
 
+  legal: {
+    actualizado: 'Last updated',
+    otros: 'The other documents',
+    documentos: 'Legal documents',
+    aviso:
+      'This is a courtesy translation. The binding document is the Spanish version, written under Spanish law; where the two differ, the Spanish text prevails.',
+    verOriginal: 'Read the Spanish original',
+  },
+
   footer: {
     descripcion:
       'A digitalisation studio for small businesses across Spain. Custom software, AI agents, process automation, SEO and web development.',

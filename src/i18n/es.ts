@@ -563,6 +563,15 @@ export const es = {
     },
   },
 
+  legal: {
+    actualizado: 'Última actualización',
+    otros: 'Los otros documentos',
+    documentos: 'Documentos legales',
+    // En castellano no hay aviso: este ES el documento que obliga.
+    aviso: '',
+    verOriginal: '',
+  },
+
   footer: {
     descripcion:
       'Estudio de digitalización para pymes de toda España. Programas a medida, agentes de IA, automatización de procesos, SEO y desarrollo web.',

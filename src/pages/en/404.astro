@@ -1,0 +1,90 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+
+const WHATSAPP_URL =
+  'https://api.whatsapp.com/send?phone=34646005171&text=Hi%2C%20I%20landed%20on%20a%20page%20that%20does%20not%20exist%20on%20your%20site%20and%20wanted%20to%20ask%20something.';
+
+// A donde tiene sentido mandar a alguien que ha llegado aqui por error.
+const SHORTCUTS = [
+  { href: '/en/servicios', titulo: 'What we do', texto: 'The six services, explained one by one.' },
+  { href: '/en/demos', titulo: 'Try an agent', texto: 'Write to it as if you were one of your own customers.' },
+  { href: '/en/calculadora', titulo: 'Work out the saving', texto: 'How much time answering messages takes you today.' },
+  { href: '/en/faq', titulo: 'Frequently asked questions', texto: 'Prices, timelines, minimum terms and data protection.' },
+];
+---
+
+<Layout
+  title="Page not found | DALSAT"
+  description="This page does not exist. Here is where to go instead: services, demos, calculator and frequently asked questions."
+  noindex={true}
+>
+  <Header client:load currentPath="/404" idioma="en" />
+
+  <main class="pt-16">
+    <section class="relative min-h-[calc(100vh-64px)] flex items-center bg-gradient-to-b from-navy-950 via-navy-800 to-navy-900 py-16 sm:py-24 border-t border-white/10 overflow-hidden">
+      <div
+        class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"
+        aria-hidden="true"
+      ></div>
+      <div
+        class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-cian/15 rounded-full blur-[150px] pointer-events-none"
+        aria-hidden="true"
+      ></div>
+
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 text-center">
+        <span
+          class="font-display font-bold text-white/15 text-[clamp(6rem,22vw,12rem)] leading-none tracking-tight block select-none"
+          aria-hidden="true"
+        >
+          404
+        </span>
+
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-2 mb-4">
+          This page does not exist
+        </h1>
+        <p class="text-white/70 text-base sm:text-lg max-w-xl mx-auto mb-10">
+          Either we moved it, or the link was wrong. Nothing to worry about, it is one click to fix.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-14">
+          <a
+            href="/en"
+            class="w-full sm:w-auto inline-flex items-center justify-center bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm px-8 py-4 rounded-2xl transition-all shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-105"
+          >
+            Back to home
+          </a>
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-full sm:w-auto inline-flex items-center justify-center border border-white/20 text-white font-bold text-sm px-8 py-4 rounded-2xl transition-colors hover:border-cian/50 hover:text-cian"
+          >
+            Ask us on WhatsApp
+          </a>
+        </div>
+
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+          {SHORTCUTS.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="group block h-full rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-colors hover:border-cian/40"
+              >
+                <span class="block text-sm font-bold text-white group-hover:text-cian transition-colors">
+                  {item.titulo}
+                </span>
+                <span class="mt-1.5 block text-xs leading-relaxed text-white/60">
+                  {item.texto}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <Footer client:visible idioma="en" />
+</Layout>

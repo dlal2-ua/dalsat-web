@@ -2,6 +2,8 @@
 import Layout from './Layout.astro';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
 
 interface Props {
   title: string;
@@ -12,45 +14,68 @@ interface Props {
   /** Para las paginas legales a las que todavia les faltan los datos
    *  fiscales del titular: existen y se pueden leer, pero no se indexan. */
   noindex?: boolean;
+  idioma?: Idioma;
 }
 
-const { title, description, currentPath, heading, updated, noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  currentPath,
+  heading,
+  updated,
+  noindex = false,
+  idioma = IDIOMA_POR_DEFECTO,
+} = Astro.props;
+
+const t = contenido(idioma);
 
 // Las tres paginas legales comparten forma: fondo crema, texto grafito y
 // titulares navy. Se monta aqui una vez para que no se desincronicen.
 const LEGALES = [
-  { href: '/aviso-legal', label: 'Aviso legal y condiciones' },
-  { href: '/politica-privacidad', label: 'Política de privacidad' },
-  { href: '/cookies', label: 'Política de cookies' },
+  { href: '/aviso-legal', label: t.footer.avisoLegal },
+  { href: '/politica-privacidad', label: t.footer.privacidad },
+  { href: '/cookies', label: t.footer.cookies },
 ];
 ---
 
 <Layout title={title} description={description} noindex={noindex}>
-  <Header client:load currentPath={currentPath} />
+  <Header client:load currentPath={currentPath} idioma={idioma} />
 
   <main class="pt-16 bg-crema text-grafito">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-      <a href="/" class="inline-flex items-center gap-1.5 text-sm font-semibold text-navy/70 hover:text-navy transition-colors mb-8">
-        &larr; Volver al inicio
+      <a href={ruta('/', idioma)} class="inline-flex items-center gap-1.5 text-sm font-semibold text-navy/70 hover:text-navy transition-colors mb-8">
+        &larr; {t.comun.volverAlInicio}
       </a>
 
       <h1 class="text-3xl sm:text-5xl font-extrabold text-navy tracking-tight mb-3">
         {heading}
       </h1>
-      <p class="text-sm text-grafito/55 mb-10">Última actualización: {updated}</p>
+      <p class="text-sm text-grafito/55 mb-6">{t.legal.actualizado}: {updated}</p>
+
+      {/* En ingles esto es una traduccion de cortesia: el documento que obliga
+          es el castellano, redactado sobre normativa espanola. Se dice a la
+          vista y no en letra pequena. */}
+      {t.legal.aviso && (
+        <p class="mb-10 rounded-xl border border-navy/15 bg-navy/[0.04] px-4 py-3 text-sm leading-relaxed text-grafito/80">
+          {t.legal.aviso}{' '}
+          <a href={ruta(currentPath, 'es')} class="font-semibold text-navy underline decoration-cian decoration-2 underline-offset-4">
+            {t.legal.verOriginal}
+          </a>
+        </p>
+      )}
 
       <div class="legal space-y-8 leading-relaxed">
         <slot />
       </div>
 
-      <nav class="mt-14 pt-8 border-t border-navy/10" aria-label="Documentos legales">
+      <nav class="mt-14 pt-8 border-t border-navy/10" aria-label={t.legal.documentos}>
         <p class="text-xs font-bold uppercase tracking-widest text-grafito/50 mb-3">
-          Los otros documentos
+          {t.legal.otros}
         </p>
         <ul class="flex flex-wrap gap-x-6 gap-y-2 list-none p-0 m-0 text-sm font-semibold">
           {LEGALES.filter((l) => l.href !== currentPath).map((l) => (
             <li>
-              <a href={l.href} class="text-navy underline decoration-cian decoration-2 underline-offset-4 hover:text-cian-dark transition-colors">
+              <a href={ruta(l.href, idioma)} class="text-navy underline decoration-cian decoration-2 underline-offset-4 hover:text-cian-dark transition-colors">
                 {l.label}
               </a>
             </li>
@@ -60,7 +85,7 @@ const LEGALES = [
     </div>
   </main>
 
-  <Footer client:visible />
+  <Footer client:visible idioma={idioma} />
 </Layout>
 
 <style is:global>
