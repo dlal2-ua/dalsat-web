@@ -1,0 +1,223 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header';
+import SplitHero from '../../components/SplitHero';
+import SatisfiedClients from '../../components/SatisfiedClients';
+import FloatingWhatsApp from '../../components/FloatingWhatsApp';
+import Footer from '../../components/Footer';
+import CtaContacto from '../../components/CtaContacto.astro';
+import { SERVICIOS } from '../../data/servicios';
+import { contenido } from '../../i18n';
+
+const t = contenido('en');
+
+// El contraste entre lo que ya hizo casi toda pyme y lo que toca ahora
+const BEFORE = [
+  'A site that shows who you are',
+  'Profiles on social media',
+  'A Google Maps listing',
+];
+
+const NOW = [
+  'A map of how you actually work',
+  'Whatever repeats each week, automated',
+  'Agents that answer and take bookings',
+];
+---
+
+<Layout
+  title="DALSAT | Re-digitalising small businesses across Spain"
+  description="You already have a site, social accounts and Google Maps. Now comes automation. Custom software, AI agents, a management panel, process mapping, SEO and web development for small businesses across Spain."
+>
+  <Header client:load currentPath="/" idioma="en" />
+
+  <main>
+    <SplitHero client:load idioma="en" />
+
+    <SatisfiedClients idioma="en" />
+
+    {/* RE-DIGITALISATION: el mensaje central */}
+    <section id="re-digitalizacion" class="relative bg-navy border-t border-white/10 py-20 sm:py-28 overflow-hidden">
+      <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" aria-hidden="true"></div>
+      <div class="absolute bottom-0 left-1/4 w-[600px] h-[350px] bg-cian/10 rounded-full blur-[160px] pointer-events-none" aria-hidden="true"></div>
+
+      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-3xl" data-reveal>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-cian bg-cian/10 border border-cian/30 px-4 py-1.5 rounded-full inline-block mb-5">
+            Re-digitalisation
+          </span>
+          <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-6">
+            You already have a site, social accounts and Google Maps. Today that is no longer enough.
+          </h2>
+          <p class="text-white/75 text-base sm:text-lg leading-relaxed mb-4">
+            Nearly every small business did its first round of digitalisation years ago. It was the right call and it is still needed. But everyone has it now, so it no longer sets you apart from anyone.
+          </p>
+          <p class="text-white/75 text-base sm:text-lg leading-relaxed">
+            What comes next is processes that run on their own. We call that re-digitalisation. It is not about having more screens: it is about looking at how your business really works, drawing it step by step, and automating whatever repeats. Artificial intelligence is a tool for winning back time, not a fashion.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mt-12">
+          <div data-reveal class="rounded-3xl p-7 sm:p-9 border border-white/10 bg-white/[0.03]">
+            <span class="text-[11px] font-bold uppercase tracking-widest text-white/40 mb-5 inline-block">
+              The first digitalisation
+            </span>
+            <ul class="space-y-3.5">
+              {BEFORE.map((item) => (
+                <li class="flex items-start gap-3 text-white/55 text-sm sm:text-base">
+                  <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/30" aria-hidden="true"></span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p class="mt-6 pt-5 border-t border-white/10 text-sm font-semibold text-white/50">
+              It gets you seen.
+            </p>
+          </div>
+
+          <div data-reveal style="--reveal-delay: 110ms" class="rounded-3xl p-7 sm:p-9 border border-cian/40 bg-gradient-to-b from-cian/[0.08] to-transparent">
+            <span class="text-[11px] font-bold uppercase tracking-widest text-cian mb-5 inline-block">
+              Re-digitalisation
+            </span>
+            <ul class="space-y-3.5">
+              {NOW.map((item) => (
+                <li class="flex items-start gap-3 text-white/85 text-sm sm:text-base">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-cian" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p class="mt-6 pt-5 border-t border-cian/20 text-sm font-semibold text-white">
+              It gets work taken off your hands.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* LOS SEIS SERVICIOS: solo el indice. El catalogo vive en /en/servicios. */}
+    <section id="servicios" class="py-20 bg-navy-900 border-t border-white/10 relative overflow-hidden">
+      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4" data-reveal>
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-widest text-cian border border-cian/30 bg-cian/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md mb-3">
+              What we do
+            </span>
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+              Six places to start
+            </h2>
+            <p class="text-white/70 text-base sm:text-lg mt-4 max-w-2xl">
+              Each one solves something different. Take the one that sounds most like your week.
+            </p>
+          </div>
+          <a
+            href="/en/servicios"
+            class="inline-flex items-center gap-2 text-sm font-extrabold text-cian hover:text-white transition-colors shrink-0"
+          >
+            {t.comun.verCatalogo} &rarr;
+          </a>
+        </div>
+
+        <ul class="border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-x-8 sm:gap-x-14">
+          {SERVICIOS.map((servicio, i) => (
+            <li class="border-b border-white/10" data-reveal style={`--reveal-delay: ${i * 60}ms`}>
+              <a href="/en/servicios#catalogo" class="group flex items-baseline gap-4 sm:gap-6 py-5 sm:py-6">
+                <span class="font-mono text-sm font-bold text-cian/60 tabular-nums shrink-0">
+                  {servicio.order}
+                </span>
+                <span class="text-lg sm:text-2xl font-extrabold text-white tracking-tight group-hover:text-cian transition-colors">
+                  {t.servicios[servicio.id as keyof typeof t.servicios].nombre}
+                </span>
+                <span
+                  class="ml-auto shrink-0 text-cian opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
+                  aria-hidden="true"
+                >
+                  &rarr;
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    {/* DOS PUERTAS: la demo manda, la calculadora acompana. */}
+    <section class="relative py-20 sm:py-28 bg-navy border-t border-white/10 overflow-hidden">
+      <div
+        class="absolute inset-0 opacity-[0.05] pointer-events-none bg-[repeating-linear-gradient(135deg,#14CDEC_0px,#14CDEC_1px,transparent_1px,transparent_12px)]"
+        aria-hidden="true"
+      ></div>
+      <div class="absolute -top-32 right-[12%] w-[520px] h-[520px] bg-cian/10 rounded-full blur-[150px] pointer-events-none" aria-hidden="true"></div>
+
+      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div data-reveal>
+          <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight max-w-2xl mb-4">
+            Before you write to us, see it yourself.
+          </h2>
+          <p class="text-white/60 text-base sm:text-lg max-w-xl mb-12 sm:mb-14">
+            Two ways to check what we do without talking to anyone.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
+          <article
+            data-reveal
+            style="--reveal-delay: 90ms"
+            class="lg:col-span-7 rounded-[2rem] border border-cian/40 bg-gradient-to-br from-cian/[0.10] via-navy-900/50 to-transparent p-8 sm:p-11 flex flex-col"
+          >
+            <span class="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-cian/70 mb-6">
+              Service 02 · AI agents
+            </span>
+            <h3 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4 max-w-lg">
+              Try an agent built for your type of business
+            </h3>
+            <p class="text-white/70 text-sm sm:text-base leading-relaxed max-w-lg">
+              Tattoo studios, restaurants, health and accountancy. Write to the agent as if you were a customer and hear how it sounds on the phone.
+            </p>
+            <a
+              href="/en/demos"
+              class="mt-8 sm:mt-10 self-start inline-flex items-center gap-2 text-sm font-extrabold text-navy bg-cian hover:bg-cian-light px-6 py-3.5 rounded-2xl transition-colors"
+            >
+              {t.comun.probarDemo}
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+          </article>
+
+          <article
+            data-reveal
+            style="--reveal-delay: 180ms"
+            class="lg:col-span-5 rounded-[2rem] border border-white/10 bg-navy-950/60 p-8 sm:p-11 flex flex-col"
+          >
+            <span class="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white/35 mb-6">
+              Clear numbers
+            </span>
+            <h3 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight mb-4">
+              What is doing it by hand costing you?
+            </h3>
+            <p class="text-white/60 text-sm sm:text-base leading-relaxed">
+              Move a couple of controls and come out with a figure: the hours you get back each month and what that is worth.
+            </p>
+            <a
+              href="/en/calculadora"
+              class="mt-8 sm:mt-10 self-start inline-flex items-center gap-2 text-sm font-extrabold text-cian hover:text-white transition-colors"
+            >
+              Do the maths
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <CtaContacto
+      titulo={t.cierreContacto.home.titulo}
+      texto={t.cierreContacto.home.texto}
+      cta={t.cierreContacto.home.cta}
+    />
+  </main>
+
+  <FloatingWhatsApp client:load idioma="en" />
+  <Footer client:visible idioma="en" />
+</Layout>

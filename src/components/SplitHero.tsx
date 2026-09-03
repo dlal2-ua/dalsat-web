@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
 
 interface ChatMessage {
   from: 'client' | 'bot';
@@ -6,35 +8,7 @@ interface ChatMessage {
   time: string;
 }
 
-// 4 pares pregunta-respuesta: cada tramo de scroll revela un par completo
-const MESSAGES: ChatMessage[] = [
-  { from: 'client', text: '¿Qué hace DALSAT?', time: '14:46' },
-  {
-    from: 'bot',
-    text: 'Programas a medida, agentes de IA, automatización de procesos, SEO y webs. Todo para pymes.',
-    time: '14:46',
-  },
-  { from: 'client', text: '¿Y a mí de qué me sirve?', time: '14:47' },
-  {
-    from: 'bot',
-    text: 'Para dejar de hacer a mano lo que se repite cada semana.',
-    time: '14:47',
-  },
-  { from: 'client', text: '¿Por dónde se empieza?', time: '14:48' },
-  {
-    from: 'bot',
-    text: 'Miramos cómo trabajas hoy y lo dibujamos paso a paso. Ahí se ve qué sobra.',
-    time: '14:48',
-  },
-  { from: 'client', text: '¿Trabajáis en mi zona?', time: '14:49' },
-  {
-    from: 'bot',
-    text: 'Sí, con pymes de toda España. Te lo contamos sin compromiso.',
-    time: '14:49',
-  },
-];
-
-const PAIRS = MESSAGES.length / 2;
+const PAIRS = 4; // 4 pares pregunta-respuesta: cada tramo de scroll revela uno
 const SPLIT_END = 0.3; // el split ocupa el 0–30 % del scroll
 const INTRO_FADE_END = 0.12; // el subtítulo se va en cuanto empiezas a scrollear
 const HINT_FADE_END = 0.3; // la indicación de scroll aguanta bastante más
@@ -88,7 +62,14 @@ function generateTwinkles(count: number): TwinkleStar[] {
   }));
 }
 
-export default function SplitHero() {
+interface Props {
+  idioma?: Idioma;
+}
+
+export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
+  const t = contenido(idioma).hero;
+  const MESSAGES = t.chat;
+
   const sectionRef = useRef<HTMLElement>(null);
   const starsRef = useRef<HTMLDivElement>(null);
   const starsFarRef = useRef<HTMLDivElement>(null);
@@ -393,23 +374,23 @@ export default function SplitHero() {
 
           <div ref={introRef} className="flex flex-col items-center">
             <p className="hero-subtitle mt-6 max-w-md text-[clamp(1rem,2.5vw,1.25rem)] font-normal text-white/55">
-              Re-digitalizamos pymes de toda España
+              {t.lema}
             </p>
 
             {/* La primera pantalla no tenia ninguna accion: habia que scrollear
                 o subir a la cabecera. Ahora se puede escribir desde aqui. */}
             <div className="hero-cta mt-7 flex flex-col items-center gap-3 sm:flex-row">
               <a
-                href="/contacto"
+                href={ruta('/contacto', idioma)}
                 className="inline-flex items-center justify-center rounded-2xl bg-terracota px-7 py-3.5 text-sm font-extrabold text-navy shadow-[0_0_25px_rgba(217,100,44,0.35)] transition-all hover:scale-105 hover:bg-terracota-dark"
               >
-                Cuéntanos cómo trabajas
+                {t.ctaPrincipal}
               </a>
               <a
-                href="/servicios"
+                href={ruta('/servicios', idioma)}
                 className="inline-flex items-center justify-center rounded-2xl border border-white/25 px-7 py-3.5 text-sm font-bold text-white/80 transition-colors hover:border-cian/60 hover:text-cian"
               >
-                Ver qué hacemos
+                {t.ctaSecundario}
               </a>
             </div>
           </div>
@@ -423,7 +404,7 @@ export default function SplitHero() {
               onClick={scrollToChat}
               className="hero-hint flex min-h-[44px] cursor-pointer flex-col items-center gap-2.5 text-white/75 transition-colors hover:text-cian"
             >
-              <span className="text-sm font-semibold tracking-wide">Baja para ver qué hacemos</span>
+              <span className="text-sm font-semibold tracking-wide">{t.pista}</span>
               <span className="hero-mouse relative flex h-9 w-[22px] items-center justify-center rounded-full border-2 border-current">
                 <span className="hero-wheel absolute top-1.5 h-1.5 w-1 rounded-full bg-current" />
               </span>
@@ -522,13 +503,13 @@ export default function SplitHero() {
             href="https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20me%20interesa%20lo%20que%20hac%C3%A9is%20y%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n."
             target="_blank"
             rel="noopener noreferrer"
-            title="Escríbenos por WhatsApp"
+            title={t.escribir}
             className="pointer-events-auto group flex items-center gap-3 rounded-b-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:border-cian/60 hover:bg-white/10 cursor-pointer"
           >
             <svg className="h-5 w-5 shrink-0 text-white/50 transition-colors group-hover:text-cian" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
             </svg>
-            <span className="flex-1 select-none text-sm text-white/50 font-medium transition-colors group-hover:text-white">Escríbenos por WhatsApp…</span>
+            <span className="flex-1 select-none text-sm text-white/50 font-medium transition-colors group-hover:text-white">{t.escribirPista}</span>
             <svg className="h-5 w-5 shrink-0 text-white/50 transition-colors group-hover:text-cian" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
             </svg>

@@ -1,0 +1,26 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header';
+import AboutUs from '../../components/AboutUs';
+import CtaContacto from '../../components/CtaContacto.astro';
+import Footer from '../../components/Footer';
+---
+
+<Layout
+  title="About us | DALSAT"
+  description="Who we are: a digitalisation studio working with small businesses across Spain."
+>
+  <Header client:load currentPath="/sobre-nosotros" idioma="en" />
+
+  <main class="pt-16">
+    <AboutUs client:load idioma="en" />
+
+    <CtaContacto
+      titulo="Work with us"
+      texto="We are with you from day one and we stay on it once it is running."
+      cta="Talk to us"
+    />
+  </main>
+
+  <Footer client:visible idioma="en" />
+</Layout>

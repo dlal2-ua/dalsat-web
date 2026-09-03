@@ -176,6 +176,25 @@ export const en: Contenido = {
       'The maths comes from 2.8 minutes per message or call handled by hand, and from the agent settling most of them on its own. It is an estimate to give you an idea, not a promise: what your business saves comes out of looking at your case.',
   },
 
+  hero: {
+    lema: 'Re-digitalising small businesses across Spain',
+    ctaPrincipal: 'Tell us how you work',
+    ctaSecundario: 'See what we do',
+    pista: 'Scroll to see what we do',
+    escribir: 'Message us on WhatsApp',
+    escribirPista: 'Message us on WhatsApp…',
+    chat: [
+      { from: 'client', text: 'What does DALSAT do?', time: '14:46' },
+      { from: 'bot', text: 'Custom software, AI agents, process automation, SEO and websites. All of it for small businesses.', time: '14:46' },
+      { from: 'client', text: 'What is in it for me?', time: '14:47' },
+      { from: 'bot', text: 'You stop doing by hand whatever repeats every week.', time: '14:47' },
+      { from: 'client', text: 'Where do we start?', time: '14:48' },
+      { from: 'bot', text: 'We look at how you work today and draw it step by step. That is where the waste shows.', time: '14:48' },
+      { from: 'client', text: 'Do you work in my area?', time: '14:49' },
+      { from: 'bot', text: 'Yes, with small businesses all over Spain. We will talk you through it, no strings attached.', time: '14:49' },
+    ],
+  },
+
   audio: {
     etiqueta: 'Real AI voice demo',
     titulo: 'Hear how your agent speaks',

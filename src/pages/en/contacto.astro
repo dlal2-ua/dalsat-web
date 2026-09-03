@@ -1,0 +1,79 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header';
+import ContactForm from '../../components/ContactForm';
+import Footer from '../../components/Footer';
+
+const WHATSAPP_URL =
+  'https://api.whatsapp.com/send?phone=34646005171&text=Hi%2C%20I%20would%20like%20to%20talk%20to%20the%20Dalsat%20team.';
+---
+
+<Layout
+  title="Contact | DALSAT"
+  description="Tell us how your business works today and we will tell you what can be automated. We work with small businesses across Spain."
+>
+  <Header client:load currentPath="/contacto" idioma="en" />
+
+  <main class="pt-16">
+    <section
+      id="contacto"
+      class="relative min-h-[calc(100vh-64px)] flex items-center bg-gradient-to-b from-navy-950 via-navy-800 to-navy-900 py-16 sm:py-24 border-t border-white/10 overflow-hidden"
+    >
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cian/15 rounded-full blur-[140px] pointer-events-none" aria-hidden="true"></div>
+
+      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+        {/* Cabecera a izquierda, como en la version en castellano: debajo hay
+            una rejilla 7/5 y un titulo centrado rompia la linea de lectura. */}
+        <div class="max-w-2xl mb-10 sm:mb-14" data-reveal>
+          <h1 class="text-4xl sm:text-6xl font-extrabold text-white mb-4 tracking-tight leading-[1.05]">
+            Tell us how you work today
+          </h1>
+          <p class="text-white/70 text-base sm:text-lg leading-relaxed">
+            We will tell you what can be automated, what is not worth it and how much time it saves you. We work with small businesses across Spain.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div class="lg:col-span-7 bg-white/[0.03] border border-white/10 rounded-3xl p-6 sm:p-10 backdrop-blur-xl shadow-2xl">
+            <ContactForm client:load idioma="en" />
+          </div>
+
+          <div class="lg:col-span-5 space-y-6">
+            <div class="bg-gradient-to-br from-navy-800 to-navy-950 border border-cian/40 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-4">
+              <div class="w-12 h-12 rounded-2xl bg-cian/20 border border-cian/40 flex items-center justify-center text-cian">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+                </svg>
+              </div>
+              <h2 class="text-xl font-bold text-white">
+                Would you rather talk on WhatsApp?
+              </h2>
+              <p class="text-white/70 text-xs sm:text-sm leading-relaxed">
+                We answer enquiries on WhatsApp straight away, Monday to Friday.
+              </p>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] block cursor-pointer flex items-center justify-center gap-2"
+              >
+                Message us on WhatsApp →
+              </a>
+            </div>
+
+            <div class="bg-white/[0.03] border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-3">
+              <h3 class="text-sm font-bold uppercase tracking-wider text-cian">
+                Already a customer?
+              </h3>
+              <p class="text-white/60 text-xs leading-relaxed">
+                If you already have something running with us and need a change, or you have a question, write to the same WhatsApp. The person who built it answers.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer client:visible idioma="en" />
+</Layout>

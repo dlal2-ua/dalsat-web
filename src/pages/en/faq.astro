@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header';
+import FaqSection from '../../components/FaqSection';
+import Footer from '../../components/Footer';
+---
+
+<Layout
+  title="Frequently asked questions | DALSAT"
+  description="Common questions about DALSAT: where to start, what it costs, timelines, custom software, AI agents, the management panel, automation, SEO, websites and data protection."
+>
+  <Header client:load currentPath="/faq" idioma="en" />
+
+  <main class="pt-16">
+    <FaqSection client:load idioma="en" />
+  </main>
+
+  <Footer client:visible idioma="en" />
+</Layout>

@@ -1,0 +1,49 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header';
+import SectorDemos from '../../components/SectorDemos';
+import AudioDemos from '../../components/AudioDemos';
+import Footer from '../../components/Footer';
+import CtaContacto from '../../components/CtaContacto.astro';
+---
+
+<Layout
+  title="AI agent demos by sector | DALSAT"
+  description="Try a DALSAT AI agent built for your type of business and hear how it sounds on the phone. The voice samples are in Spanish, the language the agents work in."
+>
+  <Header client:load currentPath="/demos" idioma="en" />
+
+  <main class="pt-16">
+    {/* La portada se aparta: lo que importa son los simuladores de abajo. */}
+    <section class="relative py-14 sm:py-20 bg-gradient-to-b from-navy-800 via-navy-950 to-navy-900 overflow-hidden">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cian/15 rounded-full blur-[160px] pointer-events-none" aria-hidden="true"></div>
+
+      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 text-center" data-reveal>
+        <p class="flex items-center justify-center gap-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-white/45 mb-6">
+          <span class="relative flex h-2 w-2" aria-hidden="true">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-cian opacity-70"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-cian"></span>
+          </span>
+          Service 02 · AI agents
+        </p>
+        <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-[1.05] mb-5 max-w-4xl mx-auto">
+          Try an agent built for your type of business
+        </h1>
+        <p class="text-white/70 text-base sm:text-lg font-light max-w-2xl mx-auto">
+          Write to the agent as if you were a customer, or hear how it sounds on the phone. Agents are one of the six services.
+        </p>
+      </div>
+    </section>
+
+    <SectorDemos client:load idioma="en" />
+    <AudioDemos client:load idioma="en" />
+
+    <CtaContacto
+      titulo="And with your own business data?"
+      texto="We will set up a free trial with your services, your prices and the way you talk to customers."
+      cta="Ask for a trial with my data"
+    />
+  </main>
+
+  <Footer client:visible idioma="en" />
+</Layout>

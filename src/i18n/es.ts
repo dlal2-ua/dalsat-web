@@ -176,6 +176,25 @@ export const es = {
       'La cuenta sale de 2,8 minutos por mensaje o llamada atendidos a mano, y de que el agente resuelve solo la mayor parte. Es una estimación para hacerte una idea, no una promesa: lo que ahorre tu negocio se ve mirando tu caso.',
   },
 
+  hero: {
+    lema: 'Re-digitalizamos pymes de toda España',
+    ctaPrincipal: 'Cuéntanos cómo trabajas',
+    ctaSecundario: 'Ver qué hacemos',
+    pista: 'Baja para ver qué hacemos',
+    escribir: 'Escríbenos por WhatsApp',
+    escribirPista: 'Escríbenos por WhatsApp…',
+    chat: [
+      { from: 'client', text: '¿Qué hace DALSAT?', time: '14:46' },
+      { from: 'bot', text: 'Programas a medida, agentes de IA, automatización de procesos, SEO y webs. Todo para pymes.', time: '14:46' },
+      { from: 'client', text: '¿Y a mí de qué me sirve?', time: '14:47' },
+      { from: 'bot', text: 'Para dejar de hacer a mano lo que se repite cada semana.', time: '14:47' },
+      { from: 'client', text: '¿Por dónde se empieza?', time: '14:48' },
+      { from: 'bot', text: 'Miramos cómo trabajas hoy y lo dibujamos paso a paso. Ahí se ve qué sobra.', time: '14:48' },
+      { from: 'client', text: '¿Trabajáis en mi zona?', time: '14:49' },
+      { from: 'bot', text: 'Sí, con pymes de toda España. Te lo contamos sin compromiso.', time: '14:49' },
+    ],
+  },
+
   audio: {
     etiqueta: 'Demo de Voz IA Real',
     titulo: 'Escucha cómo habla tu Agente',
