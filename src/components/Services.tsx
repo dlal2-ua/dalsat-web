@@ -1,7 +1,10 @@
-interface Service {
-  id: string;
-  order: string;
-  eyebrow: string;
+import { SERVICIOS } from '../data/servicios';
+
+// Lo que solo necesita el catalogo. El nombre y el numero de cada servicio
+// vienen de data/servicios.ts, que se comparte con el indice de la home.
+// `span` se queda aqui a proposito: es la maquetacion asimetrica de esta
+// pagina, no informacion del servicio.
+interface Detalle {
   title: string;
   desc: string;
   points: string[];
@@ -10,22 +13,15 @@ interface Service {
   link?: { label: string; href: string };
 }
 
-// Orden de prioridad del catalogo. El primero manda visualmente.
-const SERVICES: Service[] = [
-  {
-    id: 'saas',
-    order: '01',
-    eyebrow: 'SaaS a medida',
+const DETALLE: Record<string, Detalle> = {
+  saas: {
     title: 'El programa que tu negocio necesita, hecho para ti',
     desc: 'Dejas de pelearte con hojas de cálculo y con programas genéricos donde nada encaja. Construimos tu herramienta: clientes, citas, presupuestos, stock o lo que hoy llevas a mano.',
     points: ['Solo lo que usas', 'Tu equipo entra desde el móvil', 'Crece contigo'],
     span: 'lg:col-span-7',
     icon: 'M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25Z',
   },
-  {
-    id: 'agentes',
-    order: '02',
-    eyebrow: 'Agentes de IA',
+  agentes: {
     title: 'Agentes que atienden por ti, cada uno para lo suyo',
     desc: 'Un agente que conoce tu negocio y responde como responderías tú. Por WhatsApp, por Instagram o dentro de tu propia web. Resuelve dudas, coge reservas y avisa a tu equipo cuando hace falta una persona.',
     points: ['WhatsApp e Instagram', 'Agente dentro de tu web', 'Atención y reservas'],
@@ -33,47 +29,37 @@ const SERVICES: Service[] = [
     icon: 'M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z',
     link: { label: 'Probar una demo', href: '/demos' },
   },
-  {
-    id: 'panel',
-    order: '03',
-    eyebrow: 'Tu panel de gestión',
+  panel: {
     title: 'Un sitio desde el que lo llevas todo',
     desc: 'El panel donde cambias lo que responde tu agente de chat y el de voz, ves y mueves las reservas, lees las conversaciones y miras los números de tu negocio. Hace de CRM para todo lo que pasa por el agente.',
     points: ['Agente, reservas y métricas', 'Desde el móvil o el ordenador', 'Entra con lo que contrates'],
     span: 'lg:col-span-5',
     icon: 'M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z',
   },
-  {
-    id: 'procesos',
-    order: '04',
-    eyebrow: 'Mapeo y automatización',
+  procesos: {
     title: 'Primero entendemos cómo trabajas, después lo automatizamos',
     desc: 'Nos sentamos contigo y dibujamos cómo funciona tu negocio de verdad, paso a paso. Ahí se ve solo lo que se repite cada semana. Eso es lo que quitamos de en medio.',
     points: ['Mapa de tu negocio', 'Se ve dónde se pierde el tiempo', 'Tareas que se hacen solas'],
     span: 'lg:col-span-7',
     icon: 'M7.5 3.75H6A2.25 2.25 0 0 0 3.75 6v1.5M16.5 3.75H18A2.25 2.25 0 0 1 20.25 6v1.5m0 9V18A2.25 2.25 0 0 1 18 20.25h-1.5m-9 0H6A2.25 2.25 0 0 1 3.75 18v-1.5M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
   },
-  {
-    id: 'seo',
-    order: '05',
-    eyebrow: 'SEO',
+  seo: {
     title: 'Que te encuentren cuando te buscan',
     desc: 'Trabajamos para que tu negocio aparezca cuando alguien de tu zona busca en Google lo que tú ofreces. Ficha de Google, contenido útil y una web que carga rápido.',
     points: ['Búsquedas de tu zona', 'Ficha de Google al día', 'Sin trucos raros'],
     span: 'lg:col-span-6',
     icon: 'm21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z',
   },
-  {
-    id: 'web',
-    order: '06',
-    eyebrow: 'Desarrollo web',
+  web: {
     title: 'Webs que trabajan, no folletos',
     desc: 'Una web rápida y clara, pensada para que quien entre haga algo: pedir cita, escribirte o comprar. Y conectada con las herramientas que ya usas.',
     points: ['Carga rápido en el móvil', 'Pensada para que te escriban', 'Conectada a tu agente'],
     span: 'lg:col-span-6',
     icon: 'M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z',
   },
-];
+};
+
+const SERVICES = SERVICIOS.map((servicio) => ({ ...servicio, ...DETALLE[servicio.id] }));
 
 export default function Services() {
   return (
@@ -104,7 +90,7 @@ export default function Services() {
                       </svg>
                     </div>
                     <span className="text-[11px] font-bold uppercase tracking-widest text-white/60">
-                      {service.eyebrow}
+                      {service.nombre}
                     </span>
                   </div>
                   <span className="font-mono text-sm font-bold text-cian/50" aria-hidden="true">

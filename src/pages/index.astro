@@ -8,6 +8,7 @@ import FaqSection from '../components/FaqSection';
 import ContactForm from '../components/ContactForm';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import Footer from '../components/Footer';
+import { SERVICIOS } from '../data/servicios';
 
 const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20me%20interesa%20lo%20que%20hac%C3%A9is%20y%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n.';
 
@@ -24,45 +25,6 @@ const AHORA = [
   'Agentes que atienden y cogen reservas',
 ];
 
-// Los seis servicios, en orden de prioridad. El catálogo entero vive en /servicios.
-const SERVICIOS = [
-  {
-    n: '01',
-    nombre: 'SaaS a medida',
-    texto: 'El programa que tu negocio necesita, con lo que usas de verdad y sin lo que sobra.',
-    icono: 'M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25Z',
-  },
-  {
-    n: '02',
-    nombre: 'Agentes de IA',
-    texto: 'Atienden por WhatsApp, por Instagram o dentro de tu web. Resuelven dudas y cogen reservas.',
-    icono: 'M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z',
-  },
-  {
-    n: '03',
-    nombre: 'Tu panel de gestión',
-    texto: 'Desde donde gestionas el agente, ves las reservas y miras los números de tu negocio.',
-    icono: 'M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z',
-  },
-  {
-    n: '04',
-    nombre: 'Mapeo y automatización',
-    texto: 'Dibujamos cómo funciona tu negocio paso a paso y quitamos de en medio lo que se repite.',
-    icono: 'M7.5 3.75H6A2.25 2.25 0 0 0 3.75 6v1.5M16.5 3.75H18A2.25 2.25 0 0 1 20.25 6v1.5m0 9V18A2.25 2.25 0 0 1 18 20.25h-1.5m-9 0H6A2.25 2.25 0 0 1 3.75 18v-1.5M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
-  },
-  {
-    n: '05',
-    nombre: 'SEO',
-    texto: 'Que tu negocio salga cuando alguien de tu zona busca en Google lo que tú ofreces.',
-    icono: 'm21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z',
-  },
-  {
-    n: '06',
-    nombre: 'Desarrollo web',
-    texto: 'Webs rápidas y claras, pensadas para que quien entre pida cita, escriba o compre.',
-    icono: 'M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z',
-  },
-];
 ---
 
 <Layout
@@ -149,11 +111,14 @@ const SERVICIOS = [
             <span class="text-xs font-extrabold uppercase tracking-widest text-cian border border-cian/30 bg-cian/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md mb-3">
               Qué hacemos
             </span>
+            {/* Titular y entradilla propios. Antes eran palabra por palabra el
+                h1 y la entradilla de /servicios, asi que las dos paginas se
+                abrian igual. Alli esta el catalogo; aqui solo la lista. */}
             <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-              Seis formas de quitarte trabajo de encima
+              Seis sitios por donde empezar
             </h2>
             <p class="text-white/70 text-base sm:text-lg mt-4 max-w-2xl">
-              No hace falta hacerlo todo a la vez. Empezamos por lo que más te pesa cada semana y seguimos desde ahí.
+              Cada uno resuelve algo distinto. Quédate con el que más te suene a tu semana.
             </p>
           </div>
           <a
@@ -164,32 +129,34 @@ const SERVICIOS = [
           </a>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-          {SERVICIOS.map((s, i) => (
-            <article
-              data-reveal
-              style={`--reveal-delay: ${i * 70}ms`}
-              class="bg-white/[0.03] border border-white/10 rounded-3xl p-6 sm:p-8 backdrop-blur-xl hover:border-cian/50 hover:-translate-y-1 transition-all duration-300 group flex flex-col">
-              <div class="flex items-center justify-between gap-4 mb-5">
-                <div class="p-3 rounded-2xl bg-white/[0.07] border border-white/15 group-hover:scale-110 transition-transform duration-300">
-                  <svg class="w-6 h-6 text-cian" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d={s.icono} />
-                  </svg>
-                </div>
-                <span class="font-mono text-sm font-bold text-cian/50" aria-hidden="true">{s.n}</span>
-              </div>
-              <h3 class="text-xl font-bold text-white mb-2.5">
-                {s.nombre}
-              </h3>
-              <p class="text-white/70 text-sm leading-relaxed mb-6">
-                {s.texto}
-              </p>
-              <a href="/servicios" class="mt-auto text-xs font-bold text-cian group-hover:underline self-start">
-                Saber más →
+        {/* Indice, no catalogo. El detalle de cada servicio (que es, para
+            quien, que incluye) vive en /servicios. Aqui solo van los seis
+            nombres: repetir los mismos textos en las dos paginas obligaba a
+            mantener la misma informacion en dos sitios y hacia que la home y
+            /servicios se leyeran como la misma pagina. */}
+        <ul class="border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-x-8 sm:gap-x-14">
+          {SERVICIOS.map((servicio, i) => (
+            <li class="border-b border-white/10" data-reveal style={`--reveal-delay: ${i * 60}ms`}>
+              <a
+                href="/servicios#catalogo"
+                class="group flex items-baseline gap-4 sm:gap-6 py-5 sm:py-6"
+              >
+                <span class="font-mono text-sm font-bold text-cian/60 tabular-nums shrink-0">
+                  {servicio.order}
+                </span>
+                <span class="text-lg sm:text-2xl font-extrabold text-white tracking-tight group-hover:text-cian transition-colors">
+                  {servicio.nombre}
+                </span>
+                <span
+                  class="ml-auto shrink-0 text-cian opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
+                  aria-hidden="true"
+                >
+                  &rarr;
+                </span>
               </a>
-            </article>
+            </li>
           ))}
-        </div>
+        </ul>
 
       </div>
     </section>
