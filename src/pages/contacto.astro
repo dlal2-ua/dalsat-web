@@ -18,14 +18,14 @@ const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=34646005171&text=Hola,
       <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cian/15 rounded-full blur-[140px] pointer-events-none" aria-hidden="true"></div>
       
       <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-        <div class="text-center mb-10 sm:mb-14">
-          <span class="text-xs font-extrabold uppercase tracking-widest text-cian border border-cian/30 bg-cian/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md shadow-[0_0_15px_rgba(20,205,236,0.2)] mb-3">
-            Contacto
-          </span>
-          <h1 class="text-4xl sm:text-6xl font-extrabold text-white mb-3 tracking-tight">
+        {/* Cabecera alineada a izquierda, no centrada: debajo hay una rejilla
+            7/5 y un titulo centrado sobre ella rompia la linea de lectura.
+            El badge decia "Contacto" estando ya en /contacto y en el menu. */}
+        <div class="max-w-2xl mb-10 sm:mb-14" data-reveal>
+          <h1 class="text-4xl sm:text-6xl font-extrabold text-white mb-4 tracking-tight leading-[1.05]">
             Cuéntanos cómo trabajas hoy
           </h1>
-          <p class="text-white/70 text-base sm:text-lg max-w-xl mx-auto">
+          <p class="text-white/70 text-base sm:text-lg leading-relaxed">
             Te decimos qué se puede automatizar, qué no merece la pena y cuánto tiempo te ahorra. Trabajamos con pymes de toda España.
           </p>
         </div>

@@ -12,20 +12,28 @@ import Footer from '../components/Footer';
   <Header client:load currentPath="/calculadora" />
 
   <main class="pt-16">
-    {/* Banner de Calculadora */}
+    {/* Portada de la calculadora. Esta pagina escupe una cifra, asi que abre
+        como una hoja de calculo: que entra y que sale, en mono y sobre una
+        regla. El badge decia "Cuentas claras"; esa fila lo dice mejor. */}
     <section class="relative py-16 sm:py-24 bg-gradient-to-b from-navy-800 via-navy-950 to-navy-900 overflow-hidden">
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cian/15 rounded-full blur-[160px] pointer-events-none"></div>
+      <div class="absolute bottom-0 right-0 w-[560px] h-[400px] bg-cian-dark/15 rounded-full blur-[160px] pointer-events-none" aria-hidden="true"></div>
 
-      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 text-center">
-        <span class="text-xs font-extrabold uppercase tracking-widest text-cian-dark border border-cian-dark/30 bg-cian-dark/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md shadow-[0_0_15px_rgba(15,168,196,0.2)] mb-4">
-          Cuentas claras
-        </span>
-        <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight mb-4">
-          ¿Cuánto te cuesta hacerlo a mano?
-        </h1>
-        <p class="text-white/70 text-base sm:text-xl font-light max-w-3xl mx-auto">
-          Mueve los controles y sal con una cifra: las horas que recupera tu equipo al mes y lo que eso vale.
-        </p>
+      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+        <div class="max-w-3xl" data-reveal>
+          <p class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white/40 pb-5 mb-7 border-b border-white/10">
+            <span>Entra</span>
+            <span class="text-white/70">tu semana</span>
+            <span class="text-cian-dark" aria-hidden="true">→</span>
+            <span>Sale</span>
+            <span class="text-cian">horas y euros al mes</span>
+          </p>
+          <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-[1.05] mb-5">
+            ¿Cuánto te cuesta hacerlo a mano?
+          </h1>
+          <p class="text-white/70 text-base sm:text-lg font-light leading-relaxed max-w-2xl">
+            Mueve los controles y sal con una cifra: las horas que recupera tu equipo al mes y lo que eso vale.
+          </p>
+        </div>
       </div>
     </section>
 
