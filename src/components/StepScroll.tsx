@@ -1,38 +1,28 @@
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
 import { useEffect, useRef, useState } from 'react';
 
-interface StepItem {
-  number: string;
-  title: string;
-  desc: string;
-  tag: string;
-  icon: string;
-}
-
-const STEPS: StepItem[] = [
-  {
-    number: '1',
-    title: 'Miramos cómo trabajas',
-    desc: 'Nos cuentas tu día a día y dibujamos tu negocio paso a paso. Ahí se ve solo lo que se repite cada semana.',
-    tag: 'Una reunión de 30 minutos',
-    icon: 'M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 8.25h7.5m-7.5 3h7.5m3-9v9a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V4.5a2.25 2.25 0 0 1 2.25-2.25h5.379c.597 0 1.17.237 1.591.659l4.621 4.621c.422.422.659.994.659 1.591Z',
-  },
-  {
-    number: '2',
-    title: 'Lo construimos',
-    desc: 'Montamos lo que haga falta: tu programa a medida, tu agente, la automatización o la web. Conectado con lo que ya usas.',
-    tag: 'Días, no meses',
-    icon: 'M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z',
-  },
-  {
-    number: '3',
-    title: 'Lo ponemos en marcha',
-    desc: 'Entra en funcionamiento y lo vamos ajustando con lo que pasa de verdad cada semana. No te dejamos solo con ello.',
-    tag: 'Seguimos encima',
-    icon: 'M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z',
-  },
+// Solo los iconos: el texto de cada paso vive en src/i18n. El orden manda.
+const ICONOS = [
+  'M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 8.25h7.5m-7.5 3h7.5m3-9v9a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V4.5a2.25 2.25 0 0 1 2.25-2.25h5.379c.597 0 1.17.237 1.591.659l4.621 4.621c.422.422.659.994.659 1.591Z',
+  'M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z',
+  'M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z',
 ];
 
-export default function StepScroll() {
+interface Props {
+  idioma?: Idioma;
+}
+
+export default function StepScroll({ idioma = IDIOMA_POR_DEFECTO }: Props) {
+  const t = contenido(idioma);
+  const STEPS = t.pasos.lista.map((paso, i) => ({
+    number: String(i + 1),
+    title: paso.titulo,
+    desc: paso.texto,
+    tag: paso.etiqueta,
+    icon: ICONOS[i],
+  }));
+
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -91,13 +81,13 @@ export default function StepScroll() {
         {/* Cabecera */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <span className="text-xs font-extrabold uppercase tracking-widest text-cian border border-cian/30 bg-cian/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md shadow-[0_0_15px_rgba(20,205,236,0.2)] mb-4">
-            Cómo trabajamos
+            {t.pasos.etiqueta}
           </span>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
-            En 3 pasos, sin liarte
+            {t.pasos.titulo}
           </h2>
           <p className="text-white/70 text-base sm:text-lg">
-            De la primera reunión a tenerlo funcionando. Sin sorpresas por el camino.
+            {t.pasos.entradilla}
           </p>
         </div>
 

@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
+import type { Contenido } from '../i18n/es';
 
 type Status = 'idle' | 'sending' | 'error';
 
@@ -18,35 +21,35 @@ const CAMPO_MAL = 'border-white/60 bg-white/[0.09] focus:ring-white/70 focus:bor
 
 const LIMITES = { name: 80, email: 120, business: 80, message: 2000 };
 
-function validar(data: FormData): Errores {
+function validar(data: FormData, msg: Contenido['formulario']['errores']): Errores {
   const errores: Errores = {};
   const nombre = String(data.get('name') || '').trim();
   const email = String(data.get('email') || '').trim();
   const mensaje = String(data.get('message') || '').trim();
 
   if (nombre.length < 2) {
-    errores.name = 'Dinos cómo te llamas o cómo se llama tu negocio.';
+    errores.name = msg.nombre;
   }
   if (!email) {
-    errores.email = 'Necesitamos un correo para contestarte.';
+    errores.email = msg.emailFalta;
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-    errores.email = 'Ese correo no parece bien escrito. Revísalo.';
+    errores.email = msg.emailMal;
   }
   if (mensaje && mensaje.length < 10) {
-    errores.message = 'Cuéntanos un poco más, con dos palabras no sabemos por dónde empezar.';
+    errores.message = msg.mensajeCorto;
   }
 
   // Topes por arriba. Los campos ya llevan maxLength, pero eso solo frena a
   // quien escribe en el formulario: quien envie a mano puede mandar lo que
   // quiera, y no tiene sentido reenviarlo a Formspree.
   if (nombre.length > LIMITES.name) {
-    errores.name = 'Ese nombre es demasiado largo.';
+    errores.name = msg.nombreLargo;
   }
   if (email.length > LIMITES.email) {
-    errores.email = 'Ese correo es demasiado largo.';
+    errores.email = msg.emailLargo;
   }
   if (mensaje.length > LIMITES.message) {
-    errores.message = `El mensaje no puede pasar de ${LIMITES.message} caracteres.`;
+    errores.message = msg.mensajeLargo.replace('{max}', String(LIMITES.message));
   }
 
   return errores;
@@ -63,7 +66,13 @@ function MensajeError({ id, texto }: { id: string; texto: string }) {
   );
 }
 
-export default function ContactForm() {
+interface Props {
+  idioma?: Idioma;
+}
+
+export default function ContactForm({ idioma = IDIOMA_POR_DEFECTO }: Props) {
+  const t = contenido(idioma).formulario;
+
   const [status, setStatus] = useState<Status>('idle');
   const [errores, setErrores] = useState<Errores>({});
 
@@ -73,7 +82,7 @@ export default function ContactForm() {
     const form = e.currentTarget;
     const data = new FormData(form);
 
-    const fallos = validar(data);
+    const fallos = validar(data, t.errores);
     if (Object.keys(fallos).length > 0) {
       setErrores(fallos);
       setStatus('idle');
@@ -97,7 +106,7 @@ export default function ContactForm() {
         form.reset();
         // Página propia de gracias: sirve de confirmación clara y deja
         // medir cuántos formularios se envían de verdad.
-        window.location.href = '/gracias';
+        window.location.href = idioma === IDIOMA_POR_DEFECTO ? '/gracias' : `/${idioma}/gracias`;
       } else {
         setStatus('error');
       }
@@ -127,13 +136,13 @@ export default function ContactForm() {
 
       <div>
         <label className="block text-sm font-semibold text-white/90 mb-1.5" htmlFor="name">
-          Nombre
+          {t.nombre}
         </label>
         <input
           id="name"
           name="name"
           type="text"
-          placeholder="Tu nombre o empresa"
+          placeholder={t.nombrePista}
           maxLength={LIMITES.name}
           autoComplete="name"
           aria-invalid={errores.name ? true : undefined}
@@ -146,13 +155,13 @@ export default function ContactForm() {
 
       <div>
         <label className="block text-sm font-semibold text-white/90 mb-1.5" htmlFor="email">
-          Email
+          {t.email}
         </label>
         <input
           id="email"
           name="email"
           type="email"
-          placeholder="tu@email.com"
+          placeholder={t.emailPista}
           maxLength={LIMITES.email}
           autoComplete="email"
           inputMode="email"
@@ -166,13 +175,13 @@ export default function ContactForm() {
 
       <div>
         <label className="block text-sm font-semibold text-white/90 mb-1.5" htmlFor="business">
-          Tipo de negocio <span className="font-normal text-white/45">(opcional)</span>
+          {t.negocio} <span className="font-normal text-white/45">{t.opcional}</span>
         </label>
         <input
           id="business"
           name="business"
           type="text"
-          placeholder="Gimnasio, clínica, autoescuela…"
+          placeholder={t.negocioPista}
           maxLength={LIMITES.business}
           autoComplete="organization"
           className={`${CAMPO_BASE} ${CAMPO_OK}`}
@@ -181,13 +190,13 @@ export default function ContactForm() {
 
       <div>
         <label className="block text-sm font-semibold text-white/90 mb-1.5" htmlFor="message">
-          Mensaje <span className="font-normal text-white/45">(opcional)</span>
+          {t.mensaje} <span className="font-normal text-white/45">{t.opcional}</span>
         </label>
         <textarea
           id="message"
           name="message"
           rows={3}
-          placeholder="Cuéntanos sobre tu negocio o qué te gustaría automatizar"
+          placeholder={t.mensajePista}
           maxLength={LIMITES.message}
           aria-invalid={errores.message ? true : undefined}
           aria-describedby={errores.message ? 'error-message' : undefined}
@@ -208,11 +217,11 @@ export default function ContactForm() {
             aria-hidden="true"
           />
         )}
-        <span>{status === 'sending' ? 'Enviando…' : 'Empezar ahora →'}</span>
+        <span>{status === 'sending' ? t.enviando : `${t.enviar} →`}</span>
       </button>
 
       <p aria-live="polite" className="sr-only">
-        {status === 'sending' ? 'Enviando el formulario' : ''}
+        {status === 'sending' ? t.enviandoAviso : ''}
       </p>
 
       {status === 'error' && (
@@ -221,21 +230,21 @@ export default function ContactForm() {
             <svg className="mt-0.5 h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
             </svg>
-            <span>No hemos podido enviarlo</span>
+            <span>{t.falloTitulo}</span>
           </p>
           <p className="text-white/85">
-            Puede ser cosa de la conexión. Vuelve a darle al botón, o escríbenos a{' '}
+            {t.falloTextoAntes}{' '}
             <a href="mailto:dalsat.soluciones@gmail.com" className="font-semibold underline underline-offset-2 hover:text-cian">
               dalsat.soluciones@gmail.com
             </a>{' '}
-            o{' '}
+            {t.falloTextoO}{' '}
             <a
               href="https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20me%20interesa%20lo%20que%20hac%C3%A9is%20y%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n."
               target="_blank"
               rel="noopener noreferrer"
               className="font-semibold underline underline-offset-2 hover:text-cian"
             >
-              por WhatsApp
+              {t.falloWhatsApp}
             </a>
             .
           </p>

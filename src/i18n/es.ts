@@ -126,6 +126,60 @@ export const es = {
     },
   },
 
+  formulario: {
+    nombre: 'Nombre',
+    nombrePista: 'Tu nombre o empresa',
+    email: 'Email',
+    emailPista: 'tu@email.com',
+    negocio: 'Tipo de negocio',
+    negocioPista: 'Gimnasio, clínica, autoescuela…',
+    mensaje: 'Mensaje',
+    mensajePista: 'Cuéntanos sobre tu negocio o qué te gustaría automatizar',
+    opcional: '(opcional)',
+    enviar: 'Empezar ahora',
+    enviando: 'Enviando…',
+    enviandoAviso: 'Enviando el formulario',
+    errores: {
+      nombre: 'Dinos cómo te llamas o cómo se llama tu negocio.',
+      emailFalta: 'Necesitamos un correo para contestarte.',
+      emailMal: 'Ese correo no parece bien escrito. Revísalo.',
+      mensajeCorto: 'Cuéntanos un poco más, con dos palabras no sabemos por dónde empezar.',
+      nombreLargo: 'Ese nombre es demasiado largo.',
+      emailLargo: 'Ese correo es demasiado largo.',
+      mensajeLargo: 'El mensaje no puede pasar de {max} caracteres.',
+    },
+    falloTitulo: 'No hemos podido enviarlo',
+    falloTextoAntes: 'Puede ser cosa de la conexión. Vuelve a darle al botón, o escríbenos a',
+    falloTextoO: 'o',
+    falloWhatsApp: 'por WhatsApp',
+  },
+
+  pasos: {
+    etiqueta: 'Cómo trabajamos',
+    titulo: 'En 3 pasos, sin liarte',
+    entradilla: 'De la primera reunión a tenerlo funcionando. Sin sorpresas por el camino.',
+    lista: [
+      {
+        titulo: 'Miramos cómo trabajas',
+        texto:
+          'Nos cuentas tu día a día y dibujamos tu negocio paso a paso. Ahí se ve solo lo que se repite cada semana.',
+        etiqueta: 'Una reunión de 30 minutos',
+      },
+      {
+        titulo: 'Lo construimos',
+        texto:
+          'Montamos lo que haga falta: tu programa a medida, tu agente, la automatización o la web. Conectado con lo que ya usas.',
+        etiqueta: 'Días, no meses',
+      },
+      {
+        titulo: 'Lo ponemos en marcha',
+        texto:
+          'Entra en funcionamiento y lo vamos ajustando con lo que pasa de verdad cada semana. No te dejamos solo con ello.',
+        etiqueta: 'Seguimos encima',
+      },
+    ],
+  },
+
   plataforma: {
     etiqueta: 'Tu panel',
     titulo: 'No te dejamos con una caja negra',

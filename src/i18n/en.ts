@@ -126,6 +126,60 @@ export const en: Contenido = {
     },
   },
 
+  formulario: {
+    nombre: 'Name',
+    nombrePista: 'Your name or your business',
+    email: 'Email',
+    emailPista: 'you@email.com',
+    negocio: 'Type of business',
+    negocioPista: 'Gym, clinic, driving school…',
+    mensaje: 'Message',
+    mensajePista: 'Tell us about your business or what you would like to automate',
+    opcional: '(optional)',
+    enviar: 'Get started',
+    enviando: 'Sending…',
+    enviandoAviso: 'Sending the form',
+    errores: {
+      nombre: 'Tell us your name, or your business name.',
+      emailFalta: 'We need an email address to reply to you.',
+      emailMal: 'That email does not look right. Have another look.',
+      mensajeCorto: 'Tell us a bit more -- two words is not enough to know where to start.',
+      nombreLargo: 'That name is too long.',
+      emailLargo: 'That email address is too long.',
+      mensajeLargo: 'The message cannot be longer than {max} characters.',
+    },
+    falloTitulo: 'We could not send it',
+    falloTextoAntes: 'It may be the connection. Press the button again, or write to us at',
+    falloTextoO: 'or',
+    falloWhatsApp: 'on WhatsApp',
+  },
+
+  pasos: {
+    etiqueta: 'How we work',
+    titulo: 'Three steps, no tangle',
+    entradilla: 'From the first meeting to having it running. No surprises on the way.',
+    lista: [
+      {
+        titulo: 'We look at how you work',
+        texto:
+          'You talk us through your day and we draw your business step by step. That is where the weekly repetition shows up.',
+        etiqueta: 'A 30-minute meeting',
+      },
+      {
+        titulo: 'We build it',
+        texto:
+          'We build whatever is needed: your custom software, your agent, the automation or the site. Connected to what you already use.',
+        etiqueta: 'Days, not months',
+      },
+      {
+        titulo: 'We put it live',
+        texto:
+          'It goes into service and we keep tuning it against what actually happens each week. We do not leave you alone with it.',
+        etiqueta: 'We stay on it',
+      },
+    ],
+  },
+
   plataforma: {
     etiqueta: 'Your panel',
     titulo: 'We do not leave you with a black box',
