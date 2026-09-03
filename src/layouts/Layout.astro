@@ -2,6 +2,7 @@
 import CookieBanner from '../components/CookieBanner';
 import StickyMobileCta from '../components/StickyMobileCta';
 import VolverArriba from '../components/VolverArriba';
+import { ViewTransitions } from 'astro:transitions';
 
 interface Props {
   title?: string;
@@ -116,6 +117,9 @@ const schemaData = {
     <script is:inline>
       document.documentElement.classList.add('js');
     </script>
+    {/* Transiciones entre paginas. El router de Astro navega sin recargar, asi
+        que el revelado de abajo se re-arma en astro:page-load. */}
+    <ViewTransitions />
     <style is:global>
       @media (prefers-reduced-motion: no-preference) {
         html {
@@ -192,7 +196,11 @@ const schemaData = {
         }
       }
 
+      // Con ViewTransitions el script no se vuelve a ejecutar al navegar: el
+      // documento se sustituye en caliente. Sin esto, la segunda pagina que
+      // visitara alguien se quedaria entera en opacity 0.
       registrar(document);
+      document.addEventListener('astro:page-load', () => registrar(document));
 
       // Las islas aparecen mas tarde. Solo miramos subarboles nuevos.
       new MutationObserver((mutaciones) => {
