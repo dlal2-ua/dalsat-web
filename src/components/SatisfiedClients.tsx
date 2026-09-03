@@ -8,7 +8,7 @@ interface ClientLogo {
 // Los clientes, para el carrusel de logos. Aqui no van cifras ni testimonios:
 // esta seccion solo dice quien confia en nosotros.
 const LOGOS: ClientLogo[] = [
-  { id: 'vibora-studio', name: 'Víbora Studio', logo: '/vibora-studio.png', logoBg: 'bg-navy-950' },
+  { id: 'vibora-studio', name: 'Víbora Studio', logo: '/vibora-studio.webp', logoBg: 'bg-navy-950' },
   { id: 'atrio-asesores', name: 'Atrio Asesores', logo: '/atrio-asesores.jpg', logoBg: 'bg-crema' },
   // El logo lo dibujamos nosotros: el despacho no tenia uno.
   { id: 'beniabogados', name: 'Beniabogados', logo: '/beniabogados.svg', logoBg: 'bg-crema' },
