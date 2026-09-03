@@ -126,6 +126,56 @@ export const en: Contenido = {
     },
   },
 
+  sobreNosotros: {
+    etiqueta: 'Who we are',
+    titulo: 'Engineers focused on your bottom line',
+    entradilla: 'We put solid AI in place so you stop losing time on repetitive work.',
+    pilares: {
+      real: {
+        titulo: 'Real technology, not demos',
+        texto:
+          'Everything we build is running in a real business, every day. It adapts to your information, not to a generic example.',
+        badge: 'Running every day',
+      },
+      trato: {
+        titulo: 'You talk to the people who built it',
+        texto:
+          'No tickets and no switchboards. You message the people who built your system, on WhatsApp.',
+        enlace: 'Message us on WhatsApp',
+      },
+      datos: {
+        titulo: 'Your data, on your own server',
+        texto:
+          'Everything is installed on your server. Your data and your conversations do not leave it and are not shared with anyone.',
+      },
+      mejora: {
+        titulo: 'We review it and improve it',
+        texto:
+          'Every week we look at how it is doing against real cases and adjust. It does not stay as it was on day one.',
+        badge: 'Weekly review',
+      },
+    },
+    cifras: {
+      sistemas: 'Systems running in real businesses',
+      mensajes: 'Messages handled',
+      tiempo: 'Uptime',
+    },
+  },
+
+  calculadora: {
+    mensajesDia: 'Messages and calls per day',
+    valorHora: 'What an hour of your team is worth',
+    horasMes: 'hours/month',
+    porAno: '/year',
+    cta: 'See what can be automated',
+    porDia: '/day',
+    horasLibres: 'Hours freed up',
+    ahorroMes: 'Estimated monthly saving',
+    ahorroAno: 'Projected annual saving',
+    nota:
+      'The maths comes from 2.8 minutes per message or call handled by hand, and from the agent settling most of them on its own. It is an estimate to give you an idea, not a promise: what your business saves comes out of looking at your case.',
+  },
+
   formulario: {
     nombre: 'Name',
     nombrePista: 'Your name or your business',

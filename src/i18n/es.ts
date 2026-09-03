@@ -126,6 +126,56 @@ export const es = {
     },
   },
 
+  sobreNosotros: {
+    etiqueta: 'Quiénes Somos',
+    titulo: 'Ingenieros enfocados en tu rentabilidad',
+    entradilla: 'Implantamos IA sólida para que dejes de perder tiempo en tareas repetitivas.',
+    pilares: {
+      real: {
+        titulo: 'Tecnología real, no demos',
+        texto:
+          'Todo lo que montamos está funcionando en un negocio real, cada día. Se adapta a tu información, no a un ejemplo genérico.',
+        badge: 'Funcionando cada día',
+      },
+      trato: {
+        titulo: 'Hablas con quien lo ha montado',
+        texto:
+          'Sin tickets ni centralitas. Escribes por WhatsApp a las personas que han construido tu sistema.',
+        enlace: 'Escribir por WhatsApp',
+      },
+      datos: {
+        titulo: 'Tus datos, en tu propio servidor',
+        texto:
+          'Todo se instala en tu servidor. Tus datos y tus conversaciones no salen de ahí ni se comparten con nadie.',
+      },
+      mejora: {
+        titulo: 'Lo revisamos y lo mejoramos',
+        texto:
+          'Cada semana miramos cómo va con casos reales y lo ajustamos. No se queda como el primer día.',
+        badge: 'Revisión semanal',
+      },
+    },
+    cifras: {
+      sistemas: 'Sistemas funcionando en negocios reales',
+      mensajes: 'Mensajes gestionados',
+      tiempo: 'Tiempo que están funcionando',
+    },
+  },
+
+  calculadora: {
+    mensajesDia: 'Mensajes y llamadas al día',
+    valorHora: 'Lo que vale una hora de tu equipo',
+    horasMes: 'horas/mes',
+    porAno: '/año',
+    cta: 'Ver qué se puede automatizar',
+    porDia: '/día',
+    horasLibres: 'Horas Libres Recuperadas',
+    ahorroMes: 'Ahorro Estimado al Mes',
+    ahorroAno: 'Ahorro Proyectado al Año',
+    nota:
+      'La cuenta sale de 2,8 minutos por mensaje o llamada atendidos a mano, y de que el agente resuelve solo la mayor parte. Es una estimación para hacerte una idea, no una promesa: lo que ahorre tu negocio se ve mirando tu caso.',
+  },
+
   formulario: {
     nombre: 'Nombre',
     nombrePista: 'Tu nombre o empresa',

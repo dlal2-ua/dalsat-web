@@ -67,3 +67,13 @@ export function ruta(destino: string, idioma: Idioma): string {
         : `/${idioma}${limpio}`;
   return ancla ? `${conPrefijo}#${ancla}` : conPrefijo;
 }
+
+/**
+ * Locale para Intl / toLocaleString. El negocio factura en euros y opera en
+ * España, asi que la version inglesa usa en-GB: separadores anglosajones pero
+ * formato europeo de moneda.
+ */
+export const LOCALE_NUMERICO: Record<Idioma, string> = {
+  es: 'es-ES',
+  en: 'en-GB',
+};
