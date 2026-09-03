@@ -1,200 +1,35 @@
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
 import { useState } from 'react';
 
-interface FaqItem {
-  id: string;
-  category: string;
-  badge: string;
-  question: string;
-  answer: string;
+interface Props {
+  idioma?: Idioma;
 }
 
-const FAQS: FaqItem[] = [
-  // Categoria: Servicios
-  {
-    id: 'empezar',
-    category: 'Servicios',
-    badge: 'Primer paso',
-    question: '¿Por dónde se empieza?',
-    answer: 'Por una reunión de media hora en la que nos cuentas cómo trabajas hoy: qué haces cada día, quién lo hace y dónde se apunta. De ahí sale el mapa de tu negocio y la lista de lo que se puede quitar de en medio. Si vemos que no hay nada que te compense, te lo decimos y no pasa nada.',
-  },
-  {
-    id: 'ya-tengo-web',
-    category: 'Servicios',
-    badge: 'Re-digitalización',
-    question: 'Ya tengo web, redes y ficha en Google. ¿Esto para qué me sirve?',
-    answer: 'Todo eso sirve para que te encuentren, y sigue haciendo falta. Lo que no hace es quitarte trabajo: las llamadas, los mensajes de WhatsApp, las citas y los apuntes a mano siguen siendo tuyos. La re-digitalización es la parte de después: mirar cómo funciona tu negocio de verdad y hacer que lo que se repite cada semana se haga solo.',
-  },
-  {
-    id: 'panel',
-    category: 'Servicios',
-    badge: 'Incluido',
-    question: '¿Desde dónde gestiono mi agente y mis reservas?',
-    answer: 'Desde tu panel, con tu usuario y tu contraseña, en app.dalsats.com. Ahí cambias lo que responde el agente de chat y el de voz, ves y mueves las reservas que han cogido, lees las conversaciones y tienes los números de tu negocio: cuánto se ha respondido solo, a qué horas te escriben más y cuántas horas te has ahorrado. Hace las veces de CRM para lo que pasa por el agente. Entra con lo que contrates, no se paga aparte y no hay que instalar nada.',
-  },
-  {
-    id: 'que-haceis',
-    category: 'Servicios',
-    badge: 'Seis servicios',
-    question: '¿Solo hacéis agentes de IA?',
-    answer: 'No. Hacemos seis cosas: programas a medida para tu negocio, agentes de IA que atienden por WhatsApp, Instagram o dentro de tu web, el panel desde el que gestionas todo eso, mapeo y automatización de procesos, SEO para que te encuentren en Google y desarrollo web. Los agentes son la parte más visible, pero rara vez es por donde más se gana.',
-  },
-  {
-    id: 'saas-medida',
-    category: 'Servicios',
-    badge: 'SaaS a medida',
-    question: '¿Qué es eso de un programa a medida y en qué se diferencia de uno normal?',
-    answer: 'Un programa hecho para cómo trabajas tú, en vez de uno genérico donde acabas peleándote con campos que no usas y echando de menos los que necesitas. Suele sustituir a la hoja de cálculo y a los papeles: clientes, citas, presupuestos, stock. Solo lleva lo que usáis y entra tu equipo desde el móvil.',
-  },
-  {
-    id: 'mapeo',
-    category: 'Servicios',
-    badge: 'Mapeo de procesos',
-    question: '¿Qué es mapear los procesos de mi negocio?',
-    answer: 'Sentarnos contigo y dibujar cómo funciona tu negocio de verdad, paso a paso: qué entra, quién lo toca, qué se apunta y dónde. Cuando está dibujado se ve solo lo que se repite cada semana y lo que se puede quitar de en medio. Es el punto de partida de casi todo lo demás, y a veces la conclusión es que no hace falta ninguna IA.',
-  },
-  {
-    id: 'seo-web',
-    category: 'Servicios',
-    badge: 'SEO y web',
-    question: '¿También hacéis la web y el posicionamiento en Google?',
-    answer: 'Sí. Hacemos webs rápidas y pensadas para que quien entre haga algo: pedir cita, escribirte o comprar. Y trabajamos el SEO para que tu negocio salga cuando alguien de tu zona busca lo que ofreces: ficha de Google al día, contenido útil y una web que carga rápido en el móvil.',
-  },
-  {
-    id: 'zona',
-    category: 'Servicios',
-    badge: 'Toda España',
-    question: '¿Trabajáis en mi zona?',
-    answer: 'Trabajamos con pymes de toda España. El mapeo inicial sale mejor cara a cara, así que si estás cerca vamos en persona, y si no lo hacemos por videollamada. El resto lo llevamos en remoto sin que se note la distancia.',
-  },
-  // Categoria: WhatsApp
-  {
-    id: 'numero',
-    category: 'WhatsApp',
-    badge: 'Sin cambio de número',
-    question: '¿Tengo que cambiar el número de WhatsApp de mi empresa?',
-    answer: 'No. El agente se conecta al número de WhatsApp Business que ya usas. Mantienes tus contactos, tu historial y tu perfil de empresa, y tus clientes no notan ningún cambio.',
-  },
-  {
-    id: 'multimedia',
-    category: 'WhatsApp',
-    badge: 'Archivos & Multimedia',
-    question: '¿El agente de WhatsApp puede enviar catálogos, imágenes o documentos PDF?',
-    answer: 'Sí. Manda catálogos en PDF, fotos de tus servicios, listas de precios o la ubicación en Google Maps, según lo que le pida el cliente.',
-  },
-  {
-    id: 'pagos',
-    category: 'WhatsApp',
-    badge: 'Cobros automáticos',
-    question: '¿Puede el agente de WhatsApp enviar enlaces de pago o señal de reserva?',
-    answer: 'Sí. Lo conectamos con Stripe, Bizum o Redsys para que el agente mande un enlace de cobro seguro y no confirme la cita hasta que esté pagada la señal.',
-  },
-  {
-    id: 'notas_voz',
-    category: 'WhatsApp',
-    badge: 'Notas de voz',
-    question: '¿Qué ocurre si un cliente envía un audio de WhatsApp en lugar de escribir?',
-    answer: 'Lo escucha, entiende lo que le piden y contesta al momento, por escrito o con otra nota de voz.',
-  },
-  {
-    id: 'limite',
-    category: 'WhatsApp',
-    badge: 'Sin esperas',
-    question: '¿Hay algún límite en el número de clientes atendidos simultáneamente?',
-    answer: 'Ninguno. Lleva cientos de conversaciones a la vez sin ir más lento y sin dejar a nadie esperando.',
-  },
+// Centinela de "todas las categorias". No es un nombre traducible: si lo
+// fuera, comparar contra el se romperia al cambiar de idioma.
+const TODAS = '__todas__';
 
-  // Categoria: Agentes de Voz
-  {
-    id: 'voz',
-    category: 'Agentes de Voz',
-    badge: 'Voz Natural',
-    question: '¿Cómo suena la voz de las llamadas telefónicas?',
-    answer: 'Suena a persona: español de España, con sus pausas y su entonación. En la página de demos puedes escuchar muestras reales y juzgarlo tú.',
-  },
-  {
-    id: 'llamadas_salientes',
-    category: 'Agentes de Voz',
-    badge: 'Llamadas automáticas',
-    question: '¿Puede el agente realizar llamadas salientes para recordar citas?',
-    answer: 'Sí. Llama uno o dos días antes para confirmar, y el cliente puede confirmar o cambiar la cita en esa misma llamada. Así se te quedan muchos menos huecos sin avisar.',
-  },
-  {
-    id: 'horario_voz',
-    category: 'Agentes de Voz',
-    badge: 'Atención 24/7',
-    question: '¿El agente telefónico atiende fuera del horario comercial?',
-    answer: 'Sí, las 24 horas y todos los días del año. Si te llaman de madrugada o un domingo, el agente coge el recado, da la cita o resuelve la duda.',
-  },
+export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
+  const t = contenido(idioma).faq;
+  const FAQS = t.items;
 
-  // Categoria: Integraciones
-  {
-    id: 'agenda',
-    category: 'Integraciones',
-    badge: 'Citas automáticas',
-    question: '¿Se conecta a mi agenda actual (Google Calendar, Booksy, etc.)?',
-    answer: 'Sí. Mira los huecos libres en Google Calendar, Outlook, Booksy o Calendly antes de dar una cita, y la guarda ahí mismo. No coge dos citas para la misma hora.',
-  },
-  {
-    id: 'crm',
-    category: 'Integraciones',
-    badge: 'CRM & ERP',
-    question: '¿Se puede integrar con mi programa de facturación o sistema propio?',
-    answer: 'Sí. Nos conectamos con tu programa de facturación, tu software de gestión o el que uses en tu sector, para que los datos de un cliente no haya que meterlos dos veces.',
-  },
+  // La primera categoria del diccionario es la que abre. En castellano es
+  // 'Servicios', que es lo que hacemos entero; los agentes son uno de los
+  // seis, asi que abrir en 'WhatsApp' daba una idea equivocada. Se toma por
+  // posicion y no por nombre para que siga funcionando traducido.
+  const PRIMERA = FAQS[0].category;
 
-  // Categoria: Seguridad & RGPD
-  {
-    id: 'fallo',
-    category: 'Seguridad & RGPD',
-    badge: 'Traspaso a humano',
-    question: '¿Qué ocurre si la IA no sabe responder una consulta o el cliente requiere atención personalizada?',
-    answer: 'Te lo pasa a ti. Cuando la consulta se sale de lo que sabe o hace falta el criterio de una persona, avisa a tu equipo con el resumen de lo hablado y seguís vosotros desde ahí. No se inventa una respuesta para salir del paso.',
-  },
-  {
-    id: 'rgpd',
-    category: 'Seguridad & RGPD',
-    badge: 'RGPD Europeo',
-    question: '¿Cumple con la Ley de Protección de Datos (RGPD)?',
-    answer: 'Sí. Los datos van cifrados y se guardan en servidores europeos. Los de tus clientes no se comparten con nadie ni se usan para entrenar modelos públicos.',
-  },
-
-  // Categoria: Contrato & Tiempos
-  {
-    id: 'precio',
-    category: 'Contrato & Tiempos',
-    badge: 'Precio',
-    question: '¿Cuánto cuesta?',
-    answer: 'Depende de lo que montemos: no cuesta lo mismo un agente de WhatsApp que un programa a medida para tu negocio. Miramos tu caso, te decimos qué merece la pena y qué no, y te pasamos un precio cerrado antes de empezar. La primera reunión no se cobra y no te compromete a nada.',
-  },
-  {
-    id: 'tiempo',
-    category: 'Contrato & Tiempos',
-    badge: '48-72 Horas',
-    question: '¿En cuánto tiempo queda instalado y funcionando?',
-    answer: 'Un agente, entre 48 y 72 horas laborables. Lo montamos nosotros: le enseñamos tus precios, tus horarios y tus servicios, lo probamos y te lo entregamos funcionando. Un programa a medida o una web llevan más, y te decimos el plazo antes de empezar.',
-  },
-  {
-    id: 'permanencia',
-    category: 'Contrato & Tiempos',
-    badge: 'Sin permanencia',
-    question: '¿Existe algún tipo de contrato o permanencia obligatoria?',
-    answer: 'No. Vamos mes a mes, sin permanencia y sin penalización si lo dejas. Si no te compensa, avisas y se acaba.',
-  },
-];
-
-export default function FaqSection() {
-  const [openId, setOpenId] = useState<string>('empezar');
-  // Se abre en 'Servicios', que es lo que hacemos entero. Los agentes son uno
-  // de los seis, asi que abrir en 'WhatsApp' daba una idea equivocada.
-  const [activeCategory, setActiveCategory] = useState<string>('Servicios');
+  const [openId, setOpenId] = useState<string>(FAQS[0].id);
+  const [activeCategory, setActiveCategory] = useState<string>(PRIMERA);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [reactions, setReactions] = useState<Record<string, boolean>>({});
 
   const categories = Array.from(new Set(FAQS.map((f) => f.category)));
-  const allCategories = ['Servicios', ...categories.filter((c) => c !== 'Servicios'), 'Todas'];
+  const allCategories = [PRIMERA, ...categories.filter((c) => c !== PRIMERA), TODAS];
 
   const filteredFaqs = FAQS.filter((faq) => {
-    const matchesCategory = activeCategory === 'Todas' || faq.category === activeCategory;
+    const matchesCategory = activeCategory === TODAS || faq.category === activeCategory;
     const matchesSearch =
       faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -221,15 +56,15 @@ export default function FaqSection() {
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cian/10 border border-cian/30 backdrop-blur-xl shadow-[0_0_20px_rgba(20,205,236,0.2)] mb-4">
             <span className="text-xs font-extrabold tracking-widest uppercase text-cian">
-              Respuestas Claras
+              {t.etiqueta}
             </span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
-            Preguntas Frecuentes
+            {t.titulo}
           </h2>
           <p className="text-white/70 text-base sm:text-lg font-light max-w-2xl mx-auto">
-            Selecciona la categoría que te interesa para ver las respuestas detalladas.
+            {t.entradilla}
           </p>
 
           {/* Buscador Interactivo */}
@@ -237,7 +72,7 @@ export default function FaqSection() {
             <div className="relative flex items-center">
               <input
                 type="text"
-                placeholder="Buscar una duda (ej. WhatsApp, voz, contrato, RGPD...)"
+                placeholder={t.buscar}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full bg-white/[0.05] border border-white/20 rounded-2xl py-3.5 pl-5 pr-12 text-sm text-white placeholder-white/40 focus:outline-none focus:border-cian focus:bg-white/[0.08] focus:shadow-[0_0_20px_rgba(20,205,236,0.25)] transition-all"
@@ -287,14 +122,14 @@ export default function FaqSection() {
         {/* Si no hay resultados de búsqueda */}
         {filteredFaqs.length === 0 && (
           <div className="text-center py-12 bg-white/[0.02] border border-white/10 rounded-3xl p-8 backdrop-blur-xl">
-            <h3 className="text-lg font-bold text-white mb-2">No encontramos respuestas para "{searchTerm}"</h3>
-            <p className="text-white/60 text-xs sm:text-sm mb-6">Prueba con otras palabras o escríbenos directamente por WhatsApp.</p>
+            <h3 className="text-lg font-bold text-white mb-2">{t.sinNada.replace('{q}', searchTerm)}</h3>
+            <p className="text-white/60 text-xs sm:text-sm mb-6">{t.sinNadaPista}</p>
             <button
               type="button"
-              onClick={() => { setSearchTerm(''); setActiveCategory('Servicios'); }}
+              onClick={() => { setSearchTerm(''); setActiveCategory(PRIMERA); }}
               className="text-xs font-bold text-cian hover:underline cursor-pointer"
             >
-              ← Ver las preguntas sobre servicios
+              ← {t.volverPrimera}
             </button>
           </div>
         )}
@@ -358,7 +193,7 @@ export default function FaqSection() {
                     {/* Botones de Reacción e Interacción */}
                     <div className="flex items-center justify-between pt-2 text-xs flex-wrap gap-2">
                       <div className="flex items-center gap-2">
-                        <span className="text-white/50 text-[11px]">¿Te resulta útil esta respuesta?</span>
+                        <span className="text-white/50 text-[11px]">{t.utilPregunta}</span>
                         <button
                           type="button"
                           onClick={() => handleReaction(faq.id)}
@@ -368,7 +203,7 @@ export default function FaqSection() {
                               : 'bg-white/5 text-white/70 border-white/15 hover:bg-white/10 hover:text-white'
                           }`}
                         >
-                          <span>{hasReacted ? 'Respuesta útil' : 'Sí, me sirve'}</span>
+                          <span>{hasReacted ? t.utilSi : t.utilVota}</span>
                         </button>
                       </div>
 
@@ -409,10 +244,10 @@ export default function FaqSection() {
               Soporte Directo Dalsat
             </span>
             <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              ¿Tienes una duda específica sobre tu negocio?
+              {t.cierreTitulo}
             </h3>
             <p className="text-white/70 text-sm font-light max-w-xl">
-              Analizamos tu caso sin compromiso y te mostramos cómo adaptar la IA a tu empresa.
+              {t.cierreTexto}
             </p>
           </div>
 
@@ -422,7 +257,7 @@ export default function FaqSection() {
             rel="noopener noreferrer"
             className="px-8 py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(217,100,44,0.3)] hover:scale-105 shrink-0 flex items-center gap-2 cursor-pointer"
           >
-            <span>Consultar por WhatsApp</span>
+            <span>{t.consultar}</span>
           </a>
         </div>
 
