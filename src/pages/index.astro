@@ -2,9 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header';
 import SplitHero from '../components/SplitHero';
-import Platform from '../components/Platform';
 import SatisfiedClients from '../components/SatisfiedClients';
-import FaqSection from '../components/FaqSection';
 import ContactForm from '../components/ContactForm';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import Footer from '../components/Footer';
@@ -41,7 +39,7 @@ const AHORA = [
     {/* 2. NUESTROS CLIENTES: solo el carrusel de logos, sin cifras */}
     <SatisfiedClients />
 
-    {/* 2.5. RE-DIGITALIZACIÓN: EL MENSAJE CENTRAL */}
+    {/* 3. RE-DIGITALIZACIÓN: EL MENSAJE CENTRAL */}
     <section id="re-digitalizacion" class="relative bg-navy border-t border-white/10 py-20 sm:py-28 overflow-hidden">
       <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" aria-hidden="true"></div>
       <div class="absolute bottom-0 left-1/4 w-[600px] h-[350px] bg-cian/10 rounded-full blur-[160px] pointer-events-none" aria-hidden="true"></div>
@@ -102,7 +100,7 @@ const AHORA = [
       </div>
     </section>
 
-    {/* 3. LOS SEIS SERVICIOS (avance; el catálogo completo vive en /servicios) */}
+    {/* 4. LOS SEIS SERVICIOS: solo el indice. El catalogo vive en /servicios. */}
     <section id="servicios" class="py-20 bg-navy-900 border-t border-white/10 relative overflow-hidden">
       <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
@@ -161,10 +159,7 @@ const AHORA = [
       </div>
     </section>
 
-    {/* 3.5. LA PLATAFORMA */}
-    <Platform />
-
-    {/* 4. DOS PUERTAS PARA PROBARLO SIN HABLAR CON NADIE.
+    {/* 5. DOS PUERTAS PARA PROBARLO SIN HABLAR CON NADIE.
         Antes esto eran dos bandas seguidas con el mismo marcado, el mismo
         badge y el mismo boton. Dos interrupciones identicas se leen como
         plantilla, asi que van juntas y con distinto peso: la demo manda. */}
@@ -238,9 +233,6 @@ const AHORA = [
         </div>
       </div>
     </section>
-
-    {/* 6. PREGUNTAS FRECUENTES (FAQ) */}
-    <FaqSection client:visible />
 
     {/* 6. CONTACTO DIRECTO */}
     <section id="contacto" class="relative py-20 sm:py-28 bg-gradient-to-b from-navy-950 via-navy-800 to-navy-900 border-t border-white/10 overflow-hidden">

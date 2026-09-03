@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import SectorDemos from '../components/SectorDemos';
 import AudioDemos from '../components/AudioDemos';
 import Footer from '../components/Footer';
+import CtaContacto from '../components/CtaContacto.astro';
 ---
 
 <Layout
@@ -43,23 +44,11 @@ import Footer from '../components/Footer';
     {/* Demos de Voz IA */}
     <AudioDemos client:load />
 
-    {/* CTA de Contacto */}
-    <section class="py-20 bg-navy-900 border-t border-white/10 text-center">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6">
-        <h2 class="text-3xl sm:text-5xl font-extrabold text-white mb-4">
-          ¿Y con los datos de tu negocio?
-        </h2>
-        <p class="text-white/70 text-base sm:text-lg mb-8">
-          Te preparamos una prueba gratis con tus servicios, tus precios y tu forma de hablar.
-        </p>
-        <a
-          href="/contacto"
-          class="inline-flex bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-base px-8 py-4 rounded-2xl transition-all shadow-[0_0_30px_rgba(217,100,44,0.35)] hover:scale-105"
-        >
-          Pedir una prueba con mis datos →
-        </a>
-      </div>
-    </section>
+    <CtaContacto
+      titulo="¿Y con los datos de tu negocio?"
+      texto="Te preparamos una prueba gratis con tus servicios, tus precios y tu forma de hablar."
+      cta="Pedir una prueba con mis datos"
+    />
   </main>
 
   <Footer client:visible />

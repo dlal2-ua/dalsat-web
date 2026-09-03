@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header';
 import RoiCalculator from '../components/RoiCalculator';
 import Footer from '../components/Footer';
+import CtaContacto from '../components/CtaContacto.astro';
 ---
 
 <Layout
@@ -40,23 +41,11 @@ import Footer from '../components/Footer';
     {/* Calculadora de ahorro */}
     <RoiCalculator client:load />
 
-    {/* CTA de Contacto */}
-    <section class="py-20 bg-navy-900 border-t border-white/10 text-center">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6">
-        <h2 class="text-3xl sm:text-5xl font-extrabold text-white mb-4">
-          ¿Te cuadran los números?
-        </h2>
-        <p class="text-white/70 text-base sm:text-lg mb-8">
-          Miramos tu caso concreto y te decimos qué se puede automatizar y qué no merece la pena.
-        </p>
-        <a
-          href="/contacto"
-          class="inline-flex bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-base px-8 py-4 rounded-2xl transition-all shadow-[0_0_30px_rgba(217,100,44,0.4)] hover:scale-105"
-        >
-          Habla con nosotros →
-        </a>
-      </div>
-    </section>
+    <CtaContacto
+      titulo="¿Te cuadran los números?"
+      texto="Miramos tu caso concreto y te decimos qué se puede automatizar y qué no merece la pena."
+      cta="Habla con nosotros"
+    />
   </main>
 
   <Footer client:visible />
