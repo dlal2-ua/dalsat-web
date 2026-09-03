@@ -109,6 +109,12 @@ const schemaData = {
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#072847" />
+    {/* Marca que hay JS antes de pintar. Los revelados al hacer scroll se
+        cuelgan de .js, asi que sin JavaScript el contenido sale visible en
+        vez de quedarse en opacity 0 para siempre. */}
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
     <style is:global>
       @media (prefers-reduced-motion: no-preference) {
         html {
