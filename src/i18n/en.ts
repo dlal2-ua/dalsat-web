@@ -62,10 +62,11 @@ export const en: Contenido = {
   },
 
   clientes: {
-    titulo: 'Businesses that no longer answer the same question twenty times a day',
-    entradilla: 'Each with its own: bookings, enquiries and handovers to the team.',
+    etiqueta: 'Clients',
+    titulo: 'Our clients',
+    entradilla: 'Businesses across Spain with part of their work already automated.',
+    porQue: 'They stay with us because they stopped answering the same question twenty times a day.',
   },
-
   cookies: {
     aviso: 'Cookie notice',
     texto:

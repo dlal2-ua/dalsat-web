@@ -59,13 +59,14 @@ export const es = {
   },
 
   clientes: {
-    // Titular de la seccion, en voz de DALSAT. No es una cita de nadie: las
-    // frases atribuidas a cada cliente van en el campo `frase` de
-    // SatisfiedClients y solo se rellenan con sus palabras y su permiso.
-    titulo: 'Negocios que ya no responden lo mismo veinte veces al día',
-    entradilla: 'Cada uno con lo suyo: reservas, consultas y avisos al equipo.',
+    etiqueta: 'Clientes',
+    titulo: 'Nuestros clientes',
+    entradilla: 'Negocios de toda España que ya tienen parte de su trabajo automatizado.',
+    // Linea nuestra, no una cita: dice por que repiten sin poner palabras en
+    // boca de nadie. Las frases atribuidas a cada cliente van en el campo
+    // `frase` de SatisfiedClients y solo con sus palabras y su permiso.
+    porQue: 'Siguen con nosotros porque dejaron de responder lo mismo veinte veces al día.',
   },
-
   cookies: {
     aviso: 'Aviso de cookies',
     texto:

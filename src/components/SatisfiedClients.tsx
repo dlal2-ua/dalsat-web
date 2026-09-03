@@ -1,3 +1,6 @@
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
+
 interface ClientLogo {
   id: string;
   name: string;
@@ -29,7 +32,13 @@ const LOGOS: ClientLogo[] = [
 const REPETICIONES = 4;
 const TIRA = Array.from({ length: REPETICIONES }, () => LOGOS).flat();
 
-export default function SatisfiedClients() {
+interface Props {
+  idioma?: Idioma;
+}
+
+export default function SatisfiedClients({ idioma = IDIOMA_POR_DEFECTO }: Props) {
+  const t = contenido(idioma);
+
   return (
     <section
       id="clientes"
@@ -66,21 +75,24 @@ export default function SatisfiedClients() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cian"></span>
             </span>
             <span className="text-xs font-extrabold tracking-widest uppercase text-cian">
-              Clientes
+              {t.clientes.etiqueta}
             </span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3">
-            Nuestros clientes
+            {t.clientes.titulo}
           </h2>
           <p className="text-white/70 text-base sm:text-lg font-light">
-            Negocios de toda España que ya tienen parte de su trabajo automatizado.
+            {t.clientes.entradilla}
+          </p>
+          <p className="mt-3 text-sm font-semibold text-cian/80">
+            {t.clientes.porQue}
           </p>
         </div>
       </div>
 
       {/* Carrusel de logos: sale por la izquierda y vuelve a entrar por la derecha */}
-      <div className="marquee relative w-full overflow-hidden" aria-label="Clientes de DALSAT">
+      <div className="marquee relative w-full overflow-hidden" aria-label={t.clientes.titulo}>
         {/* Difuminado en los bordes para que no se corten de golpe */}
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 sm:w-32 bg-gradient-to-r from-navy-900 to-transparent" aria-hidden="true" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 sm:w-32 bg-gradient-to-l from-navy-900 to-transparent" aria-hidden="true" />
