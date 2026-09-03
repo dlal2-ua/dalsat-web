@@ -11,6 +11,27 @@ Astro 4 + Tailwind 3 + islas React 18. Deploy en Vercel (`@astrojs/vercel`).
 Contexto de producto y copy: `landing-brief.md`.
 Este archivo no es un CLAUDE.md completo del proyecto; si hace falta uno, ejecutar `/init`.
 
+## Bilingue
+
+Castellano en la raiz (`/servicios`), ingles bajo `/en` (`/en/servicios`).
+Enrutado i18n nativo de Astro 5, sin plugin: los que hay
+(astro-i18next, astro-i18n) llevan anos sin mantenerse y ninguno traduce el
+contenido.
+
+- **`src/i18n/es.ts` es el original.** `en.ts` esta tipado a partir de el
+  (`Contenido`), asi que si falta una clave **falla el build** en vez de
+  servir castellano a un visitante ingles. Al anadir texto, se anade a los dos.
+- Lo que comparten varios componentes vive en `src/i18n`. Lo que dice una
+  sola pagina se queda en el fichero de esa pagina.
+- Los enlaces internos van por `ruta(destino, idioma)` de `src/i18n/config.ts`.
+  Un `href="/contacto"` a pelo saca al visitante ingles del ingles.
+- Nunca comparar contra un nombre traducible. El FAQ y los sectores usan
+  centinelas (`__todas__`) e indices, no literales.
+- Los mp3 de `/audio` estan en castellano: la transcripcion **no** se traduce,
+  se anade la traduccion aparte y marcada.
+- Las paginas legales inglesas son traduccion de cortesia. El documento que
+  obliga es el castellano y la pagina lo dice a la vista.
+
 ## Identidad de marca (manda sobre todo lo demas)
 
 `tailwind.config.mjs` es la fuente de verdad de la identidad visual y **gana** frente a
