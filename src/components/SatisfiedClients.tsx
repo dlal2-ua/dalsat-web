@@ -3,10 +3,19 @@ interface ClientLogo {
   name: string;
   logo: string;
   logoBg: string;
+  /**
+   * Frase que va debajo del logo, en palabras del cliente.
+   *
+   * IMPORTANTE: esto se publica atribuido a una empresa real y con nombre.
+   * Tiene que ser algo que el cliente haya dicho de verdad y con su permiso.
+   * No se rellena a ojo ni se redacta "en su nombre": seria poner palabras en
+   * boca de un tercero en una web comercial. Mientras este vacio no se pinta
+   * nada, que es preferible a inventarselo.
+   */
+  frase?: string;
 }
 
-// Los clientes, para el carrusel de logos. Aqui no van cifras ni testimonios:
-// esta seccion solo dice quien confia en nosotros.
+// Los clientes, para el carrusel de logos.
 const LOGOS: ClientLogo[] = [
   { id: 'vibora-studio', name: 'Víbora Studio', logo: '/vibora-studio.webp', logoBg: 'bg-navy-950' },
   { id: 'atrio-asesores', name: 'Atrio Asesores', logo: '/atrio-asesores.jpg', logoBg: 'bg-crema' },
@@ -81,14 +90,26 @@ export default function SatisfiedClients() {
             <li
               key={`${client.id}-${i}`}
               aria-hidden={i >= TIRA.length ? 'true' : undefined}
-              className={`${client.logoBg} shrink-0 flex items-center justify-center rounded-3xl border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.35)] w-56 sm:w-80 h-36 sm:h-44 p-6 sm:p-8`}
+              className="shrink-0 w-56 sm:w-80"
             >
-              <img
-                src={client.logo}
-                alt={`Logo de ${client.name}`}
-                loading="lazy"
-                className="max-h-full max-w-full object-contain"
-              />
+              <div
+                className={`${client.logoBg} flex items-center justify-center rounded-3xl border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.35)] h-36 sm:h-44 p-6 sm:p-8`}
+              >
+                <img
+                  src={client.logo}
+                  alt={`Logo de ${client.name}`}
+                  loading="lazy"
+                  className="max-h-full max-w-full object-contain"
+                />
+              </div>
+              {client.frase && (
+                <figcaption className="mt-4 px-1 text-center text-sm leading-snug text-white/70">
+                  <q className="italic">{client.frase}</q>
+                  <span className="mt-1.5 block text-xs font-bold not-italic text-cian/70">
+                    {client.name}
+                  </span>
+                </figcaption>
+              )}
             </li>
           ))}
         </ul>
