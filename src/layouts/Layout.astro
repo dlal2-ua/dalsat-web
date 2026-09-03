@@ -2,7 +2,7 @@
 import CookieBanner from '../components/CookieBanner';
 import StickyMobileCta from '../components/StickyMobileCta';
 import VolverArriba from '../components/VolverArriba';
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title?: string;
@@ -119,7 +119,7 @@ const schemaData = {
     </script>
     {/* Transiciones entre paginas. El router de Astro navega sin recargar, asi
         que el revelado de abajo se re-arma en astro:page-load. */}
-    <ViewTransitions />
+    <ClientRouter />
     <style is:global>
       @media (prefers-reduced-motion: no-preference) {
         html {

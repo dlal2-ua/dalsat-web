@@ -11,11 +11,11 @@
     "node": "20.x"
   },
   "dependencies": {
-    "@astrojs/react": "^3.6.0",
-    "@astrojs/tailwind": "^5.1.0",
-    "@astrojs/vercel": "^7.8.2",
+    "@astrojs/react": "^4.4.2",
+    "@astrojs/tailwind": "^6.0.2",
+    "@astrojs/vercel": "^9.0.5",
     "@vercel/analytics": "^2.0.1",
-    "astro": "^4.16.0",
+    "astro": "^5.18.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
