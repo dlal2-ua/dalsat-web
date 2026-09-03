@@ -16,6 +16,8 @@ const CAMPO_OK = 'border-white/15 focus:ring-cian focus:border-transparent';
 // fuerte, icono y texto, que se ve igual de bien y no compite con los CTA.
 const CAMPO_MAL = 'border-white/60 bg-white/[0.09] focus:ring-white/70 focus:border-white';
 
+const LIMITES = { name: 80, email: 120, business: 80, message: 2000 };
+
 function validar(data: FormData): Errores {
   const errores: Errores = {};
   const nombre = String(data.get('name') || '').trim();
@@ -32,6 +34,19 @@ function validar(data: FormData): Errores {
   }
   if (mensaje && mensaje.length < 10) {
     errores.message = 'Cuéntanos un poco más, con dos palabras no sabemos por dónde empezar.';
+  }
+
+  // Topes por arriba. Los campos ya llevan maxLength, pero eso solo frena a
+  // quien escribe en el formulario: quien envie a mano puede mandar lo que
+  // quiera, y no tiene sentido reenviarlo a Formspree.
+  if (nombre.length > LIMITES.name) {
+    errores.name = 'Ese nombre es demasiado largo.';
+  }
+  if (email.length > LIMITES.email) {
+    errores.email = 'Ese correo es demasiado largo.';
+  }
+  if (mensaje.length > LIMITES.message) {
+    errores.message = `El mensaje no puede pasar de ${LIMITES.message} caracteres.`;
   }
 
   return errores;
@@ -97,6 +112,19 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
+      {/* Trampa anti-bot de Formspree: un campo que ninguna persona ve ni
+          puede enfocar. Los bots rellenan todo lo que encuentran, y Formspree
+          descarta el envio si este viene con algo. Sin captcha, sin cargar
+          nada de terceros y sin molestar a quien escribe de verdad. */}
+      <input
+        type="text"
+        name="_gotcha"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hidden"
+      />
+
       <div>
         <label className="block text-sm font-semibold text-white/90 mb-1.5" htmlFor="name">
           Nombre
@@ -106,6 +134,8 @@ export default function ContactForm() {
           name="name"
           type="text"
           placeholder="Tu nombre o empresa"
+          maxLength={LIMITES.name}
+          autoComplete="name"
           aria-invalid={errores.name ? true : undefined}
           aria-describedby={errores.name ? 'error-name' : undefined}
           onChange={() => limpiar('name')}
@@ -123,6 +153,9 @@ export default function ContactForm() {
           name="email"
           type="email"
           placeholder="tu@email.com"
+          maxLength={LIMITES.email}
+          autoComplete="email"
+          inputMode="email"
           aria-invalid={errores.email ? true : undefined}
           aria-describedby={errores.email ? 'error-email' : undefined}
           onChange={() => limpiar('email')}
@@ -140,6 +173,8 @@ export default function ContactForm() {
           name="business"
           type="text"
           placeholder="Gimnasio, clínica, autoescuela…"
+          maxLength={LIMITES.business}
+          autoComplete="organization"
           className={`${CAMPO_BASE} ${CAMPO_OK}`}
         />
       </div>
@@ -153,6 +188,7 @@ export default function ContactForm() {
           name="message"
           rows={3}
           placeholder="Cuéntanos sobre tu negocio o qué te gustaría automatizar"
+          maxLength={LIMITES.message}
           aria-invalid={errores.message ? true : undefined}
           aria-describedby={errores.message ? 'error-message' : undefined}
           onChange={() => limpiar('message')}
