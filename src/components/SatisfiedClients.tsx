@@ -7,23 +7,61 @@ interface ClientLogo {
   logo: string;
   logoBg: string;
   /**
-   * Frase que va debajo del logo, en palabras del cliente.
+   * Frase publicada debajo del logo, atribuida al cliente.
    *
-   * IMPORTANTE: esto se publica atribuido a una empresa real y con nombre.
-   * Tiene que ser algo que el cliente haya dicho de verdad y con su permiso.
-   * No se rellena a ojo ni se redacta "en su nombre": seria poner palabras en
-   * boca de un tercero en una web comercial. Mientras este vacio no se pinta
-   * nada, que es preferible a inventarselo.
+   * Solo se rellena con lo que el cliente haya aprobado. Es una cita con
+   * nombre y apellidos de una empresa real en una web comercial: publicar
+   * aqui algo que no ha dicho es publicidad enganosa (Ley 3/1991 de
+   * Competencia Desleal, y la Directiva Omnibus prohibe expresamente las
+   * resenas fabricadas). Mientras este vacio no se pinta nada.
    */
   frase?: string;
+
+  /**
+   * Borrador redactado por nosotros, pendiente de que el cliente lo confirme.
+   * NO se pinta: existe para mandarselo y que diga si le vale o lo cambia.
+   *
+   * Flujo: se le manda tal cual -> contesta "ok" o lo corrige -> su version
+   * se mueve a `frase` y se borra este campo. Con eso pasa a ser una cita
+   * suya de verdad, que es lo unico publicable.
+   */
+  frasePropuesta?: string;
 }
 
 // Los clientes, para el carrusel de logos.
 const LOGOS: ClientLogo[] = [
-  { id: 'vibora-studio', name: 'Víbora Studio', logo: '/vibora-studio.webp', logoBg: 'bg-navy-950' },
-  { id: 'atrio-asesores', name: 'Atrio Asesores', logo: '/atrio-asesores.jpg', logoBg: 'bg-crema' },
-  // El logo lo dibujamos nosotros: el despacho no tenia uno.
-  { id: 'beniabogados', name: 'Beniabogados', logo: '/beniabogados.svg', logoBg: 'bg-crema' },
+  {
+    id: 'vibora-studio',
+    name: 'Víbora Studio',
+    logo: '/vibora-studio.webp',
+    logoBg: 'bg-navy-950',
+    // Borrador. Se apoya en lo que ya contamos de ellos en /demos, donde el
+    // sector de tatuaje lleva su nombre: citas, estilos y disponibilidad.
+    frasePropuesta:
+      'Antes parábamos de tatuar para coger el móvil. Ahora las citas entran solas y solo miramos la agenda.',
+  },
+  {
+    id: 'atrio-asesores',
+    name: 'Atrio Asesores',
+    logo: '/atrio-asesores.jpg',
+    logoBg: 'bg-crema',
+    // Borrador. En /demos el sector de asesoría lleva su nombre: dudas de
+    // facturación y Renta, y cita con el especialista.
+    frasePropuesta:
+      'En campaña de Renta nos llovían las mismas preguntas. El agente las resuelve y a nosotros nos llega solo lo que hay que mirar.',
+  },
+  {
+    id: 'beniabogados',
+    name: 'Beniabogados',
+    logo: '/beniabogados.svg',
+    logoBg: 'bg-crema',
+    // El logo lo dibujamos nosotros: el despacho no tenia uno.
+    // Borrador apoyado en eso, que es lo unico que sabemos con certeza de
+    // este cliente. Si les hicimos algo mas, cambiar la frase antes de
+    // mandarsela.
+    frasePropuesta:
+      'No teníamos ni logo. Salimos con una imagen propia y una web que explica lo que hacemos.',
+  },
 ];
 
 // Con tres logos la tira se ve corta, asi que el juego se repite hasta llenar
