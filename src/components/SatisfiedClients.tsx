@@ -138,9 +138,22 @@ export default function SatisfiedClients({ idioma = IDIOMA_POR_DEFECTO }: Props)
                 />
               </div>
               {client.frase && (
-                <figcaption className="mt-4 px-1 text-center text-sm leading-snug text-white/70">
+                <figcaption className="mt-4 px-1 text-center text-base leading-relaxed text-white/80">
                   <q className="italic">{client.frase}</q>
-                  <span className="mt-1.5 block text-xs font-bold not-italic text-cian/70">
+
+                  {/* La cita no se traduce: es literal de quien la dijo. En
+                      ingles se pone debajo la traduccion, marcada, para que un
+                      visitante que no lea castellano sepa que dice. */}
+                  {t.clientes.etiquetaTraduccion && t.clientes.traducciones[client.id] && (
+                    <span className="mt-2 block text-sm not-italic leading-snug text-white/55">
+                      <span className="mr-1.5 font-bold text-cian/70">
+                        {t.clientes.etiquetaTraduccion}
+                      </span>
+                      {t.clientes.traducciones[client.id]}
+                    </span>
+                  )}
+
+                  <span className="mt-2 block text-sm font-bold not-italic text-cian/80">
                     {client.name}
                   </span>
                 </figcaption>

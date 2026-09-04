@@ -25,6 +25,8 @@ export const es = {
     volverArriba: 'Volver arriba',
     volverAlInicio: 'Volver al inicio',
     escribirWhatsApp: 'Escríbenos por WhatsApp',
+    avisoChat: '¿Necesitas ayuda? Pregúntame lo que quieras.',
+    cerrarAviso: 'Cerrar aviso',
     mensajeWhatsApp: 'Hola, me interesa lo que hacéis y me gustaría recibir más información.',
     hablarWhatsApp: '¿Hablamos por WhatsApp?',
     verCatalogo: 'Ver el catálogo completo',
@@ -63,6 +65,10 @@ export const es = {
     etiqueta: 'Clientes',
     titulo: 'Nuestros clientes',
     entradilla: 'Negocios de toda España que ya tienen parte de su trabajo automatizado.',
+    // Las citas son literales de cada cliente y no se traducen: se citan como
+    // se dijeron. En ingles se añade debajo la traduccion, marcada como tal.
+    etiquetaTraduccion: '',
+    traducciones: {} as Record<string, string>,
   },
   cookies: {
     aviso: 'Aviso de cookies',

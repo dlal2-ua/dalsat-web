@@ -282,11 +282,10 @@ const schemaData = {
           src={`https://dev.dalsats.com/webchat/${INSTANCIA_CHAT}/widget.js`}
           defer
         />
-        {/* Abre el chat solo la primera vez de cada sesion y le cambia el
-            icono al de IA. No pinta nada propio: empuja al widget desde
-            fuera, asi que si su marcado cambia lo peor que pasa es que no
-            haga nada. */}
-        <AvisoChat client:idle />
+        {/* Le pone cara de robot a la burbuja del widget y saca un bocadillo
+            al lado. El chat no se abre solo: se despliega al pulsar. No pinta
+            la burbuja ni el panel, solo empuja a los suyos desde fuera. */}
+        <AvisoChat client:idle texto={t.comun.avisoChat} cerrar={t.comun.cerrarAviso} />
       </>
     )}
   </body>

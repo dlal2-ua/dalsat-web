@@ -28,6 +28,8 @@ export const en: Contenido = {
     volverArriba: 'Back to top',
     volverAlInicio: 'Back to home',
     escribirWhatsApp: 'Message us on WhatsApp',
+    avisoChat: 'Need a hand? Ask me anything.',
+    cerrarAviso: 'Dismiss',
     mensajeWhatsApp: 'Hi, I am interested in what you do and would like to know more.',
     hablarWhatsApp: 'Shall we talk on WhatsApp?',
     verCatalogo: 'See the full catalogue',
@@ -66,6 +68,15 @@ export const en: Contenido = {
     etiqueta: 'Clients',
     titulo: 'Our clients',
     entradilla: 'Businesses across Spain with part of their work already automated.',
+    etiquetaTraduccion: 'In English:',
+    traducciones: {
+      'vibora-studio':
+        'We used to stop tattooing to pick up the phone, and messages still slipped through overnight. Now the booking comes in on its own while we work, and in the morning we just look at the diary.',
+      'atrio-asesores':
+        'During tax return season the same four questions rained on us all day. Now the agent answers them and only the case that really needs looking at reaches us.',
+      beniabogados:
+        'We did not even have a logo, and we explained the firm over the phone one person at a time. Now we have our own identity and a site that tells it for us before they call.',
+    } as Record<string, string>,
   },
   cookies: {
     aviso: 'Cookie notice',
