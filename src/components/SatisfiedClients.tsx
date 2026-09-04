@@ -13,19 +13,14 @@ interface ClientLogo {
    * nombre y apellidos de una empresa real en una web comercial: publicar
    * aqui algo que no ha dicho es publicidad enganosa (Ley 3/1991 de
    * Competencia Desleal, y la Directiva Omnibus prohibe expresamente las
-   * resenas fabricadas). Mientras este vacio no se pinta nada.
+   * resenas fabricadas).
+   *
+   * Las tres actuales las redactamos nosotros y las aprobaron los tres
+   * clientes antes de publicarse. Si alguna se cambia, vuelve a hacer falta
+   * su visto bueno: mientras tanto se deja vacia y no se pinta nada.
    */
   frase?: string;
 
-  /**
-   * Borrador redactado por nosotros, pendiente de que el cliente lo confirme.
-   * NO se pinta: existe para mandarselo y que diga si le vale o lo cambia.
-   *
-   * Flujo: se le manda tal cual -> contesta "ok" o lo corrige -> su version
-   * se mueve a `frase` y se borra este campo. Con eso pasa a ser una cita
-   * suya de verdad, que es lo unico publicable.
-   */
-  frasePropuesta?: string;
 }
 
 // Los clientes, para el carrusel de logos.
@@ -35,9 +30,7 @@ const LOGOS: ClientLogo[] = [
     name: 'Víbora Studio',
     logo: '/vibora-studio.webp',
     logoBg: 'bg-navy-950',
-    // Borrador. Se apoya en lo que ya contamos de ellos en /demos, donde el
-    // sector de tatuaje lleva su nombre: citas, estilos y disponibilidad.
-    frasePropuesta:
+    frase:
       'Antes parábamos de tatuar para coger el móvil, y aun así se nos escapaban mensajes por la noche. Ahora la cita entra sola mientras trabajamos y por la mañana solo miramos la agenda.',
   },
   {
@@ -45,9 +38,7 @@ const LOGOS: ClientLogo[] = [
     name: 'Atrio Asesores',
     logo: '/atrio-asesores.jpg',
     logoBg: 'bg-crema',
-    // Borrador. En /demos el sector de asesoría lleva su nombre: dudas de
-    // facturación y Renta, y cita con el especialista.
-    frasePropuesta:
+    frase:
       'En campaña de Renta nos llovían las mismas cuatro preguntas todo el día. Ahora las contesta el agente y a nosotros nos llega solo el caso que hay que mirar de verdad.',
   },
   {
@@ -56,10 +47,7 @@ const LOGOS: ClientLogo[] = [
     logo: '/beniabogados.svg',
     logoBg: 'bg-crema',
     // El logo lo dibujamos nosotros: el despacho no tenia uno.
-    // Borrador apoyado en eso, que es lo unico que sabemos con certeza de
-    // este cliente. Si les hicimos algo mas, cambiar la frase antes de
-    // mandarsela.
-    frasePropuesta:
+    frase:
       'No teníamos ni logo, y explicábamos el despacho por teléfono uno a uno. Ahora tenemos imagen propia y una web que lo cuenta por nosotros antes de que llamen.',
   },
 ];
