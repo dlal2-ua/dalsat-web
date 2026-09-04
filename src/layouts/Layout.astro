@@ -31,6 +31,11 @@ const {
 
 const SITE_URL = Astro.site || new URL('https://dalsats.com');
 
+// Slug de la instancia de Dalsat que atiende el chat web. Vacio = sin chat.
+// No poner aqui una instancia de pruebas: el agente responde con el nombre,
+// el horario y los precios del negocio al que pertenezca.
+const INSTANCIA_CHAT = '';
+
 const idioma = idiomaDeUrl(Astro.url);
 const t = contenido(idioma);
 // Ruta sin prefijo: es lo que necesitan el selector de idioma, el estado
@@ -243,20 +248,23 @@ const schemaData = {
       }).observe(document.body, { childList: true, subtree: true });
     </script>
 
-    {/* Widget de chat de la plataforma Dalsat. Una etiqueta y nada mas: el
-        agente corre en dev.dalsats.com, pinta su propia burbuja abajo a la
-        derecha y no carga el iframe hasta el primer clic.
+    {/* Widget de chat de la plataforma Dalsat.
 
-        `is:inline` es obligatorio: sin el, Astro intenta procesar el script y
-        lo saca de aqui. `defer` para que no bloquee el pintado.
+        DESACTIVADO. Para encenderlo: poner el slug de la instancia de DALSAT
+        en INSTANCIA_CHAT, arriba. Nada mas; la CSP ya permite el host.
 
-        La CSP de vercel.json le abre `script-src` y `frame-src` hacia
-        dev.dalsats.com; sin eso el navegador lo bloquea en silencio. El
-        cambio de ruta no la toca: mismo host.
-
-        El prefijo es /webchat y no /chat porque en ese host /chat* lo enruta
-        Caddy a otra aplicacion (Express) y la peticion nunca llegaba a la
-        API. */}
-    <script is:inline src="https://dev.dalsats.com/webchat/movil-pruebas-bq/widget.js" defer></script>
+        Estuvo activo con `movil-pruebas-bq`, que es una instancia de pruebas
+        de otro negocio: el chat se presentaba como "Glow Estetica" y daba sus
+        horarios a los visitantes de dalsats.com. No vale con cambiarle el
+        contexto: el nombre, el horario, los precios y las FAQs salen del
+        registro del cliente y los comparten todos los contextos. Hace falta
+        una instancia propia. No necesita WhatsApp: el chat web no lo usa. */}
+    {INSTANCIA_CHAT && (
+      <script
+        is:inline
+        src={`https://dev.dalsats.com/webchat/${INSTANCIA_CHAT}/widget.js`}
+        defer
+      />
+    )}
   </body>
 </html>
