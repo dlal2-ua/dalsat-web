@@ -300,6 +300,7 @@ export const en: Contenido = {
     entradilla: 'If something is missing, write to us and we will explain it.',
     sinResultados: 'No questions in this category.',
     todas: 'All',
+    dudaWhatsApp: 'Hi, I have a question about:',
     consultar: 'Ask about my case',
     buscar: 'Search a question (e.g. WhatsApp, voice, terms, GDPR...)',
     sinNada: 'We found no answers for "{q}"',

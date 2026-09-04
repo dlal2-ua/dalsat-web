@@ -2,8 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { urlWhatsApp } from '../data/contacto';
 
-const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20acabo%20de%20escribiros%20por%20el%20formulario%20de%20la%20web.';
+const WHATSAPP_URL = urlWhatsApp('Hola, acabo de escribiros por el formulario de la web.');
 
 // Mientras esperan, algo que mirar. Nada de esto pide otro formulario.
 const MIENTRAS = [

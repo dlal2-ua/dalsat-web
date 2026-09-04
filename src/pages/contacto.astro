@@ -3,8 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header';
 import ContactForm from '../components/ContactForm';
 import Footer from '../components/Footer';
+import { urlWhatsApp } from '../data/contacto';
 
-const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20me%20gustar%C3%ADa%20hablar%20con%20el%20equipo%20de%20Dalsat.';
+const WHATSAPP_URL = urlWhatsApp('Hola, me gustaría hablar con el equipo de Dalsat.');
 ---
 
 <Layout

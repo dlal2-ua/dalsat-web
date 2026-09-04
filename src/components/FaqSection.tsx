@@ -1,6 +1,7 @@
 import { contenido } from '../i18n';
 import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
 import { useState } from 'react';
+import { urlWhatsApp } from '../data/contacto';
 
 interface Props {
   idioma?: Idioma;
@@ -208,7 +209,7 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                       </div>
 
                       <a
-                        href={`https://api.whatsapp.com/send?phone=34646005171&text=Hola%2C%20tengo%20una%20duda%20sobre%3A%20${encodeURIComponent(faq.question)}`}
+                        href={urlWhatsApp(`${t.dudaWhatsApp} ${faq.question}`)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-[11px] font-bold text-cian hover:underline flex items-center gap-1 cursor-pointer"
@@ -252,7 +253,7 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
           </div>
 
           <a
-            href="https://api.whatsapp.com/send?phone=34646005171&text=Hola%2C%20quisiera%20consultar%20mi%20caso%20particular%20con%20un%20especialista%20de%20Dalsat."
+            href={urlWhatsApp('Hola, quisiera consultar mi caso particular con un especialista de Dalsat.')}
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(217,100,44,0.3)] hover:scale-105 shrink-0 flex items-center gap-2 cursor-pointer"

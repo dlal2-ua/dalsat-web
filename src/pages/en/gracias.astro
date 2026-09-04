@@ -2,9 +2,10 @@
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import { urlWhatsApp } from '../../data/contacto';
 
 const WHATSAPP_URL =
-  'https://api.whatsapp.com/send?phone=34646005171&text=Hi%2C%20I%20have%20just%20written%20to%20you%20through%20the%20form%20on%20the%20site.';
+  urlWhatsApp('Hi, I have just written to you through the form on the site.');
 
 // Mientras esperan, algo que mirar. Nada de esto pide otro formulario.
 const MEANWHILE = [

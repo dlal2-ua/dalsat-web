@@ -1,7 +1,8 @@
 import { contenido } from '../i18n';
 import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
+import { urlWhatsApp } from '../data/contacto';
 
-const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20me%20interesa%20lo%20que%20hac%C3%A9is%20y%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n.';
+const WHATSAPP_URL = urlWhatsApp('Hola, me interesa lo que hacéis y me gustaría recibir más información.');
 
 interface FooterProps {
   idioma?: Idioma;

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { contenido } from '../i18n';
 import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
 import type { Contenido } from '../i18n/es';
+import { urlWhatsApp } from '../data/contacto';
 
 type Status = 'idle' | 'sending' | 'error';
 
@@ -239,7 +240,7 @@ export default function ContactForm({ idioma = IDIOMA_POR_DEFECTO }: Props) {
             </a>{' '}
             {t.falloTextoO}{' '}
             <a
-              href="https://api.whatsapp.com/send?phone=34646005171&text=Hola,%20me%20interesa%20lo%20que%20hac%C3%A9is%20y%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n."
+              href={urlWhatsApp('Hola, me interesa lo que hacéis y me gustaría recibir más información.')}
               target="_blank"
               rel="noopener noreferrer"
               className="font-semibold underline underline-offset-2 hover:text-cian"

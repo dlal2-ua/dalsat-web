@@ -300,6 +300,7 @@ export const es = {
     entradilla: 'Si te falta algo, escríbenos y te lo contamos.',
     sinResultados: 'No hay preguntas en esta categoría.',
     todas: 'Todas',
+    dudaWhatsApp: 'Hola, tengo una duda sobre:',
     consultar: 'Consultar mi caso',
     buscar: 'Buscar una duda (ej. WhatsApp, voz, contrato, RGPD...)',
     sinNada: 'No encontramos respuestas para "{q}"',

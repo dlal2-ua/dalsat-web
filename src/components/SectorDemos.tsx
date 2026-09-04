@@ -1,6 +1,7 @@
 import { contenido } from '../i18n';
 import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
 import { useState, useEffect, useRef } from 'react';
+import { urlWhatsApp } from '../data/contacto';
 
 interface Props {
   idioma?: Idioma;
@@ -17,7 +18,7 @@ export default function SectorDemos({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   const chatRef = useRef<HTMLDivElement>(null);
 
   const activeSector = SECTORS.find((s) => s.id === activeId) || SECTORS[0];
-  const whatsappUrl = `https://api.whatsapp.com/send?phone=34646005171&text=${encodeURIComponent(activeSector.whatsappMessage)}`;
+  const whatsappUrl = urlWhatsApp(activeSector.whatsappMessage);
 
   const handleSelectSector = (id: string) => {
     setActiveId(id);

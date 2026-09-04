@@ -2,9 +2,10 @@
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import { urlWhatsApp } from '../../data/contacto';
 
 const WHATSAPP_URL =
-  'https://api.whatsapp.com/send?phone=34646005171&text=Hi%2C%20I%20landed%20on%20a%20page%20that%20does%20not%20exist%20on%20your%20site%20and%20wanted%20to%20ask%20something.';
+  urlWhatsApp('Hi, I landed on a page that does not exist on your site and wanted to ask something.');
 
 // A donde tiene sentido mandar a alguien que ha llegado aqui por error.
 const SHORTCUTS = [
