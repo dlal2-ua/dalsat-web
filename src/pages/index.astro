@@ -3,7 +3,6 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header';
 import SplitHero from '../components/SplitHero';
 import SatisfiedClients from '../components/SatisfiedClients';
-import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import Footer from '../components/Footer';
 import CtaContacto from '../components/CtaContacto.astro';
 import { SERVICIOS } from '../data/servicios';
@@ -246,6 +245,5 @@ const AHORA = [
 
   </main>
 
-  <FloatingWhatsApp client:load />
   <Footer client:visible />
 </Layout>
