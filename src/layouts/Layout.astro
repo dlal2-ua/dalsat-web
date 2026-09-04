@@ -251,7 +251,12 @@ const schemaData = {
         lo saca de aqui. `defer` para que no bloquee el pintado.
 
         La CSP de vercel.json le abre `script-src` y `frame-src` hacia
-        dev.dalsats.com; sin eso el navegador lo bloquea en silencio. */}
-    <script is:inline src="https://dev.dalsats.com/chat/movil-pruebas-bq/widget.js" defer></script>
+        dev.dalsats.com; sin eso el navegador lo bloquea en silencio. El
+        cambio de ruta no la toca: mismo host.
+
+        El prefijo es /webchat y no /chat porque en ese host /chat* lo enruta
+        Caddy a otra aplicacion (Express) y la peticion nunca llegaba a la
+        API. */}
+    <script is:inline src="https://dev.dalsats.com/webchat/movil-pruebas-bq/widget.js" defer></script>
   </body>
 </html>
