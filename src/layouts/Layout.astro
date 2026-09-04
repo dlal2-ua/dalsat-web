@@ -242,5 +242,16 @@ const schemaData = {
         }
       }).observe(document.body, { childList: true, subtree: true });
     </script>
+
+    {/* Widget de chat de la plataforma Dalsat. Una etiqueta y nada mas: el
+        agente corre en dev.dalsats.com, pinta su propia burbuja abajo a la
+        derecha y no carga el iframe hasta el primer clic.
+
+        `is:inline` es obligatorio: sin el, Astro intenta procesar el script y
+        lo saca de aqui. `defer` para que no bloquee el pintado.
+
+        La CSP de vercel.json le abre `script-src` y `frame-src` hacia
+        dev.dalsats.com; sin eso el navegador lo bloquea en silencio. */}
+    <script is:inline src="https://dev.dalsats.com/chat/movil-pruebas-bq/widget.js" defer></script>
   </body>
 </html>
