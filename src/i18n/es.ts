@@ -25,6 +25,9 @@ export const es = {
     volverArriba: 'Volver arriba',
     volverAlInicio: 'Volver al inicio',
     escribirWhatsApp: 'Escríbenos por WhatsApp',
+    mensajeWhatsApp: 'Hola, me interesa lo que hacéis y me gustaría recibir más información.',
+    avisoChat: '¿Tienes alguna duda? Pregúntale a nuestro agente.',
+    cerrarAviso: 'Cerrar aviso',
     hablarWhatsApp: '¿Hablamos por WhatsApp?',
     verCatalogo: 'Ver el catálogo completo',
     saberMas: 'Saber más',
@@ -62,10 +65,6 @@ export const es = {
     etiqueta: 'Clientes',
     titulo: 'Nuestros clientes',
     entradilla: 'Negocios de toda España que ya tienen parte de su trabajo automatizado.',
-    // Linea nuestra, no una cita: dice por que repiten sin poner palabras en
-    // boca de nadie. Las frases atribuidas a cada cliente van en el campo
-    // `frase` de SatisfiedClients y solo con sus palabras y su permiso.
-    porQue: 'Siguen con nosotros porque dejaron de responder lo mismo veinte veces al día.',
   },
   cookies: {
     aviso: 'Aviso de cookies',

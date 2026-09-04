@@ -38,7 +38,7 @@ const LOGOS: ClientLogo[] = [
     // Borrador. Se apoya en lo que ya contamos de ellos en /demos, donde el
     // sector de tatuaje lleva su nombre: citas, estilos y disponibilidad.
     frasePropuesta:
-      'Antes parábamos de tatuar para coger el móvil. Ahora las citas entran solas y solo miramos la agenda.',
+      'Antes parábamos de tatuar para coger el móvil, y aun así se nos escapaban mensajes por la noche. Ahora la cita entra sola mientras trabajamos y por la mañana solo miramos la agenda.',
   },
   {
     id: 'atrio-asesores',
@@ -48,7 +48,7 @@ const LOGOS: ClientLogo[] = [
     // Borrador. En /demos el sector de asesoría lleva su nombre: dudas de
     // facturación y Renta, y cita con el especialista.
     frasePropuesta:
-      'En campaña de Renta nos llovían las mismas preguntas. El agente las resuelve y a nosotros nos llega solo lo que hay que mirar.',
+      'En campaña de Renta nos llovían las mismas cuatro preguntas todo el día. Ahora las contesta el agente y a nosotros nos llega solo el caso que hay que mirar de verdad.',
   },
   {
     id: 'beniabogados',
@@ -60,7 +60,7 @@ const LOGOS: ClientLogo[] = [
     // este cliente. Si les hicimos algo mas, cambiar la frase antes de
     // mandarsela.
     frasePropuesta:
-      'No teníamos ni logo. Salimos con una imagen propia y una web que explica lo que hacemos.',
+      'No teníamos ni logo, y explicábamos el despacho por teléfono uno a uno. Ahora tenemos imagen propia y una web que lo cuenta por nosotros antes de que llamen.',
   },
 ];
 
@@ -122,9 +122,6 @@ export default function SatisfiedClients({ idioma = IDIOMA_POR_DEFECTO }: Props)
           </h2>
           <p className="text-white/70 text-base sm:text-lg font-light">
             {t.clientes.entradilla}
-          </p>
-          <p className="mt-3 text-sm font-semibold text-cian/80">
-            {t.clientes.porQue}
           </p>
         </div>
       </div>

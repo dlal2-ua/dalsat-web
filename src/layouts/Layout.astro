@@ -2,6 +2,8 @@
 import CookieBanner from '../components/CookieBanner';
 import StickyMobileCta from '../components/StickyMobileCta';
 import VolverArriba from '../components/VolverArriba';
+import FloatingWhatsApp from '../components/FloatingWhatsApp';
+import AvisoChat from '../components/AvisoChat';
 import { ClientRouter } from 'astro:transitions';
 import { contenido } from '../i18n';
 import {
@@ -194,6 +196,11 @@ const schemaData = {
   <body class="font-sans antialiased bg-crema text-grafito">
     <slot />
     <VolverArriba client:idle etiqueta={t.comun.volverArriba} />
+
+    {/* WhatsApp y el chat conviven en la misma esquina: el widget fija su
+        burbuja en right:20px y este se pone a su izquierda. En movil no sale
+        ninguno de los dos aqui, que la barra fija de abajo ya lleva WhatsApp. */}
+    <FloatingWhatsApp client:idle idioma={idioma} />
     {mostrarBarraMovil && <StickyMobileCta client:idle idioma={idioma} />}
     {/* La analitica de Vercel ya no se carga aqui: la inyecta el banner solo
         si el visitante acepta. Antes se cargaba siempre y el aviso era humo. */}
@@ -269,11 +276,17 @@ const schemaData = {
         un 503 durante uno. Si molesta, mover la instancia a produccion y
         cambiar el host aqui. */}
     {INSTANCIA_CHAT && (
-      <script
-        is:inline
-        src={`https://dev.dalsats.com/webchat/${INSTANCIA_CHAT}/widget.js`}
-        defer
-      />
+      <>
+        <script
+          is:inline
+          src={`https://dev.dalsats.com/webchat/${INSTANCIA_CHAT}/widget.js`}
+          defer
+        />
+        {/* Etiqueta propia que llama la atencion sobre la burbuja del widget.
+            No toca su DOM: se coloca al lado y al pulsarla hace clic en la
+            suya. Si el widget no llega a pintarse, esta no aparece. */}
+        <AvisoChat client:idle texto={t.comun.avisoChat} cerrar={t.comun.cerrarAviso} />
+      </>
     )}
   </body>
 </html>

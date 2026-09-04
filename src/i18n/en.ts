@@ -28,6 +28,9 @@ export const en: Contenido = {
     volverArriba: 'Back to top',
     volverAlInicio: 'Back to home',
     escribirWhatsApp: 'Message us on WhatsApp',
+    mensajeWhatsApp: 'Hi, I am interested in what you do and would like to know more.',
+    avisoChat: 'Got a question? Ask our agent.',
+    cerrarAviso: 'Dismiss',
     hablarWhatsApp: 'Shall we talk on WhatsApp?',
     verCatalogo: 'See the full catalogue',
     saberMas: 'Find out more',
@@ -65,7 +68,6 @@ export const en: Contenido = {
     etiqueta: 'Clients',
     titulo: 'Our clients',
     entradilla: 'Businesses across Spain with part of their work already automated.',
-    porQue: 'They stay with us because they stopped answering the same question twenty times a day.',
   },
   cookies: {
     aviso: 'Cookie notice',
