@@ -282,10 +282,11 @@ const schemaData = {
           src={`https://dev.dalsats.com/webchat/${INSTANCIA_CHAT}/widget.js`}
           defer
         />
-        {/* Etiqueta propia que llama la atencion sobre la burbuja del widget.
-            No toca su DOM: se coloca al lado y al pulsarla hace clic en la
-            suya. Si el widget no llega a pintarse, esta no aparece. */}
-        <AvisoChat client:idle texto={t.comun.avisoChat} cerrar={t.comun.cerrarAviso} />
+        {/* Abre el chat solo la primera vez de cada sesion y le cambia el
+            icono al de IA. No pinta nada propio: empuja al widget desde
+            fuera, asi que si su marcado cambia lo peor que pasa es que no
+            haga nada. */}
+        <AvisoChat client:idle />
       </>
     )}
   </body>

@@ -26,8 +26,6 @@ export const es = {
     volverAlInicio: 'Volver al inicio',
     escribirWhatsApp: 'Escríbenos por WhatsApp',
     mensajeWhatsApp: 'Hola, me interesa lo que hacéis y me gustaría recibir más información.',
-    avisoChat: '¿Tienes alguna duda? Pregúntale a nuestro agente.',
-    cerrarAviso: 'Cerrar aviso',
     hablarWhatsApp: '¿Hablamos por WhatsApp?',
     verCatalogo: 'Ver el catálogo completo',
     saberMas: 'Saber más',
