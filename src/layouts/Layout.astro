@@ -32,9 +32,15 @@ const {
 const SITE_URL = Astro.site || new URL('https://dalsats.com');
 
 // Slug de la instancia de Dalsat que atiende el chat web. Vacio = sin chat.
-// No poner aqui una instancia de pruebas: el agente responde con el nombre,
-// el horario y los precios del negocio al que pertenezca.
-const INSTANCIA_CHAT = '';
+//
+// El slug conserva el nombre de cuando la instancia era de pruebas; lo que
+// importa es a que negocio apunta, y apunta a Dalsat: cabecera, identidad,
+// servicios y precios verificados en el chat antes de encenderlo.
+//
+// No poner aqui una instancia de otro negocio: el agente responde con SU
+// nombre, SU horario y SUS precios, y cambiarle el contexto no basta porque
+// esos campos salen del registro del cliente y los comparten los contextos.
+const INSTANCIA_CHAT = 'movil-pruebas-bq';
 
 const idioma = idiomaDeUrl(Astro.url);
 const t = contenido(idioma);
@@ -248,17 +254,20 @@ const schemaData = {
       }).observe(document.body, { childList: true, subtree: true });
     </script>
 
-    {/* Widget de chat de la plataforma Dalsat.
+    {/* Widget de chat de la plataforma Dalsat. Una etiqueta y nada mas: el
+        agente corre en dev.dalsats.com, pinta su propia burbuja abajo a la
+        derecha y no pide el iframe hasta el primer clic.
 
-        DESACTIVADO. Para encenderlo: poner el slug de la instancia de DALSAT
-        en INSTANCIA_CHAT, arriba. Nada mas; la CSP ya permite el host.
+        `is:inline` es obligatorio: sin el, Astro procesa el script y lo saca
+        del body. `defer` para que no bloquee el pintado.
 
-        Estuvo activo con `movil-pruebas-bq`, que es una instancia de pruebas
-        de otro negocio: el chat se presentaba como "Glow Estetica" y daba sus
-        horarios a los visitantes de dalsats.com. No vale con cambiarle el
-        contexto: el nombre, el horario, los precios y las FAQs salen del
-        registro del cliente y los comparten todos los contextos. Hace falta
-        una instancia propia. No necesita WhatsApp: el chat web no lo usa. */}
+        La CSP de vercel.json le abre script-src, frame-src y connect-src
+        hacia dev.dalsats.com; sin eso el navegador lo bloquea en silencio.
+
+        OJO: el agente vive en el entorno de DESARROLLO. Un despliegue de la
+        plataforma deja el chat caido un rato en la web comercial; ya se vio
+        un 503 durante uno. Si molesta, mover la instancia a produccion y
+        cambiar el host aqui. */}
     {INSTANCIA_CHAT && (
       <script
         is:inline
