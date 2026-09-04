@@ -11,6 +11,24 @@ Astro 4 + Tailwind 3 + islas React 18. Deploy en Vercel (`@astrojs/vercel`).
 Contexto de producto y copy: `landing-brief.md`.
 Este archivo no es un CLAUDE.md completo del proyecto; si hace falta uno, ejecutar `/init`.
 
+## vercel.json
+
+**No admite comentarios ni claves extra.** Es JSON estricto contra un esquema
+con `additionalProperties: false`, y una clave de mas tumba el deploy entero
+antes de compilar nada: `should NOT have additional property`. El build local
+NO lo detecta. Cada regla de `headers` solo acepta `source`, `headers`, `has`
+y `missing`.
+
+Lo que no cabe explicar ahi va aqui:
+
+- **La CSP se aplica a todo menos a `citas.dalsats.com`** (por eso el
+  `missing` de la segunda regla). Ese host no sirve esta web: el `rewrite` de
+  arriba lo manda a una aplicacion externa que no esta en este repositorio y
+  cuyos recursos no podemos enumerar. Aplicarle nuestra politica la romperia.
+- `script-src` lleva `'unsafe-inline'` porque Astro emite scripts de modulo en
+  linea y la pagina lleva JSON-LD y el flag `.js` del `<head>`. Aun asi
+  bloquea scripts de cualquier host que no este nombrado, que es el objetivo.
+
 ## Bilingue
 
 Castellano en la raiz (`/servicios`), ingles bajo `/en` (`/en/servicios`).

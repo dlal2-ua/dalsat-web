@@ -31,7 +31,6 @@
       ]
     },
     {
-      "//": "La CSP se deja fuera de citas.dalsats.com. Ese host no sirve esta web: lo reescribe arriba a una aplicacion externa que no esta en este repositorio y cuyos recursos no podemos enumerar. Aplicarle esta politica la romperia.",
       "source": "/(.*)",
       "missing": [
         {
