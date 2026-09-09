@@ -1,22 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { contenido } from '../i18n';
 import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
-import { urlWhatsApp } from '../data/contacto';
 
-interface ChatMessage {
-  from: 'client' | 'bot';
-  text: string;
-  time: string;
-}
-
-const PAIRS = 4; // 4 pares pregunta-respuesta: cada tramo de scroll revela uno
 const SPLIT_END = 0.3; // el split ocupa el 0–30 % del scroll
 const INTRO_FADE_END = 0.12; // el subtítulo se va en cuanto empiezas a scrollear
 const HINT_FADE_END = 0.3; // la indicación de scroll aguanta bastante más
-const CHAT_START = 0.22;
-const CHAT_FADE_SPAN = 0.18;
-const PAIRS_START = 0.38; // los pares de mensajes se revelan del 38 al 95 %
-const PAIRS_END = 0.95;
 
 /** Genera el valor box-shadow con N estrellas aleatorias en unidades vw/vh.
  *  El rango se extiende bastante más allá del viewport para que la deriva
@@ -69,7 +57,6 @@ interface Props {
 
 export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   const t = contenido(idioma).hero;
-  const MESSAGES = t.chat;
 
   const sectionRef = useRef<HTMLElement>(null);
   const starsRef = useRef<HTMLDivElement>(null);
@@ -78,10 +65,6 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   const satRef = useRef<HTMLSpanElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
   const hintRef = useRef<HTMLDivElement>(null);
-  const chatRef = useRef<HTMLDivElement>(null);
-  const chatAreaRef = useRef<HTMLDivElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
-  const [visiblePairs, setVisiblePairs] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [twinkles, setTwinkles] = useState<TwinkleStar[]>([]);
 
@@ -95,7 +78,6 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setReducedMotion(true);
-      setVisiblePairs(PAIRS);
       return;
     }
 
@@ -116,7 +98,6 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       const split = Math.min(1, p / SPLIT_END);
       const introOpacity = Math.max(0, 1 - p / INTRO_FADE_END);
       const hintOpacity = Math.max(0, 1 - p / HINT_FADE_END);
-      const chat = Math.max(0, Math.min(1, (p - CHAT_START) / CHAT_FADE_SPAN));
 
       const dal = dalRef.current;
       const sat = satRef.current;
@@ -134,16 +115,6 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         hintRef.current.style.opacity = String(hintOpacity);
         hintRef.current.style.pointerEvents = hintOpacity > 0.3 ? 'auto' : 'none';
       }
-
-      const chatEl = chatRef.current;
-      if (chatEl) {
-        chatEl.style.opacity = String(chat);
-        chatEl.style.transform = `translateY(${(1 - chat) * 50}px) scale(${0.96 + chat * 0.04})`;
-      }
-
-      const pairProgress = Math.max(0, Math.min(1, (p - PAIRS_START) / (PAIRS_END - PAIRS_START)));
-      const pairs = p <= PAIRS_START ? 0 : Math.min(PAIRS, Math.floor(pairProgress * PAIRS) + 1);
-      setVisiblePairs(pairs);
     };
 
     const loop = () => {
@@ -175,48 +146,20 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     };
   }, []);
 
-  // Sin scroll interno: desliza la lista hacia arriba con un translateY suave
-  // para que el último mensaje revelado quede siempre visible
-  useEffect(() => {
-    if (reducedMotion) return;
-    const area = chatAreaRef.current;
-    const list = listRef.current;
-    if (!area || !list) return;
-
-    const count = visiblePairs * 2;
-    const update = () => {
-      if (count === 0) {
-        list.style.transform = 'translateY(0)';
-        return;
-      }
-      const last = list.children[count - 1] as HTMLElement | undefined;
-      if (!last) return;
-      const bottom = last.offsetTop + last.offsetHeight + 24;
-      const overflow = Math.max(0, bottom - area.clientHeight);
-      list.style.transform = `translateY(${-overflow}px)`;
-    };
-
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, [visiblePairs, reducedMotion]);
-
-  // La flecha lleva hasta el punto del scroll donde el chat ya es visible
+  // La flecha lleva más allá del split, hacia el resto de la página
   const scrollToChat = () => {
     const section = sectionRef.current;
     if (!section) return;
     const total = section.offsetHeight - window.innerHeight;
-    window.scrollTo({ top: section.offsetTop + total * 0.5, behavior: 'smooth' });
+    window.scrollTo({ top: section.offsetTop + total, behavior: 'smooth' });
   };
-
-  const visibleCount = visiblePairs * 2;
 
   return (
     <section
       ref={sectionRef}
       id="hero"
       className="relative bg-navy"
-      style={{ height: reducedMotion ? 'auto' : '450vh' }}
+      style={{ height: reducedMotion ? 'auto' : '200vh' }}
     >
       <style>{`
         @keyframes heroLetterIn {
@@ -415,115 +358,6 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
             </button>
           </div>
         )}
-
-        {/* Capa 2: chat integrado con el fondo galáctico.
-            pointer-events-none: el chat es decorativo y nunca captura la rueda,
-            el único scroll es el de la página */}
-        <div
-          ref={chatRef}
-          className={`pointer-events-none relative z-20 flex w-[94vw] max-w-4xl lg:max-w-5xl flex-col ${
-            reducedMotion ? '' : 'h-[78vh]'
-          }`}
-          style={reducedMotion ? undefined : { opacity: 0 }}
-        >
-          {/* Cabecera del chat */}
-          <div className="flex items-center justify-between rounded-t-2xl border border-white/10 bg-white/5 px-5 py-3.5 backdrop-blur-md">
-            <svg className="h-5 w-5 text-white/60" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-            <span
-              className="font-display text-xl font-bold tracking-[0.2em] text-white"
-              style={{ textShadow: '0 0 20px rgba(20,205,236,0.4)' }}
-            >
-              DALSAT
-            </span>
-            <svg className="h-5 w-5 text-white/60" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-            </svg>
-          </div>
-
-          {/* Mensajes sobre el fondo estrellado (sin barra de scroll propia) */}
-          <div
-            ref={chatAreaRef}
-            className="flex-1 overflow-hidden border-x border-white/10 bg-navy/20 backdrop-blur-[2px]"
-          >
-            <div
-              ref={listRef}
-              className="relative flex flex-col gap-4 px-4 py-6 transition-transform duration-500 ease-out will-change-transform sm:px-6"
-            >
-            {MESSAGES.map((msg, i) => {
-              const shown = i < visibleCount;
-              const isBot = msg.from === 'bot';
-              return (
-                <div
-                  key={i}
-                  className={`flex items-end gap-2.5 transition-all duration-500 ease-out ${
-                    isBot ? 'justify-end' : 'justify-start'
-                  } ${shown ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
-                  style={{ transitionDelay: shown && isBot ? '180ms' : '0ms' }}
-                >
-                  {!isBot && (
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-300/80">
-                      <svg className="h-5 w-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path
-                          fillRule="evenodd"
-                          d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                  )}
-                  <div className={`flex max-w-[78%] flex-col ${isBot ? 'items-end' : 'items-start'}`}>
-                    <div
-                      className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-lg sm:text-[15px] ${
-                        isBot
-                          ? 'rounded-br-md bg-gradient-to-r from-cian-dark via-cian-dark to-cian text-white shadow-cian-dark/30'
-                          : 'rounded-bl-md bg-gray-200/95 text-gray-900 shadow-black/30'
-                      }`}
-                    >
-                      {msg.text}
-                    </div>
-                    <span className="mt-1 px-1 text-[11px] text-white/40">{msg.time}</span>
-                  </div>
-                  {isBot && (
-                    <div
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-cian to-cian-dark text-[11px] font-bold text-white"
-                      style={{ boxShadow: '0 0 14px rgba(20,205,236,0.35)' }}
-                    >
-                      DA
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-            </div>
-          </div>
-
-          {/* Barra de entrada enlazada a WhatsApp real */}
-          <a
-            href={urlWhatsApp('Hola, me interesa lo que hacéis y me gustaría recibir más información.')}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={t.escribir}
-            className="pointer-events-auto group flex items-center gap-3 rounded-b-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:border-cian/60 hover:bg-white/10 cursor-pointer"
-          >
-            <svg className="h-5 w-5 shrink-0 text-white/50 transition-colors group-hover:text-cian" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
-            </svg>
-            <span className="flex-1 select-none text-sm text-white/50 font-medium transition-colors group-hover:text-white">{t.escribirPista}</span>
-            <svg className="h-5 w-5 shrink-0 text-white/50 transition-colors group-hover:text-cian" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
-            </svg>
-            <div
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cian transition-transform duration-300 group-hover:scale-110"
-              style={{ boxShadow: '0 0 16px rgba(20,205,236,0.5)' }}
-            >
-              <svg className="h-4 w-4 text-navy" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
-              </svg>
-            </div>
-          </a>
-        </div>
       </div>
     </section>
   );

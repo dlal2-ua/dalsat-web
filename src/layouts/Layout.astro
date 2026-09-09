@@ -3,7 +3,7 @@ import CookieBanner from '../components/CookieBanner';
 import StickyMobileCta from '../components/StickyMobileCta';
 import VolverArriba from '../components/VolverArriba';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
-import AvisoChat from '../components/AvisoChat';
+import DalsatMascot from '../components/DalsatMascot';
 import { ClientRouter } from 'astro:transitions';
 import { contenido } from '../i18n';
 import {
@@ -282,10 +282,11 @@ const schemaData = {
           src={`https://dev.dalsats.com/webchat/${INSTANCIA_CHAT}/widget.js`}
           defer
         />
-        {/* Le pone cara de robot a la burbuja del widget y saca un bocadillo
-            al lado. El chat no se abre solo: se despliega al pulsar. No pinta
-            la burbuja ni el panel, solo empuja a los suyos desde fuera. */}
-        <AvisoChat client:idle texto={t.comun.avisoChat} cerrar={t.comun.cerrarAviso} />
+        {/* Mascota de soporte: en escritorio sustituye a la burbuja nativa por
+            un robot que vuela pegado al borde derecho, siguiendo el scroll.
+            En móvil solo le repinta la cara. El chat no se abre solo, y no
+            reimplementa el panel: al pulsar, hace clic en la burbuja real. */}
+        <DalsatMascot client:idle idioma={idioma} />
       </>
     )}
   </body>
