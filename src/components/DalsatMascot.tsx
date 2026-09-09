@@ -74,10 +74,13 @@ interface Perch {
 }
 
 // Progreso 0–1 del scroll pineado del hero (misma cuenta que usa SplitHero).
+// Si el hero no tiene recorrido de scroll (p.ej. `height:auto` con
+// prefers-reduced-motion), no hay pin que recorrer: eso es el principio de
+// la página, no el final, así que aquí el progreso es 0, nunca 1.
 function progresoHero(hero: HTMLElement): number {
   const rect = hero.getBoundingClientRect();
   const total = hero.offsetHeight - window.innerHeight;
-  return total > 0 ? Math.max(0, Math.min(1, -rect.top / total)) : 1;
+  return total > 0 ? Math.max(0, Math.min(1, -rect.top / total)) : 0;
 }
 
 function clamp(n: number, min: number, max: number) {
@@ -139,21 +142,17 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
   // Oculta (opacidad, no display) la burbuja nativa mientras el robot vuela.
   useEffect(() => {
-    let attempts = 0;
     const aplicarVisibilidad = () => {
       const boton = burbujaNativa();
-      if (!boton) {
-        attempts += 1;
-        return attempts < 40;
-      }
+      if (!boton) return;
+      // Se reafirma sin parar (no solo una vez): el propio widget de
+      // terceros puede re-imponer su estilo por su cuenta -- se vio volver
+      // visible la burbuja nativa después de fijarle opacity:0 una sola vez.
       boton.style.opacity = isDesktop ? '0' : '';
       boton.style.pointerEvents = isDesktop ? 'none' : '';
-      return true;
     };
-    if (aplicarVisibilidad()) return;
-    const reintento = setInterval(() => {
-      if (aplicarVisibilidad()) clearInterval(reintento);
-    }, 300);
+    aplicarVisibilidad();
+    const reintento = setInterval(aplicarVisibilidad, 400);
     return () => clearInterval(reintento);
   }, [isDesktop]);
 
@@ -173,9 +172,29 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     }));
   }, []);
 
-  // Fase inicial y bocadillo de bienvenida (una vez por sesión).
+  // Fase inicial: sentada en la D si hay hero y hay movimiento; si no, directa
+  // a roaming (sin la coreografía de caída, que no pega sin el split).
+  //
+  // Se decide UNA sola vez (guardado en un ref): este efecto puede volver a
+  // ejecutarse -- p.ej. el doble-invoke de efectos en desarrollo, o cualquier
+  // recálculo tardío de isDesktop/hasHero -- y sin este guardado repetiría
+  // `setFase`, devolviendo el robot a 'roaming' después de que ya hubiera
+  // arrancado la caída o el scroll llevara un rato.
+  const faseInicialDecididaRef = useRef(false);
   useEffect(() => {
-    if (!isDesktop) return;
+    if (!isDesktop || faseInicialDecididaRef.current) return;
+    faseInicialDecididaRef.current = true;
+    setFase(hasHero && !reducedMotion ? 'perchada-d' : 'roaming');
+  }, [isDesktop, hasHero, reducedMotion]);
+
+  // Bocadillo de bienvenida: sale en cuanto el robot está sentado (o, si no
+  // hay hero/hay menos movimiento, casi al momento), una sola vez. Si ya se
+  // vio en esta sesión (sessionStorage), no vuelve a salir en esta pestaña.
+  const bienvenidaMostradaRef = useRef(false);
+  useEffect(() => {
+    if (!isDesktop || bienvenidaMostradaRef.current) return;
+    const listaParaSaludar = fase === 'perchada-d' || (fase === 'roaming' && !hasHero);
+    if (!listaParaSaludar) return;
 
     let vistoYa = false;
     try {
@@ -183,22 +202,20 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     } catch {
       // Sin almacenamiento: se enseña igual, sin memoria entre páginas.
     }
+    if (vistoYa) return;
 
-    if (hasHero && !reducedMotion) {
-      setFase('perchada-d');
-    } else {
-      setFase('roaming');
-    }
-
-    if (!vistoYa) {
-      const aparecer = setTimeout(() => {
-        setBubbleMsg(t.avisoChat);
-        setBubbleCta(null);
-        setShowBubble(true);
-      }, hasHero ? 900 : 1400);
-      return () => clearTimeout(aparecer);
-    }
-  }, [isDesktop, hasHero, reducedMotion, t.avisoChat]);
+    bienvenidaMostradaRef.current = true;
+    const aparecer = setTimeout(() => {
+      // Si en estos 500ms ya se agarró a un punto de la web (scroll rápido,
+      // o la página no tiene hero y arranca directa en roaming con perch),
+      // ese mensaje manda: la bienvenida no lo pisa por detrás.
+      if (activePerchRef.current) return;
+      setBubbleMsg(t.avisoChat);
+      setBubbleCta(null);
+      setShowBubble(true);
+    }, 500);
+    return () => clearTimeout(aparecer);
+  }, [isDesktop, fase, hasHero, t.avisoChat]);
 
   // El widget avisa de que se abrió/cerró cambiando la clase del contenedor.
   useEffect(() => {
@@ -252,14 +269,9 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     const flame = flameRef.current;
     if (!wrap) return;
 
-    if (reducedMotion) {
-      wrap.style.left = '';
-      wrap.style.right = '20px';
-      wrap.style.top = '45%';
-      wrap.style.transform = 'translateY(-50%)';
-      return;
-    }
-
+    // Con menos movimiento la fase inicial ya es 'roaming' (más abajo), así
+    // que este bucle no dibuja ninguna caída: solo sigue puntos de agarre y
+    // enseña los mensajes, sin inercia ni banca -- salta directo al sitio.
     let rafId = 0;
     let currentLeft = window.innerWidth - 90;
     let currentTop = window.innerHeight * 0.4;
@@ -272,16 +284,19 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     const heroEl = hasHero ? document.getElementById('hero') : null;
     const dLetra = hasHero ? document.querySelector<HTMLElement>('[data-mascot-anchor="hero-d"]') : null;
 
+    // null si el scroll no ha llegado a ningún punto de agarre todavía --
+    // a propósito: antes caía en perches[0] como reserva, y eso disparaba el
+    // mensaje del primer perch nada más entrar en 'roaming', pisando la
+    // bienvenida sin que hubiera scroll real de por medio.
     const elegirPerch = (): Perch | null => {
       const perches = perchesRef.current;
-      if (perches.length === 0) return null;
       const linea = window.innerHeight * 0.6;
       let elegido: Perch | null = null;
       for (const p of perches) {
         const top = p.el.getBoundingClientRect().top;
         if (top <= linea) elegido = p;
       }
-      return elegido ?? perches[0];
+      return elegido;
     };
 
     const loop = (now: number) => {
@@ -345,16 +360,19 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       targetLeft = clamp(targetLeft, 10, window.innerWidth - 84);
       targetTop = clamp(targetTop, 64, window.innerHeight - 96);
 
-      const ease = faseRef.current === 'cayendo' ? 0.22 : 0.1;
+      const ease = reducedMotion ? 1 : faseRef.current === 'cayendo' ? 0.22 : 0.1;
       currentLeft += (targetLeft - currentLeft) * ease;
       currentTop += (targetTop - currentTop) * ease;
 
-      const targetBank =
-        faseRef.current === 'cayendo' ? currentBank : clamp(velocity * 55, -16, 16);
-      currentBank += (targetBank - currentBank) * 0.15;
+      const targetBank = reducedMotion
+        ? 0
+        : faseRef.current === 'cayendo'
+          ? currentBank
+          : clamp(velocity * 55, -16, 16);
+      currentBank += (targetBank - currentBank) * (reducedMotion ? 1 : 0.15);
 
-      const targetFlame = mostrarLlama ? Math.min(1, 0.35 + Math.abs(velocity) * 4.5) : 0;
-      currentFlame += (targetFlame - currentFlame) * 0.18;
+      const targetFlame = reducedMotion ? 0 : mostrarLlama ? Math.min(1, 0.35 + Math.abs(velocity) * 4.5) : 0;
+      currentFlame += (targetFlame - currentFlame) * (reducedMotion ? 1 : 0.18);
 
       wrap.style.left = `${currentLeft}px`;
       wrap.style.top = `${currentTop}px`;
@@ -381,7 +399,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   return (
     <div
       ref={wrapRef}
-      className="fixed z-[2147482999] flex flex-col items-end transition-[right,bottom,opacity] duration-[700ms] ease-out"
+      className="fixed z-[2147482999] transition-[right,bottom,opacity] duration-[700ms] ease-out"
       style={
         anclada
           ? { top: 'auto', bottom: '20px', right: '22px', left: 'auto', transform: 'none' }
@@ -389,9 +407,14 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       }
       aria-hidden={anclada ? 'true' : undefined}
     >
-      {/* Bocadillo: bienvenida, o comentario de la sección activa */}
+      {/* Bocadillo: bienvenida, o comentario de la sección activa.
+          Posición absoluta a propósito: si contara para el tamaño de este
+          contenedor (p.ej. en un flex), su ancho empujaría al robot -- es
+          justo el bug que se veía como "se tira a la derecha" al aparecer
+          un mensaje largo. Aquí cuelga por su cuenta, anclado a la esquina
+          del robot, sin mover un píxel su posición. */}
       {showBubble && !anclada && (
-        <div className="relative mb-2 max-w-[16rem] animate-fadeIn rounded-2xl border border-cian/40 bg-navy-900/95 px-4 py-3 text-left shadow-[0_12px_30px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+        <div className="absolute bottom-full right-0 mb-2 max-w-[16rem] animate-fadeIn rounded-2xl border border-cian/40 bg-navy-900/95 px-4 py-3 text-left shadow-[0_12px_30px_rgba(0,0,0,0.55)] backdrop-blur-xl">
           <span
             className="absolute -bottom-[7px] right-9 h-3 w-3 rotate-45 border-b border-r border-cian/40 bg-navy-900"
             aria-hidden="true"
@@ -437,7 +460,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         }`}
       >
         <span
-          className="pointer-events-none absolute inset-x-0 top-1/3 -z-10 rounded-full bg-cian/25 blur-xl"
+          className="pointer-events-none absolute left-1/2 top-[45%] -z-10 h-12 w-12 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cian/25 blur-xl"
           style={{ animation: reducedMotion ? undefined : 'mascotaPulso 3.2s ease-in-out infinite' }}
           aria-hidden="true"
         />
@@ -489,19 +512,36 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
           <circle cx="46" cy="86" r="7" fill="#03131F" opacity="0.8" />
           <circle cx="46" cy="86" r="3.2" fill="#14CDEC" />
 
-          {/* Brazos, como si se agarrara al borde de lo que tiene al lado */}
-          <path d="M20 74 Q4 78 4 94" stroke="url(#dalsatBotBody)" strokeWidth="9" strokeLinecap="round" fill="none" />
-          <circle cx="4" cy="96" r="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
-          <path d="M72 74 Q88 78 88 94" stroke="url(#dalsatBotBody)" strokeWidth="9" strokeLinecap="round" fill="none" />
-          <circle cx="88" cy="96" r="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
+          {grande ? (
+            <>
+              {/* Sentado: brazos apoyados en las rodillas */}
+              <path d="M20 76 Q10 88 20 100" stroke="url(#dalsatBotBody)" strokeWidth="9" strokeLinecap="round" fill="none" />
+              <path d="M72 76 Q82 88 72 100" stroke="url(#dalsatBotBody)" strokeWidth="9" strokeLinecap="round" fill="none" />
 
-          {/* Piernas cortas */}
-          <rect x="27" y="104" width="14" height="18" rx="6" fill="url(#dalsatBotBody)" />
-          <rect x="51" y="104" width="14" height="18" rx="6" fill="url(#dalsatBotBody)" />
+              {/* Piernas dobladas: muslo horizontal + espinilla colgando, como
+                  sentado en el borde de la letra */}
+              <rect x="6" y="100" width="30" height="12" rx="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" />
+              <rect x="6" y="108" width="12" height="20" rx="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" />
+              <rect x="56" y="100" width="30" height="12" rx="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" />
+              <rect x="74" y="108" width="12" height="20" rx="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" />
+            </>
+          ) : (
+            <>
+              {/* Brazos, como si se agarrara al borde de lo que tiene al lado */}
+              <path d="M20 74 Q4 78 4 94" stroke="url(#dalsatBotBody)" strokeWidth="9" strokeLinecap="round" fill="none" />
+              <circle cx="4" cy="96" r="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
+              <path d="M72 74 Q88 78 88 94" stroke="url(#dalsatBotBody)" strokeWidth="9" strokeLinecap="round" fill="none" />
+              <circle cx="88" cy="96" r="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
 
-          {/* Boquillas del propulsor */}
-          <path d="M31 122 L41 122 L37 130 L35 130 Z" fill="#03131F" stroke="#14CDEC" strokeOpacity="0.5" />
-          <path d="M51 122 L61 122 L57 130 L55 130 Z" fill="#03131F" stroke="#14CDEC" strokeOpacity="0.5" />
+              {/* Piernas rectas, en vuelo */}
+              <rect x="27" y="104" width="14" height="18" rx="6" fill="url(#dalsatBotBody)" />
+              <rect x="51" y="104" width="14" height="18" rx="6" fill="url(#dalsatBotBody)" />
+
+              {/* Boquillas del propulsor */}
+              <path d="M31 122 L41 122 L37 130 L35 130 Z" fill="#03131F" stroke="#14CDEC" strokeOpacity="0.5" />
+              <path d="M51 122 L61 122 L57 130 L55 130 Z" fill="#03131F" stroke="#14CDEC" strokeOpacity="0.5" />
+            </>
+          )}
         </svg>
       </button>
 
