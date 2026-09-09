@@ -302,7 +302,12 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
           >
             <span ref={dalRef} className="inline-block will-change-transform" aria-hidden="true">
               {['D', 'A', 'L'].map((letter, i) => (
-                <span key={i} className="hero-letter inline-block" style={{ animationDelay: `${0.1 + i * 0.08}s` }}>
+                <span
+                  key={i}
+                  className="hero-letter inline-block"
+                  style={{ animationDelay: `${0.1 + i * 0.08}s` }}
+                  {...(i === 0 ? { 'data-mascot-anchor': 'hero-d' } : {})}
+                >
                   {letter}
                 </span>
               ))}

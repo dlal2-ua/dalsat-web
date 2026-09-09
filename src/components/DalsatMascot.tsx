@@ -2,15 +2,16 @@ import { useEffect, useRef, useState } from 'react';
 import { contenido } from '../i18n';
 import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
 
-// Mascota de soporte: un robotito con propulsor que vuela pegado al borde
-// derecho y sube o baja siguiendo el scroll de la página. No reimplementa el
-// chat: al pulsarlo, hace clic en la burbuja real del widget de la
-// plataforma (dev.dalsats.com) y desaparece para dejarle sitio al panel.
+// Mascota de soporte: un robotito de cuerpo entero que se sienta en la D de
+// DALSAT, se cae cuando la letra desaparece por el scroll del hero, y luego
+// va agarrándose a distintos puntos de la web (data-mascot-perch) según lo
+// que estés mirando, comentando la sección o proponiendo un CTA. No
+// reimplementa el chat: al pulsarlo, hace clic en la burbuja real del
+// widget de la plataforma (dev.dalsats.com) y se aparta para dejarle sitio.
 //
-// En escritorio sustituye por completo a la burbuja nativa (se le baja la
-// opacidad a 0, sin quitarla del DOM, para no romper el posicionamiento del
-// panel cuando se abre). En móvil, donde no hay espacio para volar, se deja
-// la burbuja nativa tal cual y solo se le repinta la cara.
+// En escritorio sustituye a la burbuja nativa (opacidad a 0, sin quitarla
+// del DOM, para no romper el panel al abrirse). En móvil, sin sitio para
+// volar, se deja la burbuja nativa tal cual y solo se le repinta la cara.
 
 interface Props {
   idioma?: Idioma;
@@ -25,7 +26,6 @@ function burbujaNativa(): HTMLButtonElement | null {
   return raiz ? raiz.querySelector('button') : null;
 }
 
-// Cara del robot para la burbuja nativa (móvil, o mientras el widget carga).
 const ICONO_ROBOT = `
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
      stroke-linecap="round" stroke-linejoin="round" width="26" height="26" aria-hidden="true">
@@ -38,8 +38,6 @@ const ICONO_ROBOT = `
   <path d="M2.2 9.6v3.6M21.8 9.6v3.6"/>
 </svg>`;
 
-// Reintenta hasta que exista la burbuja del widget (carga con defer) y hace
-// clic en ella. Si ya existe, clic inmediato.
 function abrirChatReal() {
   const inmediata = burbujaNativa();
   if (inmediata) {
@@ -60,21 +58,54 @@ function abrirChatReal() {
 }
 
 const CLAVE_VISTO = 'dalsat-mascota-vista';
-const MIN_TOP = 0.14; // % de viewport, no pasa por encima de la cabecera
-const MAX_TOP = 0.78; // no baja hasta el rincón donde viven WhatsApp/burbuja
+
+// Mismo umbral que SPLIT_END en SplitHero: cuando el scroll del hero supera
+// esta fracción, las letras ya se han abierto y desvanecido del todo.
+const HERO_SPLIT_END = 0.3;
+const HERO_FALL_AT = 0.24; // se cae un poco antes de que la D termine de irse
+
+type Fase = 'perchada-d' | 'cayendo' | 'esperando' | 'roaming' | 'anclada';
+
+interface Perch {
+  el: HTMLElement;
+  msg: string;
+  cta?: string;
+  ctaHref?: string;
+}
+
+// Progreso 0–1 del scroll pineado del hero (misma cuenta que usa SplitHero).
+function progresoHero(hero: HTMLElement): number {
+  const rect = hero.getBoundingClientRect();
+  const total = hero.offsetHeight - window.innerHeight;
+  return total > 0 ? Math.max(0, Math.min(1, -rect.top / total)) : 1;
+}
+
+function clamp(n: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, n));
+}
 
 export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   const t = contenido(idioma).comun;
 
   const [isDesktop, setIsDesktop] = useState(false);
   const [hasHero, setHasHero] = useState(false);
-  const [phase, setPhase] = useState<'intro' | 'roaming'>('roaming');
+  const [fase, setFase] = useState<Fase>('roaming');
   const [chatOpen, setChatOpen] = useState(false);
   const [showBubble, setShowBubble] = useState(false);
+  const [bubbleMsg, setBubbleMsg] = useState('');
+  const [bubbleCta, setBubbleCta] = useState<{ label: string; href: string } | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const flameRef = useRef<HTMLDivElement>(null);
+  const faseRef = useRef<Fase>('roaming');
+  const perchesRef = useRef<Perch[]>([]);
+  const activePerchRef = useRef<Perch | null>(null);
+  const faseAntesDeDockRef = useRef<Fase>('roaming');
+
+  useEffect(() => {
+    faseRef.current = fase;
+  }, [fase]);
 
   // Repinta la cara de la burbuja nativa en cuanto el widget la monta.
   useEffect(() => {
@@ -106,8 +137,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     return () => mq.removeEventListener('change', aplicar);
   }, []);
 
-  // Oculta (opacidad, no display) la burbuja nativa mientras el robot vuela,
-  // para que el robot sea el único disparador visible sin romper el panel.
+  // Oculta (opacidad, no display) la burbuja nativa mientras el robot vuela.
   useEffect(() => {
     let attempts = 0;
     const aplicarVisibilidad = () => {
@@ -127,16 +157,23 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     return () => clearInterval(reintento);
   }, [isDesktop]);
 
-  // Detecta si esta página tiene el hero de letras (home) para el aterrizaje
-  // grande, y si el visitante pide menos movimiento.
+  // Detecta el hero (home) y las preferencias de movimiento, y recoge los
+  // puntos de agarre marcados en la página.
   useEffect(() => {
     setHasHero(!!document.getElementById('hero'));
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setReducedMotion(true);
     }
+    const nodos = Array.from(document.querySelectorAll<HTMLElement>('[data-mascot-perch]'));
+    perchesRef.current = nodos.map((el) => ({
+      el,
+      msg: el.dataset.mascotMsg || '',
+      cta: el.dataset.mascotCta,
+      ctaHref: el.dataset.mascotCtaHref,
+    }));
   }, []);
 
-  // Fase intro -> roaming, y aparición del bocadillo de bienvenida.
+  // Fase inicial y bocadillo de bienvenida (una vez por sesión).
   useEffect(() => {
     if (!isDesktop) return;
 
@@ -148,36 +185,20 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     }
 
     if (hasHero && !reducedMotion) {
-      setPhase('intro');
+      setFase('perchada-d');
     } else {
-      setPhase('roaming');
+      setFase('roaming');
     }
 
     if (!vistoYa) {
-      const aparecer = setTimeout(() => setShowBubble(true), hasHero ? 900 : 1400);
+      const aparecer = setTimeout(() => {
+        setBubbleMsg(t.avisoChat);
+        setBubbleCta(null);
+        setShowBubble(true);
+      }, hasHero ? 900 : 1400);
       return () => clearTimeout(aparecer);
     }
-  }, [isDesktop, hasHero, reducedMotion]);
-
-  // Primer scroll (o unos segundos) -> pasa de intro a roaming.
-  useEffect(() => {
-    if (!isDesktop || phase !== 'intro') return;
-    let hecho = false;
-    const pasar = () => {
-      if (hecho) return;
-      hecho = true;
-      setPhase('roaming');
-    };
-    const onScroll = () => {
-      if (window.scrollY > 30) pasar();
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    const fallback = setTimeout(pasar, 4200);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      clearTimeout(fallback);
-    };
-  }, [isDesktop, phase]);
+  }, [isDesktop, hasHero, reducedMotion, t.avisoChat]);
 
   // El widget avisa de que se abrió/cerró cambiando la clase del contenedor.
   useEffect(() => {
@@ -190,8 +211,15 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     return () => observador.disconnect();
   }, []);
 
+  // Aparca/recupera la fase al abrir/cerrar el chat.
   useEffect(() => {
-    if (chatOpen) setShowBubble(false);
+    if (chatOpen) {
+      if (faseRef.current !== 'anclada') faseAntesDeDockRef.current = faseRef.current;
+      setFase('anclada');
+      setShowBubble(false);
+    } else if (faseRef.current === 'anclada') {
+      setFase(faseAntesDeDockRef.current);
+    }
   }, [chatOpen]);
 
   function ocultarBurbuja() {
@@ -208,56 +236,134 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     abrirChatReal();
   }
 
-  // Bucle físico: sigue el scroll, banca en la dirección del movimiento y
-  // alarga la llama del propulsor según la velocidad. Todo imperativo sobre
-  // refs -- sin setState -- para no repintar React a 60fps.
+  // Bucle físico único: sitúa el robot según la fase, banca con la
+  // velocidad y alarga la llama del propulsor. Todo imperativo sobre refs
+  // -- sin setState -- para no repintar React a 60fps.
+  //
+  // OJO: este efecto no depende de `fase` a propósito. Si se reiniciara en
+  // cada cambio de fase perdería currentLeft/currentTop y la caída desde la
+  // D se vería como un salto, no como una caída continua. En su lugar lee
+  // faseRef.current en cada frame y, si está anclado (chat abierto), sigue
+  // vivo pero sin tocar la posición, para retomarla igual al cerrar.
   useEffect(() => {
-    if (!isDesktop || phase !== 'roaming' || chatOpen) return;
+    if (!isDesktop) return;
+
+    const wrap = wrapRef.current;
+    const flame = flameRef.current;
+    if (!wrap) return;
+
     if (reducedMotion) {
-      const wrap = wrapRef.current;
-      if (wrap) {
-        wrap.style.top = `${MIN_TOP * 100 + (MAX_TOP - MIN_TOP) * 50}%`;
-        wrap.style.transform = 'translateY(-50%)';
-      }
+      wrap.style.left = '';
+      wrap.style.right = '20px';
+      wrap.style.top = '45%';
+      wrap.style.transform = 'translateY(-50%)';
       return;
     }
 
     let rafId = 0;
-    let currentTop = MIN_TOP + (MAX_TOP - MIN_TOP) * 0.3;
+    let currentLeft = window.innerWidth - 90;
+    let currentTop = window.innerHeight * 0.4;
     let currentBank = 0;
     let currentFlame = 0.35;
     let lastScrollY = window.scrollY;
     let lastTime = performance.now();
+    let cayendoDesde = 0;
+
+    const heroEl = hasHero ? document.getElementById('hero') : null;
+    const dLetra = hasHero ? document.querySelector<HTMLElement>('[data-mascot-anchor="hero-d"]') : null;
+
+    const elegirPerch = (): Perch | null => {
+      const perches = perchesRef.current;
+      if (perches.length === 0) return null;
+      const linea = window.innerHeight * 0.6;
+      let elegido: Perch | null = null;
+      for (const p of perches) {
+        const top = p.el.getBoundingClientRect().top;
+        if (top <= linea) elegido = p;
+      }
+      return elegido ?? perches[0];
+    };
 
     const loop = (now: number) => {
       const dt = Math.max(1, now - lastTime);
       lastTime = now;
 
+      if (faseRef.current === 'anclada') {
+        lastScrollY = window.scrollY;
+        rafId = requestAnimationFrame(loop);
+        return;
+      }
+
       const scrollY = window.scrollY;
       const velocity = (scrollY - lastScrollY) / dt; // px/ms
       lastScrollY = scrollY;
 
-      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      const progress = Math.max(0, Math.min(1, scrollY / maxScroll));
-      const targetTop = MIN_TOP + progress * (MAX_TOP - MIN_TOP);
+      let targetLeft = currentLeft;
+      let targetTop = currentTop;
+      let mostrarLlama = true;
 
-      currentTop += (targetTop - currentTop) * 0.09;
+      if (faseRef.current === 'perchada-d' && heroEl && dLetra) {
+        const p = progresoHero(heroEl);
+        if (p >= HERO_FALL_AT) {
+          cayendoDesde = now;
+          setFase('cayendo');
+        } else {
+          const rect = dLetra.getBoundingClientRect();
+          targetLeft = rect.left + rect.width * 0.55;
+          targetTop = rect.bottom - rect.height * 0.35;
+          mostrarLlama = false;
+        }
+      } else if (faseRef.current === 'cayendo') {
+        // Breve caída: tira hacia abajo con giro, luego pasa a esperar.
+        targetTop = currentTop + 480;
+        targetLeft = currentLeft + 40;
+        currentBank += (60 - currentBank) * 0.1;
+        if (now - cayendoDesde > 550) setFase('esperando');
+      } else if (faseRef.current === 'esperando' && heroEl) {
+        targetLeft = window.innerWidth * 0.5 - 35;
+        targetTop = window.innerHeight * 0.48 + Math.sin(now / 600) * 10;
+        if (progresoHero(heroEl) >= 1) setFase('roaming');
+      } else {
+        // roaming: se agarra al último punto de la web que ha pasado por
+        // el 60% superior del viewport.
+        const perch = elegirPerch();
+        if (perch !== activePerchRef.current) {
+          activePerchRef.current = perch;
+          if (perch) {
+            setBubbleMsg(perch.msg);
+            setBubbleCta(perch.cta && perch.ctaHref ? { label: perch.cta, href: perch.ctaHref } : null);
+            setShowBubble(true);
+          }
+        }
+        if (perch) {
+          const rect = perch.el.getBoundingClientRect();
+          targetLeft = rect.right - 58;
+          targetTop = rect.top + 18;
+        }
+      }
 
-      const targetBank = Math.max(-16, Math.min(16, velocity * 60));
+      targetLeft = clamp(targetLeft, 10, window.innerWidth - 84);
+      targetTop = clamp(targetTop, 64, window.innerHeight - 96);
+
+      const ease = faseRef.current === 'cayendo' ? 0.22 : 0.1;
+      currentLeft += (targetLeft - currentLeft) * ease;
+      currentTop += (targetTop - currentTop) * ease;
+
+      const targetBank =
+        faseRef.current === 'cayendo' ? currentBank : clamp(velocity * 55, -16, 16);
       currentBank += (targetBank - currentBank) * 0.15;
 
-      const targetFlame = Math.min(1, 0.35 + Math.abs(velocity) * 4.5);
+      const targetFlame = mostrarLlama ? Math.min(1, 0.35 + Math.abs(velocity) * 4.5) : 0;
       currentFlame += (targetFlame - currentFlame) * 0.18;
 
-      const wrap = wrapRef.current;
-      if (wrap) {
-        wrap.style.top = `${currentTop * 100}%`;
-        wrap.style.transform = `translateY(-50%) rotate(${currentBank}deg)`;
-      }
-      const flame = flameRef.current;
+      wrap.style.left = `${currentLeft}px`;
+      wrap.style.top = `${currentTop}px`;
+      wrap.style.right = 'auto';
+      wrap.style.transform = `rotate(${currentBank}deg)`;
+
       if (flame) {
-        flame.style.opacity = String(0.55 + currentFlame * 0.45);
-        flame.style.transform = `scaleY(${0.6 + currentFlame * 1.1})`;
+        flame.style.opacity = String(0.15 + currentFlame * 0.85);
+        flame.style.transform = `scaleY(${0.4 + currentFlame * 1.2})`;
       }
 
       rafId = requestAnimationFrame(loop);
@@ -265,29 +371,27 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
     rafId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(rafId);
-  }, [isDesktop, phase, chatOpen, reducedMotion]);
+  }, [isDesktop, hasHero, reducedMotion]);
 
   if (!isDesktop) return null;
 
-  const docked = chatOpen;
-  const introActive = phase === 'intro' && !docked;
+  const anclada = fase === 'anclada';
+  const grande = fase === 'perchada-d';
 
   return (
     <div
       ref={wrapRef}
-      className="fixed z-[2147482999] flex flex-col items-end transition-[top,right,left,transform,opacity] duration-[900ms] ease-out"
+      className="fixed z-[2147482999] flex flex-col items-end transition-[right,bottom,opacity] duration-[700ms] ease-out"
       style={
-        docked
+        anclada
           ? { top: 'auto', bottom: '20px', right: '22px', left: 'auto', transform: 'none' }
-          : introActive
-            ? { top: '40%', left: '50%', right: 'auto', transform: 'translate(-50%, -50%)' }
-            : { top: '45%', right: '20px', left: 'auto', transform: 'translateY(-50%)' }
+          : undefined
       }
-      aria-hidden={docked ? 'true' : undefined}
+      aria-hidden={anclada ? 'true' : undefined}
     >
-      {/* Bocadillo de bienvenida */}
-      {showBubble && !docked && (
-        <div className="relative mb-2 max-w-[15.5rem] animate-fadeIn rounded-2xl border border-cian/40 bg-navy-900/95 px-4 py-3 text-left shadow-[0_12px_30px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+      {/* Bocadillo: bienvenida, o comentario de la sección activa */}
+      {showBubble && !anclada && (
+        <div className="relative mb-2 max-w-[16rem] animate-fadeIn rounded-2xl border border-cian/40 bg-navy-900/95 px-4 py-3 text-left shadow-[0_12px_30px_rgba(0,0,0,0.55)] backdrop-blur-xl">
           <span
             className="absolute -bottom-[7px] right-9 h-3 w-3 rotate-45 border-b border-r border-cian/40 bg-navy-900"
             aria-hidden="true"
@@ -300,8 +404,16 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
             onClick={alPulsar}
             className="block text-left text-sm font-semibold leading-snug text-white transition-colors hover:text-cian-light"
           >
-            {t.avisoChat}
+            {bubbleMsg}
           </button>
+          {bubbleCta && (
+            <a
+              href={bubbleCta.href}
+              className="mt-2.5 block rounded-xl bg-terracota px-3.5 py-2 text-center text-xs font-extrabold text-navy transition-colors hover:bg-terracota-dark"
+            >
+              {bubbleCta.label} →
+            </a>
+          )}
           <button
             type="button"
             onClick={ocultarBurbuja}
@@ -315,43 +427,36 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         </div>
       )}
 
-      {/* El robot */}
+      {/* El robot, de cuerpo entero */}
       <button
         type="button"
         onClick={alPulsar}
         aria-label={t.avisoChat}
-        className={`group relative flex items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:scale-110 active:scale-95 ${
-          introActive ? 'h-[104px] w-[104px]' : docked ? 'h-14 w-14' : 'h-[70px] w-[70px]'
+        className={`group relative flex items-center justify-center bg-transparent transition-[width,height] duration-500 ease-out hover:scale-110 active:scale-95 ${
+          grande ? 'h-[120px] w-[92px]' : anclada ? 'h-16 w-12' : 'h-[86px] w-[66px]'
         }`}
       >
-        {/* Halo ambiental, hace de sombra/aura sin necesitar un suelo */}
         <span
-          className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-cian/25 blur-xl"
+          className="pointer-events-none absolute inset-x-0 top-1/3 -z-10 rounded-full bg-cian/25 blur-xl"
           style={{ animation: reducedMotion ? undefined : 'mascotaPulso 3.2s ease-in-out infinite' }}
           aria-hidden="true"
         />
 
-        {/* Llama del propulsor, debajo del robot */}
+        {/* Llama del propulsor, entre las piernas */}
         <div
           ref={flameRef}
-          className="pointer-events-none absolute left-1/2 top-[86%] h-6 w-3 -translate-x-1/2 rounded-b-full"
+          className="pointer-events-none absolute left-1/2 top-[80%] h-7 w-3 -translate-x-1/2 rounded-b-full"
           style={{
             background: 'linear-gradient(to bottom, #7FE4F5, #14CDEC 55%, transparent)',
             filter: 'blur(1.5px)',
             transformOrigin: 'top center',
-            // El bucle físico (roaming) escribe transform/opacity por rAF;
-            // el parpadeo en CSS solo corre cuando ese bucle no está activo.
-            animation:
-              reducedMotion || (phase === 'roaming' && !docked)
-                ? undefined
-                : 'mascotaLlama 0.5s ease-in-out infinite alternate',
           }}
           aria-hidden="true"
         />
 
-        <svg viewBox="0 0 100 110" className="relative h-full w-full drop-shadow-[0_8px_18px_rgba(20,205,236,0.35)]" aria-hidden="true">
+        <svg viewBox="0 0 92 130" className="relative h-full w-full drop-shadow-[0_10px_20px_rgba(20,205,236,0.35)]" aria-hidden="true">
           <defs>
-            <radialGradient id="dalsatBotBody" cx="38%" cy="28%" r="80%">
+            <radialGradient id="dalsatBotBody" cx="38%" cy="24%" r="80%">
               <stop offset="0%" stopColor="#1F6E9C" />
               <stop offset="55%" stopColor="#0A3459" />
               <stop offset="100%" stopColor="#03131F" />
@@ -364,40 +469,46 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
           </defs>
 
           {/* Antena */}
-          <line x1="50" y1="6" x2="50" y2="16" stroke="#14CDEC" strokeWidth="2.5" strokeLinecap="round" />
-          <circle cx="50" cy="5" r="3.4" fill="#7FE4F5" />
+          <line x1="46" y1="4" x2="46" y2="13" stroke="#14CDEC" strokeWidth="2.4" strokeLinecap="round" />
+          <circle cx="46" cy="3" r="3.2" fill="#7FE4F5" />
 
-          {/* Orejas/propulsores laterales */}
-          <rect x="6" y="38" width="10" height="20" rx="5" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
-          <rect x="84" y="38" width="10" height="20" rx="5" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
+          {/* Cabeza */}
+          <rect x="10" y="10" width="72" height="60" rx="26" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.5" />
+          <ellipse cx="28" cy="26" rx="13" ry="7.5" fill="white" opacity="0.16" />
+          <rect x="20" y="30" width="52" height="22" rx="11" fill="#03131F" opacity="0.85" />
+          <circle cx="34" cy="41" r="6" fill="url(#dalsatBotEye)" />
+          <circle cx="58" cy="41" r="6" fill="url(#dalsatBotEye)" />
+          <path d="M37 60 Q46 65 55 60" stroke="#7FE4F5" strokeWidth="2.2" strokeLinecap="round" fill="none" opacity="0.85" />
 
-          {/* Cuerpo/cabeza: cápsula única */}
-          <rect x="14" y="14" width="72" height="78" rx="30" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.5" />
+          {/* Orejas laterales */}
+          <rect x="1" y="30" width="9" height="18" rx="4.5" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
+          <rect x="82" y="30" width="9" height="18" rx="4.5" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
 
-          {/* Brillo especular, arriba a la izquierda */}
-          <ellipse cx="34" cy="30" rx="16" ry="9" fill="white" opacity="0.16" />
+          {/* Cuerpo */}
+          <rect x="20" y="66" width="52" height="42" rx="18" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" strokeWidth="1.5" />
+          <circle cx="46" cy="86" r="7" fill="#03131F" opacity="0.8" />
+          <circle cx="46" cy="86" r="3.2" fill="#14CDEC" />
 
-          {/* Visor */}
-          <rect x="24" y="38" width="52" height="24" rx="12" fill="#03131F" opacity="0.85" />
-          <circle cx="39" cy="50" r="6.4" fill="url(#dalsatBotEye)" />
-          <circle cx="61" cy="50" r="6.4" fill="url(#dalsatBotEye)" />
+          {/* Brazos, como si se agarrara al borde de lo que tiene al lado */}
+          <path d="M20 74 Q4 78 4 94" stroke="url(#dalsatBotBody)" strokeWidth="9" strokeLinecap="round" fill="none" />
+          <circle cx="4" cy="96" r="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
+          <path d="M72 74 Q88 78 88 94" stroke="url(#dalsatBotBody)" strokeWidth="9" strokeLinecap="round" fill="none" />
+          <circle cx="88" cy="96" r="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
 
-          {/* Sonrisa */}
-          <path d="M42 72 Q50 78 58 72" stroke="#7FE4F5" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.85" />
+          {/* Piernas cortas */}
+          <rect x="27" y="104" width="14" height="18" rx="6" fill="url(#dalsatBotBody)" />
+          <rect x="51" y="104" width="14" height="18" rx="6" fill="url(#dalsatBotBody)" />
 
-          {/* Boquilla del propulsor */}
-          <path d="M40 92 L60 92 L54 100 L46 100 Z" fill="#03131F" stroke="#14CDEC" strokeOpacity="0.5" />
+          {/* Boquillas del propulsor */}
+          <path d="M31 122 L41 122 L37 130 L35 130 Z" fill="#03131F" stroke="#14CDEC" strokeOpacity="0.5" />
+          <path d="M51 122 L61 122 L57 130 L55 130 Z" fill="#03131F" stroke="#14CDEC" strokeOpacity="0.5" />
         </svg>
       </button>
 
       <style>{`
         @keyframes mascotaPulso {
-          0%, 100% { opacity: 0.55; transform: scale(1); }
-          50% { opacity: 0.85; transform: scale(1.12); }
-        }
-        @keyframes mascotaLlama {
-          from { opacity: 0.55; transform: translateX(-50%) scaleY(0.6); }
-          to { opacity: 1; transform: translateX(-50%) scaleY(1.15); }
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.1); }
         }
       `}</style>
     </div>
