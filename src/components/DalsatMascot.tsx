@@ -101,6 +101,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const flameRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<SVGGElement>(null);
   const faseRef = useRef<Fase>('roaming');
   const perchesRef = useRef<Perch[]>([]);
   const activePerchRef = useRef<Perch | null>(null);
@@ -184,17 +185,15 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   useEffect(() => {
     if (!isDesktop || faseInicialDecididaRef.current) return;
     faseInicialDecididaRef.current = true;
-    setFase(hasHero && !reducedMotion ? 'perchada-d' : 'roaming');
-  }, [isDesktop, hasHero, reducedMotion]);
+    setFase(hasHero ? 'perchada-d' : 'roaming');
+  }, [isDesktop, hasHero]);
 
-  // Bocadillo de bienvenida: sale en cuanto el robot está sentado (o, si no
-  // hay hero/hay menos movimiento, casi al momento), una sola vez. Si ya se
-  // vio en esta sesión (sessionStorage), no vuelve a salir en esta pestaña.
+  // Bocadillo de bienvenida: sale a los pocos segundos de cargar, una sola
+  // vez, sin importar en qué fase esté el robot (sentado, roaming, lo que
+  // sea). Si ya se vio en esta sesión (sessionStorage), no vuelve a salir.
   const bienvenidaMostradaRef = useRef(false);
   useEffect(() => {
     if (!isDesktop || bienvenidaMostradaRef.current) return;
-    const listaParaSaludar = fase === 'perchada-d' || (fase === 'roaming' && !hasHero);
-    if (!listaParaSaludar) return;
 
     let vistoYa = false;
     try {
@@ -215,7 +214,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       setShowBubble(true);
     }, 500);
     return () => clearTimeout(aparecer);
-  }, [isDesktop, fase, hasHero, t.avisoChat]);
+  }, [isDesktop, t.avisoChat]);
 
   // El widget avisa de que se abrió/cerró cambiando la clase del contenedor.
   useEffect(() => {
@@ -267,22 +266,37 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
     const wrap = wrapRef.current;
     const flame = flameRef.current;
+    const head = headRef.current;
     if (!wrap) return;
 
     // Con menos movimiento la fase inicial ya es 'roaming' (más abajo), así
     // que este bucle no dibuja ninguna caída: solo sigue puntos de agarre y
     // enseña los mensajes, sin inercia ni banca -- salta directo al sitio.
+    const heroEl = hasHero ? document.getElementById('hero') : null;
+    const dLetra = hasHero ? document.querySelector<HTMLElement>('[data-mascot-anchor="hero-d"]') : null;
+
+    // Posición de arranque: sobre la D si existe (coincide con la fase
+    // 'perchada-d'/'roaming' inicial), y solo si no hay D cae al borde
+    // derecho -- antes siempre arrancaba ahí, que es justo el "aparece
+    // pegado a la derecha" que se veía con reduced-motion (sin caída, sin
+    // scroll todavía, ningún perch elegido aún).
     let rafId = 0;
-    let currentLeft = window.innerWidth - 90;
-    let currentTop = window.innerHeight * 0.4;
+    let currentLeft: number;
+    let currentTop: number;
+    if (dLetra) {
+      const rect = dLetra.getBoundingClientRect();
+      currentLeft = rect.left + rect.width * 0.55;
+      currentTop = rect.bottom - rect.height * 0.35;
+    } else {
+      currentLeft = window.innerWidth - 90;
+      currentTop = window.innerHeight * 0.4;
+    }
     let currentBank = 0;
+    let currentHeadBank = 0;
     let currentFlame = 0.35;
     let lastScrollY = window.scrollY;
     let lastTime = performance.now();
     let cayendoDesde = 0;
-
-    const heroEl = hasHero ? document.getElementById('hero') : null;
-    const dLetra = hasHero ? document.querySelector<HTMLElement>('[data-mascot-anchor="hero-d"]') : null;
 
     // null si el scroll no ha llegado a ningún punto de agarre todavía --
     // a propósito: antes caía en perches[0] como reserva, y eso disparaba el
@@ -374,14 +388,29 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       const targetFlame = reducedMotion ? 0 : mostrarLlama ? Math.min(1, 0.35 + Math.abs(velocity) * 4.5) : 0;
       currentFlame += (targetFlame - currentFlame) * (reducedMotion ? 1 : 0.18);
 
+      // Vaivén constante, sutil: un personaje vivo nunca está del todo
+      // quieto. Se suma solo al pintar, no a currentTop -- si entrara en la
+      // física se acumularía con el propio objetivo de cada fase.
+      const bob = reducedMotion ? 0 : Math.sin(now / 950) * 4;
+
+      // La cabeza (y la antena) van un pelín por detrás del cuerpo al
+      // bancar: sin este retraso todo el SVG gira como una sola pieza
+      // rígida, que es justo el aspecto "piezas pegadas" que se quería
+      // evitar. Con retraso, el cuerpo lidera y la cabeza le sigue.
+      currentHeadBank += (currentBank - currentHeadBank) * (reducedMotion ? 1 : 0.06);
+
       wrap.style.left = `${currentLeft}px`;
-      wrap.style.top = `${currentTop}px`;
+      wrap.style.top = `${currentTop + bob}px`;
       wrap.style.right = 'auto';
       wrap.style.transform = `rotate(${currentBank}deg)`;
 
       if (flame) {
         flame.style.opacity = String(0.15 + currentFlame * 0.85);
         flame.style.transform = `scaleY(${0.4 + currentFlame * 1.2})`;
+      }
+
+      if (head) {
+        head.style.transform = `rotate(${(currentHeadBank - currentBank) * 0.6}deg)`;
       }
 
       rafId = requestAnimationFrame(loop);
@@ -479,7 +508,14 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
         <svg viewBox="0 0 92 130" className="relative h-full w-full drop-shadow-[0_10px_20px_rgba(20,205,236,0.35)]" aria-hidden="true">
           <defs>
-            <radialGradient id="dalsatBotBody" cx="38%" cy="24%" r="80%">
+            {/* userSpaceOnUse a propósito: con el valor por defecto
+                (objectBoundingBox) cada rect/circle/path calcula SU PROPIO
+                degradado ajustado a su propia caja, así que cada pieza queda
+                iluminada por su cuenta -- eso es lo que se veía como
+                "partes pegadas". Con coordenadas fijas del viewBox, todo el
+                cuerpo comparte un único foco de luz y se ve como una sola
+                figura. */}
+            <radialGradient id="dalsatBotBody" gradientUnits="userSpaceOnUse" cx="30" cy="25" r="110">
               <stop offset="0%" stopColor="#1F6E9C" />
               <stop offset="55%" stopColor="#0A3459" />
               <stop offset="100%" stopColor="#03131F" />
@@ -491,57 +527,59 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
             </radialGradient>
           </defs>
 
-          {/* Antena */}
-          <line x1="46" y1="4" x2="46" y2="13" stroke="#14CDEC" strokeWidth="2.4" strokeLinecap="round" />
-          <circle cx="46" cy="3" r="3.2" fill="#7FE4F5" />
-
-          {/* Cabeza */}
-          <rect x="10" y="10" width="72" height="60" rx="26" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.5" />
-          <ellipse cx="28" cy="26" rx="13" ry="7.5" fill="white" opacity="0.16" />
-          <rect x="20" y="30" width="52" height="22" rx="11" fill="#03131F" opacity="0.85" />
-          <circle cx="34" cy="41" r="6" fill="url(#dalsatBotEye)" />
-          <circle cx="58" cy="41" r="6" fill="url(#dalsatBotEye)" />
-          <path d="M37 60 Q46 65 55 60" stroke="#7FE4F5" strokeWidth="2.2" strokeLinecap="round" fill="none" opacity="0.85" />
-
-          {/* Orejas laterales */}
-          <rect x="1" y="30" width="9" height="18" rx="4.5" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
-          <rect x="82" y="30" width="9" height="18" rx="4.5" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
-
-          {/* Cuerpo */}
-          <rect x="20" y="66" width="52" height="42" rx="18" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" strokeWidth="1.5" />
-          <circle cx="46" cy="86" r="7" fill="#03131F" opacity="0.8" />
-          <circle cx="46" cy="86" r="3.2" fill="#14CDEC" />
-
+          {/* Piernas y brazos: un único <path> curvo por miembro que nace
+              dentro del torso y sale hacia fuera (en vez de un rect recto +
+              un circle pegado en la punta), con el mismo degradado que el
+              resto del cuerpo -- así no hay costura visible en la unión. */}
           {grande ? (
             <>
-              {/* Sentado: brazos apoyados en las rodillas */}
-              <path d="M20 76 Q10 88 20 100" stroke="url(#dalsatBotBody)" strokeWidth="9" strokeLinecap="round" fill="none" />
-              <path d="M72 76 Q82 88 72 100" stroke="url(#dalsatBotBody)" strokeWidth="9" strokeLinecap="round" fill="none" />
+              {/* Sentado: piernas dobladas de verdad -- muslo horizontal que
+                  sale de la cadera, curva de rodilla, espinilla colgando. */}
+              <path d="M30,98 C14,98 4,101 3,108 C2.3,113 5,117 10,117.6 C15,118.2 18,115 18,110 C24,111 29,109 30,104 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
+              <path d="M8,110 C4,112 2,117 3,124 C3.6,129.5 9,131.5 14,129.6 C18,128 19,123 17.4,118.6 C16,114.6 12,111.6 8,110 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" strokeWidth="1.2" />
+              <path d="M62,98 C78,98 88,101 89,108 C89.7,113 87,117 82,117.6 C77,118.2 74,115 74,110 C68,111 63,109 62,104 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
+              <path d="M84,110 C88,112 90,117 89,124 C88.4,129.5 83,131.5 78,129.6 C74,128 73,123 74.6,118.6 C76,114.6 80,111.6 84,110 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" strokeWidth="1.2" />
 
-              {/* Piernas dobladas: muslo horizontal + espinilla colgando, como
-                  sentado en el borde de la letra */}
-              <rect x="6" y="100" width="30" height="12" rx="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" />
-              <rect x="6" y="108" width="12" height="20" rx="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" />
-              <rect x="56" y="100" width="30" height="12" rx="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" />
-              <rect x="74" y="108" width="12" height="20" rx="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" />
+              {/* Brazos apoyados en las rodillas */}
+              <path d="M22,74 C10,78 6,86 8,96 C9.4,103 15,106 20,103.5 C23,102 23.5,97.5 21,93 C18.5,88.5 19,80 25,75 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
+              <path d="M70,74 C82,78 86,86 84,96 C82.6,103 77,106 72,103.5 C69,102 68.5,97.5 71,93 C73.5,88.5 73,80 67,75 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
             </>
           ) : (
             <>
-              {/* Brazos, como si se agarrara al borde de lo que tiene al lado */}
-              <path d="M20 74 Q4 78 4 94" stroke="url(#dalsatBotBody)" strokeWidth="9" strokeLinecap="round" fill="none" />
-              <circle cx="4" cy="96" r="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
-              <path d="M72 74 Q88 78 88 94" stroke="url(#dalsatBotBody)" strokeWidth="9" strokeLinecap="round" fill="none" />
-              <circle cx="88" cy="96" r="6" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" />
+              {/* En vuelo: piernas juntas colgando bajo el propulsor */}
+              <path d="M35,98 C29,98 26,104 26,114 C26,122 28,128 32,129 C36,130 38,126 38,118 C38,111 38,104 35,98 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
+              <path d="M57,98 C63,98 66,104 66,114 C66,122 64,128 60,129 C56,130 54,126 54,118 C54,111 54,104 57,98 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
+              <ellipse cx="32" cy="124" rx="4" ry="2.2" fill="#03131F" opacity="0.8" />
+              <ellipse cx="60" cy="124" rx="4" ry="2.2" fill="#03131F" opacity="0.8" />
 
-              {/* Piernas rectas, en vuelo */}
-              <rect x="27" y="104" width="14" height="18" rx="6" fill="url(#dalsatBotBody)" />
-              <rect x="51" y="104" width="14" height="18" rx="6" fill="url(#dalsatBotBody)" />
-
-              {/* Boquillas del propulsor */}
-              <path d="M31 122 L41 122 L37 130 L35 130 Z" fill="#03131F" stroke="#14CDEC" strokeOpacity="0.5" />
-              <path d="M51 122 L61 122 L57 130 L55 130 Z" fill="#03131F" stroke="#14CDEC" strokeOpacity="0.5" />
+              {/* Brazos levantados hacia fuera -- por encima de las piernas
+                  a propósito, para que se lean como brazos y no como un
+                  tercer par de patas */}
+              <path d="M23,70 C6,66 -3,72 -2,84 C-1.4,92 5,95 12,92 C17,90 18,85 15,80 C13,76.5 15,72 24,72 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
+              <path d="M69,70 C86,66 95,72 94,84 C93.4,92 87,95 80,92 C75,90 74,85 77,80 C79,76.5 77,72 68,72 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
             </>
           )}
+
+          {/* Cuerpo */}
+          <rect x="20" y="64" width="52" height="44" rx="19" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" strokeWidth="1.5" />
+          <circle cx="46" cy="86" r="7" fill="#03131F" opacity="0.8" />
+          <circle cx="46" cy="86" r="3.2" fill="#14CDEC" />
+
+          {/* Cabeza, en su propio grupo: el bucle físico le aplica un ligero
+              retraso de rotación respecto al cuerpo (ver headRef en el
+              efecto) para que no gire como un bloque rígido de una pieza. */}
+          <g ref={headRef} style={{ transformOrigin: '46px 66px' }}>
+            <line x1="46" y1="4" x2="46" y2="13" stroke="#14CDEC" strokeWidth="2.4" strokeLinecap="round" />
+            <circle cx="46" cy="3" r="3.2" fill="#7FE4F5" />
+            <rect x="10" y="10" width="72" height="60" rx="27" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.5" />
+            <ellipse cx="28" cy="25" rx="13" ry="7.5" fill="white" opacity="0.14" />
+            <rect x="20" y="30" width="52" height="22" rx="11" fill="#03131F" opacity="0.85" />
+            <circle cx="34" cy="41" r="6" fill="url(#dalsatBotEye)" />
+            <circle cx="58" cy="41" r="6" fill="url(#dalsatBotEye)" />
+            <path d="M37 60 Q46 65 55 60" stroke="#7FE4F5" strokeWidth="2.2" strokeLinecap="round" fill="none" opacity="0.85" />
+            <path d="M1,30 C-3,36 -3,44 1,48 C4,50 9,49 10,44 L10,34 C9,29 4,28 1,30 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" strokeWidth="1.2" />
+            <path d="M91,30 C95,36 95,44 91,48 C88,50 83,49 82,44 L82,34 C83,29 88,28 91,30 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" strokeWidth="1.2" />
+          </g>
         </svg>
       </button>
 
