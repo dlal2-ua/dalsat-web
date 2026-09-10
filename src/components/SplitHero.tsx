@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { contenido } from '../i18n';
 import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
 
-const SPLIT_END = 0.3; // el split ocupa el 0–30 % del scroll
-const INTRO_FADE_END = 0.12; // el subtítulo se va en cuanto empiezas a scrollear
-const HINT_FADE_END = 0.3; // la indicación de scroll aguanta bastante más
+// Fracciones del recorrido pineado (altura del hero menos una pantalla, 50vh
+// con 150vh de alto). El split acaba casi al final: antes el hero medía
+// 200vh y tras abrirse las letras quedaban 70vh de scroll vacío.
+const SPLIT_END = 0.7;
+const INTRO_FADE_END = 0.25; // el subtítulo se va en cuanto empiezas a scrollear
+const HINT_FADE_END = 0.6; // la indicación de scroll aguanta bastante más
 
 /** Genera el valor box-shadow con N estrellas aleatorias en unidades vw/vh.
  *  El rango se extiende bastante más allá del viewport para que la deriva
@@ -159,7 +162,7 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       ref={sectionRef}
       id="hero"
       className="relative bg-navy"
-      style={{ height: reducedMotion ? 'auto' : '200vh' }}
+      style={{ height: reducedMotion ? 'auto' : '150vh' }}
     >
       <style>{`
         @keyframes heroLetterIn {

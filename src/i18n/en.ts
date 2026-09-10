@@ -28,7 +28,7 @@ export const en: Contenido = {
     volverArriba: 'Back to top',
     volverAlInicio: 'Back to home',
     escribirWhatsApp: 'Message us on WhatsApp',
-    avisoChat: "Hi! I'm the DALSAT agent. Got any question at all — ask away.",
+    avisoChat: "Hello, I'm DALSAT's virtual assistant. If you have any questions, click on me and I'll help you right away.",
     cerrarAviso: 'Dismiss',
     mensajeWhatsApp: 'Hi, I am interested in what you do and would like to know more.',
     hablarWhatsApp: 'Shall we talk on WhatsApp?',
@@ -38,12 +38,12 @@ export const en: Contenido = {
   },
 
   mascota: {
-    etiqueta: 'DALSAT agent',
+    etiqueta: 'DALSAT assistant',
     secciones: {
-      clientes: 'These already work with us. See what they say 👀',
-      're-digitalizacion': 'This is the important bit: what changes once your business runs itself.',
-      servicios: 'Does any of these sound like your week? Tell me and we will look at it.',
-      pruebalo: 'Rather try it without talking to anyone? Start with the demo.',
+      're-digitalizacion': 'This is where we explain what changes once your business processes start running on their own.',
+      servicios: 'Not sure which service fits your business? We will point you in the right direction, no strings attached.',
+      clientes: 'These businesses already work with us. Under each logo, their experience in their own words.',
+      pruebalo: 'You can try a real agent before talking to us. The demo needs no sign-up.',
     },
     ctaServicios: 'Talk to us',
   },

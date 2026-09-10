@@ -574,6 +574,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     let parpadeoDesde = -1e9;
     let anclando = false;
     let escondido = false;
+    let revisarYa = false;
 
     function mostrarRobot() {
       if (!escondido) return;
@@ -673,7 +674,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         x1: nx,
         y1: ny,
         t0: ahora,
-        dur: clamp(380 + dist * 0.8, 450, 1300),
+        dur: clamp(260 + dist * 0.5, 320, 800),
         arco: Math.min(90, dist * 0.22),
         // Un tirabuzón solo si cruza de verdad la pantalla, repartido a lo
         // largo del vuelo: nunca un giro seco al llegar.
@@ -708,17 +709,21 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         return;
       }
       mostrarRobot();
-      const destinoX = plan.robot.x + window.scrollX;
-      const destinoY = plan.robot.y + window.scrollY;
       const lado = plan.lado;
       const m = conMsg ? msg : null;
+      const scrollAlPlanear = window.scrollY;
+      // Vuela en coordenadas de pantalla: si se sigue scrolleando durante el
+      // vuelo, llega igual al sitio planeado en vez de quedarse atrás con la
+      // página. Al posarse vuelve a ir anclado al documento.
       volarA(
-        destinoX,
-        destinoY,
-        'documento',
+        plan.robot.x,
+        plan.robot.y,
+        'pantalla',
         (t) => {
+          pasarA('documento');
           modo = 'posado';
           aplastar(t);
+          if (Math.abs(window.scrollY - scrollAlPlanear) > 4) revisarYa = true;
           if (m && lado) mostrarBurbuja(m, lado, t, dura);
         },
         ahora,
@@ -891,7 +896,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         vy = 0;
         mezclaSentado = 0;
         modo = reducido ? 'sentado' : 'entrando';
-        if (reducido && !yaVisto()) pedir(tc.comun.avisoChat, null, 'bienvenida-sentado');
+        if (reducido) pedir(tc.comun.avisoChat, null, 'bienvenida-sentado');
       } else {
         liberarD();
         fijarTam(tamVuelo());
@@ -1087,7 +1092,9 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
               modo = 'sentado';
               aplastar(ahora);
               dTiltVel = -0.35;
-              if (!yaVisto()) pedir(tc.comun.avisoChat, null, 'bienvenida-sentado');
+              // Sentado en la D se presenta siempre: es lo primero que ve
+              // quien entra y tiene que saber que es un asistente clicable.
+              pedir(tc.comun.avisoChat, null, 'bienvenida-sentado');
             }
           }
         }
@@ -1100,7 +1107,8 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
           y = s.y - (ASIENTO_Y / VB_H) * rh;
           const p = progresoHero(hero);
           if (p > 0.02 && burbujaActual) esconderBurbuja(true);
-          if (p >= 0.15 || s.y < techo() + rh * 0.75) caer(ahora);
+          // 0.35 ≈ media apertura del split (SPLIT_END = 0.7 en SplitHero).
+          if (p >= 0.35 || s.y < techo() + rh * 0.75) caer(ahora);
         }
       } else if (modo === 'cayendo') {
         vy += 0.0022 * dt;
@@ -1138,7 +1146,8 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
             obstFijos.some((f) => cruzan(f, caja));
           if (fuera && ahora - ultimoPlan > 250) {
             irAHueco('deriva', anclaDe(perchaActiva), burbujaActual ? mensajeActual : null, ahora);
-          } else if (ahora - ultimaRevision > 1200 && ahora - ultimoPlan > 800) {
+          } else if (revisarYa || (ahora - ultimaRevision > 1200 && ahora - ultimoPlan > 800)) {
+            revisarYa = false;
             // Lo que hay debajo puede cambiar sin scroll (tarjetas que entran
             // con animación, el banner de cookies): se revisa de vez en cuando.
             ultimaRevision = ahora;
@@ -1353,11 +1362,11 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                   <stop offset="100%" stopColor="#14CDEC" stopOpacity="0" />
                 </linearGradient>
                 <filter id="mascotaDifuso" x="-150%" y="-150%" width="400%" height="400%">
-                  <feGaussianBlur stdDeviation="7" />
+                  <feGaussianBlur stdDeviation="10" />
                 </filter>
               </defs>
 
-              <circle cx="50" cy="70" r="26" fill="#14CDEC" opacity="0.22" filter="url(#mascotaDifuso)" />
+              <circle cx="50" cy="68" r="38" fill="#14CDEC" opacity="0.34" filter="url(#mascotaDifuso)" />
 
               <g ref={llamaRef} opacity="0">
                 <path d="M-4.5,0 C-4.5,8 -1.6,14 0,23 C1.6,14 4.5,8 4.5,0 Z" fill="url(#mascotaLlama)" />

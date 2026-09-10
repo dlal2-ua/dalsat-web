@@ -25,7 +25,7 @@ export const es = {
     volverArriba: 'Volver arriba',
     volverAlInicio: 'Volver al inicio',
     escribirWhatsApp: 'Escríbenos por WhatsApp',
-    avisoChat: '¡Hola! Soy el agente de DALSAT. Cualquier duda que tengas, pregúntamela.',
+    avisoChat: 'Hola, soy el asistente virtual de DALSAT. Si tienes cualquier duda, pulsa sobre mí y te atiendo al momento.',
     cerrarAviso: 'Cerrar aviso',
     mensajeWhatsApp: 'Hola, me interesa lo que hacéis y me gustaría recibir más información.',
     hablarWhatsApp: '¿Hablamos por WhatsApp?',
@@ -37,12 +37,12 @@ export const es = {
   // Lo que dice la mascota de soporte. Las claves de `secciones` son los
   // valores de `data-mascot-perch` en el marcado de la home.
   mascota: {
-    etiqueta: 'Agente DALSAT',
+    etiqueta: 'Asistente DALSAT',
     secciones: {
-      clientes: 'Estos ya trabajan con nosotros. Lee lo que cuentan 👀',
-      're-digitalizacion': 'Aquí va lo importante: qué cambia cuando tu negocio funciona solo.',
-      servicios: '¿Alguno te suena a tu semana? Cuéntamelo y lo vemos.',
-      pruebalo: 'Si prefieres probarlo sin hablar con nadie, empieza por la demo.',
+      're-digitalizacion': 'Aquí explicamos qué cambia cuando los procesos de tu negocio pasan a funcionar solos.',
+      servicios: '¿No tienes claro qué servicio encaja con tu negocio? Te orientamos sin compromiso.',
+      clientes: 'Estas empresas ya trabajan con nosotros. Debajo de cada logo, su experiencia en sus propias palabras.',
+      pruebalo: 'Puedes probar un agente real antes de hablar con nosotros. La demo no requiere registro.',
     } as Record<string, string>,
     ctaServicios: 'Hablar con nosotros',
   },

@@ -86,7 +86,10 @@ export default function SatisfiedClients({ idioma = IDIOMA_POR_DEFECTO }: Props)
           animation: clientesMarquee 55s linear infinite;
           width: max-content;
         }
-        .marquee:hover .marquee-track { animation-play-state: paused; }
+        /* Solo se para mientras se mantiene pulsado (ratón o dedo), no al
+           pasar el ratón por encima. */
+        .marquee { -webkit-touch-callout: none; user-select: none; }
+        .marquee:active .marquee-track { animation-play-state: paused; }
         @media (prefers-reduced-motion: reduce) {
           .marquee-track { animation: none; }
           .marquee { overflow-x: auto; }
@@ -138,6 +141,7 @@ export default function SatisfiedClients({ idioma = IDIOMA_POR_DEFECTO }: Props)
                   src={client.logo}
                   alt={`Logo de ${client.name}`}
                   loading="lazy"
+                  draggable={false}
                   className="max-h-full max-w-full object-contain"
                 />
               </div>

@@ -251,6 +251,10 @@ const schemaData = {
       registrar(document);
       document.addEventListener('astro:page-load', () => registrar(document));
 
+      // Safari de iOS no aplica :active al tocar si no hay ningún listener de
+      // touchstart. Lo usa el carrusel de clientes para pararse al mantener.
+      document.addEventListener('touchstart', () => {}, { passive: true });
+
       // Las islas aparecen mas tarde. Solo miramos subarboles nuevos.
       new MutationObserver((mutaciones) => {
         for (const m of mutaciones) {
