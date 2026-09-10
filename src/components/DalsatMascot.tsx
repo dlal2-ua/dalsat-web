@@ -527,7 +527,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     ).filter(
       (s, _i, todas) =>
         s.id !== 'hero' &&
-        (!!s.dataset.mascotPerch || !!s.querySelector('h1, h2')) &&
+        (!!s.dataset.mascotPerch || !!tc.mascota.secciones[s.id] || !!s.querySelector('h1, h2, h3')) &&
         !todas.some((o) => o !== s && o.contains(s)),
     );
     const excluir = () => [raiz, medidorRef.current, raizChat()].filter(Boolean) as Element[];
@@ -851,12 +851,19 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       return elegida;
     }
 
+    const ctaDe = (clave: string): Cta | null =>
+      tc.mascota.conCta.includes(clave) ? { label: tc.mascota.cta, href: ruta('/contacto', idioma) } : null;
+
     function mensajeDe(p: HTMLElement): { texto: string; cta: Cta | null } | null {
       const id = p.dataset.mascotPerch || p.id;
       const texto = tc.mascota.secciones[id];
-      if (!texto) return null;
-      const cta = id === 'servicios' ? { label: tc.mascota.ctaServicios, href: ruta('/contacto', idioma) } : null;
-      return { texto, cta };
+      return texto ? { texto, cta: ctaDe(id) } : null;
+    }
+
+    function mensajePagina(): { texto: string; cta: Cta | null } | null {
+      const rutaActual = window.location.pathname.replace(/^\/en(?=\/|$)/, '').replace(/\/+$/, '') || '/';
+      const texto = tc.mascota.paginas[rutaActual];
+      return texto ? { texto, cta: ctaDe(rutaActual) } : null;
     }
 
     const heroFijado = () => !!hero && hero.offsetHeight > altoVp() * 1.2;
@@ -967,7 +974,11 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         x = window.scrollX + anchoVp() + 20;
         y = window.scrollY + altoVp() * 0.3;
         modo = 'posado';
-        if (!yaVisto()) pedir(tc.comun.avisoChat, null, 'bienvenida');
+        // Cada página tiene su mensaje al llegar; si alguna no lo tuviera,
+        // la presentación genérica (una vez por sesión).
+        const dePagina = mensajePagina();
+        if (dePagina) pedir(dePagina.texto, dePagina.cta, 'bienvenida');
+        else if (!yaVisto()) pedir(tc.comun.avisoChat, null, 'bienvenida');
         else irAHueco('deriva', anclaDe(document.querySelector('main')), null, ahora);
       }
       setVisible(true);
@@ -1212,15 +1223,20 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         aterrizarEnD(ahora);
       } else if (modo === 'posado' || modo === 'guardado') {
         const p = perchaEnVista();
-        if (p && p !== perchaActiva) {
+        // El mensaje de llegada a la página se deja leer unos segundos antes
+        // de que el de la sección lo sustituya.
+        const leyendoLlegada =
+          esperando?.tipo === 'bienvenida' ||
+          (!!burbujaActual && burbujaActual.id === bienvenidaIdRef.current && ahora - burbujaDesde < 5000);
+        if (p && p !== perchaActiva && !leyendoLlegada) {
           perchaActiva = p;
           const m = mensajeDe(p);
           if (m) {
             pedir(m.texto, m.cta, 'seccion', p);
-          } else {
-            // Sección sin nada que decir: igualmente se acerca a su titular.
-            esconderBurbuja(true);
-            irAHueco('seccion', anclaDe(p), null, ahora);
+          } else if (!esperando) {
+            // Sección sin nada que decir: igualmente se acerca a su titular,
+            // llevándose el bocadillo que tuviera abierto (el de la página).
+            irAHueco('seccion', anclaDe(p), burbujaActual ? mensajeActual : null, ahora);
           }
         }
 

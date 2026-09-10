@@ -39,15 +39,34 @@ export const en: Contenido = {
 
   mascota: {
     etiqueta: 'DALSAT assistant',
+    paginas: {
+      '/servicios': "Six services built so your business does fewer things by hand. If you're not sure where to start, ask me.",
+      '/demos': "This is where you can try agents like me. Spoiler: the one you're looking at right now is one too.",
+      '/calculadora': 'How much time does your team lose answering the same things over and over? Scroll down and check it with your own numbers.',
+      '/faq': "Can't find your question? Click on me and I'll answer it right away.",
+      '/sobre-nosotros': "Here's who is behind DALSAT and how we work.",
+      '/contacto': "If you'd rather have an answer straight away, click on me and we'll sort it out now.",
+      '/gracias': 'Message received. While we get back to you, I can answer any question: click on me.',
+      '/aviso-legal': "If anything in this text isn't clear, click on me and I'll explain it in plain words.",
+      '/cookies': "If anything in this text isn't clear, click on me and I'll explain it in plain words.",
+      '/politica-privacidad': "If anything in this text isn't clear, click on me and I'll explain it in plain words.",
+    },
     secciones: {
       're-digitalizacion': 'This is where we explain what changes once your business processes start running on their own.',
       servicios: 'Not sure which service fits your business? We will point you in the right direction, no strings attached.',
       clientes: 'These businesses already work with us. Under each logo, their experience in their own words.',
       pruebalo: 'You can try a real agent before talking to us. The demo needs no sign-up.',
-      'preguntas-frecuentes': "Can't find your question? Click on me and I'll answer it right away.",
-      contacto: "If you'd rather have an answer straight away, click on me and we'll sort it out now.",
+      catalogo: "Each card is a service. If you're torn between two, click on me and I'll tell you which one fits your case.",
+      calculadora:
+        "Move the two sliders with your figures: messages per day and what an hour of your team's time is worth. Right below you'll see the hours and money you'd get back.",
+      'demos-sector': 'Pick your sector and write to the agent as if you were a customer. It answers just as it would for your business.',
+      'demos-voz': 'Press play and hear how a voice agent handles a call.',
+      'quienes-somos': 'And while you are here: would you like an assistant like me on your website?',
+      cierre: "Would you like an assistant like me on your website? That's exactly what we do.",
+      'no-encontrada': "This page doesn't exist, but I do. Click on me and I'll help you find what you were looking for.",
     },
-    ctaServicios: 'Talk to us',
+    conCta: ['servicios', 'quienes-somos', 'cierre'],
+    cta: 'Talk to us',
   },
 
   cierreContacto: {

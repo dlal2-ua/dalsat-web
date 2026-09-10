@@ -34,19 +34,41 @@ export const es = {
     probarDemo: 'Probar una demo',
   },
 
-  // Lo que dice la mascota de soporte. Las claves de `secciones` son los
-  // valores de `data-mascot-perch` en el marcado de la home.
+  // Lo que dice la mascota de soporte.
+  // - `paginas`: al llegar a cada página (ruta sin /en ni barra final).
+  // - `secciones`: al llegar a cada sección; la clave es su
+  //   `data-mascot-perch` o, si no tiene, su id.
+  // Las de `conCta` llevan debajo el botón a /contacto.
   mascota: {
     etiqueta: 'Asistente DALSAT',
+    paginas: {
+      '/servicios': 'Seis servicios pensados para que tu negocio haga menos cosas a mano. Si no sabes por dónde empezar, pregúntame.',
+      '/demos': 'Aquí puedes probar agentes como yo. Spoiler: el que estás viendo ahora mismo también es uno.',
+      '/calculadora': '¿Cuánto tiempo pierde tu equipo contestando siempre lo mismo? Baja y compruébalo con tus propios números.',
+      '/faq': '¿No encuentras tu pregunta? Pulsa sobre mí y te la respondo al momento.',
+      '/sobre-nosotros': 'Aquí te contamos quién hay detrás de DALSAT y cómo trabajamos.',
+      '/contacto': 'Si prefieres una respuesta inmediata, pulsa sobre mí y lo resolvemos ahora.',
+      '/gracias': 'Mensaje recibido. Mientras te respondemos, puedo resolver cualquier duda: pulsa sobre mí.',
+      '/aviso-legal': 'Si algo de este texto no queda claro, pulsa sobre mí y te lo explico con palabras sencillas.',
+      '/cookies': 'Si algo de este texto no queda claro, pulsa sobre mí y te lo explico con palabras sencillas.',
+      '/politica-privacidad': 'Si algo de este texto no queda claro, pulsa sobre mí y te lo explico con palabras sencillas.',
+    } as Record<string, string>,
     secciones: {
       're-digitalizacion': 'Aquí explicamos qué cambia cuando los procesos de tu negocio pasan a funcionar solos.',
       servicios: '¿No tienes claro qué servicio encaja con tu negocio? Te orientamos sin compromiso.',
       clientes: 'Estas empresas ya trabajan con nosotros. Debajo de cada logo, su experiencia en sus propias palabras.',
       pruebalo: 'Puedes probar un agente real antes de hablar con nosotros. La demo no requiere registro.',
-      'preguntas-frecuentes': '¿No encuentras tu pregunta? Pulsa sobre mí y te la respondo al momento.',
-      contacto: 'Si prefieres una respuesta inmediata, pulsa sobre mí y lo resolvemos ahora.',
+      catalogo: 'Cada tarjeta es un servicio. Si dudas entre dos, pulsa sobre mí y te digo cuál encaja mejor con tu caso.',
+      calculadora:
+        'Mueve los dos controles con tus datos: mensajes al día y lo que vale una hora de tu equipo. Justo debajo verás las horas y el dinero que recuperarías.',
+      'demos-sector': 'Elige tu sector y escribe al agente como si fueras un cliente. Responde igual que lo haría en tu negocio.',
+      'demos-voz': 'Dale al play y escucha cómo atiende una llamada un agente de voz.',
+      'quienes-somos': 'Y ya que estás por aquí: ¿te gustaría tener un asistente como yo en tu web?',
+      cierre: '¿Te gustaría tener un asistente como yo en tu web? Es justo lo que hacemos.',
+      'no-encontrada': 'Esta página no existe, pero yo sí. Pulsa sobre mí y te ayudo a encontrar lo que buscabas.',
     } as Record<string, string>,
-    ctaServicios: 'Hablar con nosotros',
+    conCta: ['servicios', 'quienes-somos', 'cierre'],
+    cta: 'Hablar con nosotros',
   },
 
   cierreContacto: {
