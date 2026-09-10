@@ -70,7 +70,6 @@ export default function SatisfiedClients({ idioma = IDIOMA_POR_DEFECTO }: Props)
       id="clientes"
       className="relative py-20 sm:py-28 bg-navy-900 border-t border-white/10 overflow-hidden"
       data-mascot-perch="clientes"
-      data-mascot-msg="Estas empresas ya confían en nosotros 👀"
     >
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[750px] h-[400px] sm:h-[550px] bg-gradient-to-tr from-cian/15 via-cian-dark/15 to-transparent rounded-full blur-[170px] pointer-events-none" />
@@ -117,7 +116,10 @@ export default function SatisfiedClients({ idioma = IDIOMA_POR_DEFECTO }: Props)
       </div>
 
       {/* Carrusel de logos: sale por la izquierda y vuelve a entrar por la derecha */}
-      <div className="marquee relative w-full overflow-hidden" aria-label={t.clientes.titulo}>
+      {/* data-mascot-obstacle: la tira se mueve sola, así que la mascota la
+          trata como un bloque entero -- si mirara logo a logo, un hueco
+          libre ahora dejaría de estarlo al pasar el siguiente. */}
+      <div className="marquee relative w-full overflow-hidden" aria-label={t.clientes.titulo} data-mascot-obstacle>
         {/* Difuminado en los bordes para que no se corten de golpe */}
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 sm:w-32 bg-gradient-to-r from-navy-900 to-transparent" aria-hidden="true" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 sm:w-32 bg-gradient-to-l from-navy-900 to-transparent" aria-hidden="true" />

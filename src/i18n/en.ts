@@ -37,6 +37,17 @@ export const en: Contenido = {
     probarDemo: 'Try a demo',
   },
 
+  mascota: {
+    etiqueta: 'DALSAT agent',
+    secciones: {
+      clientes: 'These already work with us. See what they say 👀',
+      're-digitalizacion': 'This is the important bit: what changes once your business runs itself.',
+      servicios: 'Does any of these sound like your week? Tell me and we will look at it.',
+      pruebalo: 'Rather try it without talking to anyone? Start with the demo.',
+    },
+    ctaServicios: 'Talk to us',
+  },
+
   cierreContacto: {
     home: {
       titulo: 'Start with whatever weighs on you most',

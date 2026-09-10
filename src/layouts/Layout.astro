@@ -282,10 +282,11 @@ const schemaData = {
           src={`https://dev.dalsats.com/webchat/${INSTANCIA_CHAT}/widget.js`}
           defer
         />
-        {/* Mascota de soporte: en escritorio sustituye a la burbuja nativa por
-            un robot que vuela pegado al borde derecho, siguiendo el scroll.
-            En móvil solo le repinta la cara. El chat no se abre solo, y no
-            reimplementa el panel: al pulsar, hace clic en la burbuja real. */}
+        {/* Mascota de soporte: sustituye a la burbuja nativa en todos los
+            tamaños. No reimplementa el panel: al pulsar, hace clic en la
+            burbuja real. OJO: dev.dalsats.com solo se deja embeber desde
+            https://dalsats.com (frame-ancestors), así que en localhost o en
+            previews de Vercel el panel se abre pero sale "rechazado". */}
         <DalsatMascot client:idle idioma={idioma} />
       </>
     )}

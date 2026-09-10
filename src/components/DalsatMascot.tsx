@@ -1,17 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { contenido } from '../i18n';
-import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
+import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
 
-// Mascota de soporte: un robotito de cuerpo entero que se sienta en la D de
-// DALSAT, se cae cuando la letra desaparece por el scroll del hero, y luego
-// va agarrándose a distintos puntos de la web (data-mascot-perch) según lo
-// que estés mirando, comentando la sección o proponiendo un CTA. No
-// reimplementa el chat: al pulsarlo, hace clic en la burbuja real del
-// widget de la plataforma (dev.dalsats.com) y se aparta para dejarle sitio.
-//
-// En escritorio sustituye a la burbuja nativa (opacidad a 0, sin quitarla
-// del DOM, para no romper el panel al abrirse). En móvil, sin sitio para
-// volar, se deja la burbuja nativa tal cual y solo se le repinta la cara.
+// Mascota de soporte. Se sienta en la D del hero, se cae cuando la letra se
+// va, y a partir de ahí se posa en huecos libres de la página junto a la
+// sección que comenta. No reimplementa el chat: al pulsarla hace clic en la
+// burbuja real del widget de dev.dalsats.com.
 
 interface Props {
   idioma?: Idioma;
@@ -22,28 +16,9 @@ function raizChat(): HTMLElement | null {
 }
 
 function burbujaNativa(): HTMLButtonElement | null {
-  const raiz = raizChat();
-  return raiz ? raiz.querySelector('button') : null;
+  return raizChat()?.querySelector('button') ?? null;
 }
 
-const ICONO_ROBOT = `
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
-     stroke-linecap="round" stroke-linejoin="round" width="26" height="26" aria-hidden="true">
-  <path d="M12 2.6v2.6"/>
-  <circle cx="12" cy="2" r="1.1" fill="currentColor" stroke="none"/>
-  <rect x="4.2" y="5.2" width="15.6" height="12.4" rx="3.4"/>
-  <circle cx="9" cy="11" r="1.35" fill="currentColor" stroke="none"/>
-  <circle cx="15" cy="11" r="1.35" fill="currentColor" stroke="none"/>
-  <path d="M9.4 14.6h5.2"/>
-  <path d="M2.2 9.6v3.6M21.8 9.6v3.6"/>
-</svg>`;
-
-// El widget de dev.dalsats.com llega por un <script defer> externo: si se
-// pulsa el robot antes de que ese script termine de cargar y montar su
-// burbuja, `burbujaNativa()` no encuentra nada todavía. Un único intervalo
-// compartido (en vez de uno nuevo por cada clic, que se iban acumulando sin
-// limpiarse) sigue reintentando, y además se engancha al evento `load` del
-// propio script para no depender solo del sondeo.
 let reintentoAbrirChat: ReturnType<typeof setInterval> | null = null;
 
 function abrirChatReal() {
@@ -52,24 +27,13 @@ function abrirChatReal() {
     inmediata.click();
     return;
   }
-  if (reintentoAbrirChat) return; // ya hay un intento en marcha, no se duplica
-
+  if (reintentoAbrirChat) return;
   let intentos = 0;
-  const probar = () => {
-    const boton = burbujaNativa();
-    if (!boton) return false;
-    boton.click();
-    if (reintentoAbrirChat) clearInterval(reintentoAbrirChat);
-    reintentoAbrirChat = null;
-    return true;
-  };
-
-  const script = document.querySelector<HTMLScriptElement>('script[src*="dalsats.com/webchat/"]');
-  script?.addEventListener('load', probar, { once: true });
-
   reintentoAbrirChat = setInterval(() => {
     intentos += 1;
-    if (probar() || intentos > 60) {
+    const boton = burbujaNativa();
+    if (boton) boton.click();
+    if (boton || intentos > 60) {
       if (reintentoAbrirChat) clearInterval(reintentoAbrirChat);
       reintentoAbrirChat = null;
     }
@@ -78,637 +42,1382 @@ function abrirChatReal() {
 
 const CLAVE_VISTO = 'dalsat-mascota-vista';
 
-// Mismo umbral que SPLIT_END en SplitHero: cuando el scroll del hero supera
-// esta fracción, las letras ya se han abierto y desvanecido del todo.
-const HERO_SPLIT_END = 0.3;
-const HERO_FALL_AT = 0.24; // se cae un poco antes de que la D termine de irse
-
-type Fase = 'perchada-d' | 'cayendo' | 'esperando' | 'roaming' | 'anclada';
-
-interface Perch {
-  el: HTMLElement;
-  msg: string;
-  cta?: string;
-  ctaHref?: string;
+function yaVisto(): boolean {
+  try {
+    return window.sessionStorage.getItem(CLAVE_VISTO) === 'visto';
+  } catch {
+    return false;
+  }
 }
 
-// Progreso 0–1 del scroll pineado del hero (misma cuenta que usa SplitHero).
-// Si el hero no tiene recorrido de scroll (p.ej. `height:auto` con
-// prefers-reduced-motion), no hay pin que recorrer: eso es el principio de
-// la página, no el final, así que aquí el progreso es 0, nunca 1.
+function marcarVisto() {
+  try {
+    window.sessionStorage.setItem(CLAVE_VISTO, 'visto');
+  } catch {
+    // Sin almacenamiento: volverá a saludar en la siguiente página.
+  }
+}
+
+// ---------------------------------------------------------------- geometría
+
+interface Caja {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
+
+// Viewport sin barras de scroll: innerWidth las incluye, y el robot acabaría
+// posado debajo de la barra.
+const anchoVp = () => document.documentElement.clientWidth;
+const altoVp = () => document.documentElement.clientHeight;
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const suave = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+function unir(a: Caja, b: Caja | null): Caja {
+  if (!b) return a;
+  const x = Math.min(a.x, b.x);
+  const y = Math.min(a.y, b.y);
+  return { x, y, w: Math.max(a.x + a.w, b.x + b.w) - x, h: Math.max(a.y + a.h, b.y + b.h) - y };
+}
+
+function cruzan(a: Caja, b: Caja) {
+  return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+}
+
+function distCajas(a: Caja, b: Caja) {
+  const dx = Math.max(b.x - (a.x + a.w), a.x - (b.x + b.w), 0);
+  const dy = Math.max(b.y - (a.y + a.h), a.y - (b.y + b.h), 0);
+  return Math.hypot(dx, dy);
+}
+
+// Sistema de coordenadas del dibujo. ASIENTO es el punto del robot que apoya
+// en la letra: el trasero, justo bajo la pelvis.
+const VB_W = 100;
+const VB_H = 130;
+const ASIENTO_X = 50;
+const ASIENTO_Y = 93;
+const ASPECTO = VB_W / VB_H;
+
+type Lado = 'arriba-izq' | 'arriba-der' | 'izq' | 'der' | 'abajo-izq' | 'abajo-der';
+const LADOS: Lado[] = ['arriba-izq', 'arriba-der', 'izq', 'der', 'abajo-izq', 'abajo-der'];
+const SEP = 10;
+
+function cajaBurbuja(r: Caja, bw: number, bh: number, lado: Lado): Caja {
+  switch (lado) {
+    case 'arriba-izq':
+      return { x: r.x + r.w - bw, y: r.y - SEP - bh, w: bw, h: bh };
+    case 'arriba-der':
+      return { x: r.x, y: r.y - SEP - bh, w: bw, h: bh };
+    case 'abajo-izq':
+      return { x: r.x + r.w - bw, y: r.y + r.h + SEP, w: bw, h: bh };
+    case 'abajo-der':
+      return { x: r.x, y: r.y + r.h + SEP, w: bw, h: bh };
+    case 'izq':
+      return { x: r.x - SEP - bw, y: r.y, w: bw, h: bh };
+    case 'der':
+      return { x: r.x + r.w + SEP, y: r.y, w: bw, h: bh };
+  }
+}
+
+// -------------------------------------------------------------- obstáculos
+
+type ElementoVis = Element & { checkVisibility?: (o?: Record<string, boolean>) => boolean };
+
+function alfa(color: string): number {
+  if (!color || color === 'transparent') return 0;
+  const m = color.match(/rgba?\(([^)]+)\)/);
+  if (!m) return 1;
+  const partes = m[1].split(/[\s,/]+/).filter(Boolean);
+  return partes.length >= 4 ? parseFloat(partes[3]) : 1;
+}
+
+function esVisible(el: Element): boolean {
+  // Lo que aún no ha hecho su animación de entrada va a aparecer enseguida.
+  if (el.closest('[data-reveal]:not(.se-ve)')) return true;
+  const e = el as ElementoVis;
+  if (e.checkVisibility && !e.checkVisibility({ opacityProperty: true, visibilityProperty: true })) return false;
+  // checkVisibility solo descarta opacity 0 exacta; las letras del hero se
+  // desvanecen por grados y a medio fundido ya no se leen.
+  let a: Element | null = el;
+  for (let i = 0; i < 3 && a; i++, a = a.parentElement) {
+    if (parseFloat(getComputedStyle(a).opacity) < 0.2) return false;
+  }
+  return true;
+}
+
+function enVista(r: { left: number; top: number; right: number; bottom: number; width: number; height: number }) {
+  return r.width > 0 && r.height > 0 && r.bottom > 0 && r.right > 0 && r.top < altoVp() && r.left < anchoVp();
+}
+
+const aCaja = (r: DOMRect): Caja => ({ x: r.left, y: r.top, w: r.width, h: r.height });
+
+function recogerFijos(excluir: Element[]): Caja[] {
+  const areaVp = anchoVp() * altoVp();
+  const out: Caja[] = [];
+  for (const el of Array.from(document.querySelectorAll('header, [class*="fixed"]'))) {
+    if (excluir.some((x) => x.contains(el))) continue;
+    const r = el.getBoundingClientRect();
+    if (!enVista(r) || r.width * r.height > areaVp * 0.5) continue;
+    if (!esVisible(el)) continue;
+    out.push(aCaja(r));
+  }
+  return out;
+}
+
+function recogerObstaculos(excluir: Element[]): { todos: Caja[]; fijos: Caja[] } {
+  const areaVp = anchoVp() * altoVp();
+  const todos: Caja[] = [];
+  const fuera = (el: Element) => excluir.some((x) => x.contains(el));
+
+  // Texto línea a línea (Range) y no el bloque entero: un <p> en una columna
+  // ancha taparía todo su ancho aunque la línea sea corta, y no quedaría
+  // hueco en ningún sitio.
+  const cache = new Map<Element, boolean>();
+  const rango = document.createRange();
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+    if (!n.nodeValue || !n.nodeValue.trim()) continue;
+    const p = n.parentElement;
+    if (!p) continue;
+    let ok = cache.get(p);
+    if (ok === undefined) {
+      ok = !p.closest('script,style,noscript,template') && enVista(p.getBoundingClientRect()) && !fuera(p) && esVisible(p);
+      cache.set(p, ok);
+    }
+    if (!ok) continue;
+    rango.selectNodeContents(n);
+    const rects = rango.getClientRects();
+    for (let i = 0; i < rects.length; i++) if (enVista(rects[i])) todos.push(aCaja(rects[i]));
+  }
+
+  const SEL = 'img,svg,video,canvas,iframe,input,textarea,select,button,a,[role="button"],[data-mascot-obstacle]';
+  for (const el of Array.from(document.querySelectorAll(SEL))) {
+    if (fuera(el)) continue;
+    const r = el.getBoundingClientRect();
+    if (!enVista(r) || r.width * r.height > areaVp * 0.5) continue;
+    if (!esVisible(el)) continue;
+    todos.push(aCaja(r));
+  }
+
+  // Tarjetas, chips y paneles: lo que tiene fondo, borde o sombra propios.
+  // Los adornos (retículas, manchas de luz, estrellas) llevan
+  // pointer-events:none y no cuentan.
+  for (const el of Array.from(document.querySelectorAll('[class*="rounded"],[class*="border"],[class*="bg-"],[class*="shadow"]'))) {
+    if (fuera(el)) continue;
+    const r = el.getBoundingClientRect();
+    // De borde a borde es una banda de sección, no una tarjeta: su fondo es
+    // el de la página.
+    if (!enVista(r) || r.width * r.height > areaVp * 0.45 || r.width >= anchoVp() - 4) continue;
+    if (el.getAttribute('aria-hidden') === 'true') continue;
+    const cs = getComputedStyle(el);
+    if (cs.pointerEvents === 'none') continue;
+    const fondo = cs.backgroundImage !== 'none' || alfa(cs.backgroundColor) > 0.02;
+    const borde =
+      (parseFloat(cs.borderTopWidth) || 0) + (parseFloat(cs.borderLeftWidth) || 0) > 0 && alfa(cs.borderTopColor) > 0.02;
+    if (!fondo && !borde && cs.boxShadow === 'none') continue;
+    if (!esVisible(el)) continue;
+    todos.push(aCaja(r));
+  }
+
+  const fijos = recogerFijos(excluir);
+  todos.push(...fijos);
+  return { todos, fijos };
+}
+
+// Rejilla de ocupación con tabla de áreas acumuladas: cualquier caja se
+// comprueba en O(1), así se pueden probar miles de posiciones por plan.
+const CELDA = 8;
+const HOLGURA = 6;
+
+class Rejilla {
+  cols: number;
+  filas: number;
+  sat: Int32Array;
+
+  constructor(vw: number, vh: number, obst: Caja[]) {
+    this.cols = Math.ceil(vw / CELDA);
+    this.filas = Math.ceil(vh / CELDA);
+    const occ = new Uint8Array(this.cols * this.filas);
+    for (const o of obst) {
+      const x0 = clamp(Math.floor((o.x - HOLGURA) / CELDA), 0, this.cols - 1);
+      const x1 = clamp(Math.ceil((o.x + o.w + HOLGURA) / CELDA) - 1, 0, this.cols - 1);
+      const y0 = clamp(Math.floor((o.y - HOLGURA) / CELDA), 0, this.filas - 1);
+      const y1 = clamp(Math.ceil((o.y + o.h + HOLGURA) / CELDA) - 1, 0, this.filas - 1);
+      for (let fy = y0; fy <= y1; fy++) occ.fill(1, fy * this.cols + x0, fy * this.cols + x1 + 1);
+    }
+    const w = this.cols + 1;
+    this.sat = new Int32Array(w * (this.filas + 1));
+    for (let fy = 0; fy < this.filas; fy++) {
+      let fila = 0;
+      for (let fx = 0; fx < this.cols; fx++) {
+        fila += occ[fy * this.cols + fx];
+        this.sat[(fy + 1) * w + fx + 1] = this.sat[fy * w + fx + 1] + fila;
+      }
+    }
+  }
+
+  ocupado(c: Caja): number {
+    const w = this.cols + 1;
+    const x0 = clamp(Math.floor(c.x / CELDA), 0, this.cols);
+    const y0 = clamp(Math.floor(c.y / CELDA), 0, this.filas);
+    const x1 = clamp(Math.ceil((c.x + c.w) / CELDA), 0, this.cols);
+    const y1 = clamp(Math.ceil((c.y + c.h) / CELDA), 0, this.filas);
+    return this.sat[y1 * w + x1] - this.sat[y0 * w + x1] - this.sat[y1 * w + x0] + this.sat[y0 * w + x0];
+  }
+}
+
+type Motivo = 'seccion' | 'bienvenida' | 'deriva' | 'obstaculo' | 'hero';
+
+const PESOS: Record<Motivo, { ancla: number; cont: number; dir: number; lado: number }> = {
+  seccion: { ancla: 4, cont: 0.6, dir: 0.3, lado: 0.2 },
+  bienvenida: { ancla: 3, cont: 0.1, dir: 0, lado: 0 },
+  deriva: { ancla: 0.8, cont: 1.4, dir: 1.2, lado: 0.4 },
+  obstaculo: { ancla: 0.4, cont: 3, dir: 0.3, lado: 0.3 },
+  hero: { ancla: 0, cont: 2, dir: 0, lado: 0 },
+};
+
+interface Plan {
+  robot: Caja;
+  lado: Lado | null;
+}
+
+function planificar(o: {
+  rejilla: Rejilla;
+  techo: number;
+  rw: number;
+  rh: number;
+  bw: number;
+  bh: number;
+  actual: { x: number; y: number };
+  ancla: Caja | null;
+  dir: number;
+  motivo: Motivo;
+}): Plan | null {
+  const vw = anchoVp();
+  const vh = altoVp();
+  const p = PESOS[o.motivo];
+  const minX = 6;
+  const maxX = vw - 6;
+  const minY = o.techo + 6;
+  const maxY = vh - 6;
+  const ladoActualIzq = o.actual.x < vw / 2;
+  let mejor: Plan | null = null;
+  let mejorCoste = Infinity;
+
+  for (let y = minY; y + o.rh <= maxY; y += 10) {
+    for (let x = minX; x + o.rw <= maxX; x += 10) {
+      const r = { x, y, w: o.rw, h: o.rh };
+      if (o.rejilla.ocupado(r)) continue;
+      const cx = x + o.rw / 2;
+      const cy = y + o.rh / 2;
+      let coste = (p.cont * Math.hypot(cx - o.actual.x, cy - o.actual.y)) / vh;
+      if (o.ancla) coste += (p.ancla * distCajas(r, o.ancla)) / vh;
+      // Con doc-anclaje el robot se va con la página: si se baja, conviene
+      // posarlo en la parte de abajo para que dure más antes de salirse.
+      if (o.dir > 0) coste += p.dir * (1 - cy / vh);
+      else if (o.dir < 0) coste += p.dir * (cy / vh);
+      if (cx < vw / 2 !== ladoActualIzq) coste += p.lado;
+      if (coste >= mejorCoste) continue;
+      if (!o.bw) {
+        mejor = { robot: r, lado: null };
+        mejorCoste = coste;
+        continue;
+      }
+      for (const lado of LADOS) {
+        const b = cajaBurbuja(r, o.bw, o.bh, lado);
+        if (b.x < minX || b.y < minY || b.x + b.w > maxX || b.y + b.h > maxY) continue;
+        if (o.rejilla.ocupado(b)) continue;
+        const c = coste + (lado.startsWith('abajo') ? 0.05 : 0);
+        if (c < mejorCoste) {
+          mejorCoste = c;
+          mejor = { robot: r, lado };
+        }
+      }
+    }
+  }
+  return mejor;
+}
+
+// ----------------------------------------------------------------- la letra
+
+// Medidas de la tinta de la D dentro de su caja, sin transformar. La caja del
+// span no es la letra: con leading-none su borde de arriba queda muy por
+// encima del trazo, y el tracking deja espacio a la derecha.
+interface Glifo {
+  tintaIzq: number;
+  tintaDer: number;
+  techoCap: number;
+  altoCap: number;
+}
+
+function medirGlifo(d: HTMLElement): Glifo | null {
+  const cs = getComputedStyle(d);
+  const ctx = document.createElement('canvas').getContext('2d');
+  if (!ctx) return null;
+  const tamFuente = parseFloat(cs.fontSize);
+  ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  const m = ctx.measureText(d.textContent || 'D');
+  const alturaLinea = cs.lineHeight === 'normal' ? tamFuente * 1.2 : parseFloat(cs.lineHeight);
+  const asc = m.fontBoundingBoxAscent || tamFuente * 0.9;
+  const desc = m.fontBoundingBoxDescent || tamFuente * 0.25;
+  const base = (alturaLinea - (asc + desc)) / 2 + asc;
+  const cap = m.actualBoundingBoxAscent || tamFuente * 0.7;
+  return { tintaIzq: -m.actualBoundingBoxLeft, tintaDer: m.actualBoundingBoxRight, techoCap: base - cap, altoCap: cap };
+}
+
+// Punto de asiento sobre el trazo superior de la D, en pantalla. Se calcula a
+// mano en vez de con getBoundingClientRect de la D porque esta va inclinada
+// (su caja envolvente ya no es la letra) y su padre escala durante el split.
+function asientoEnPantalla(d: HTMLElement, dal: HTMLElement, g: Glifo, inclinacion: number) {
+  const rDal = dal.getBoundingClientRect();
+  const escala = dal.offsetWidth ? rDal.width / dal.offsetWidth : 1;
+  // El padre lleva will-change:transform, que en Chrome lo convierte en el
+  // offsetParent de la D; en otros motores lo es un ancestro común.
+  const propio = d.offsetParent === dal;
+  const lx = propio ? d.offsetLeft : d.offsetLeft - dal.offsetLeft;
+  const ly = propio ? d.offsetTop : d.offsetTop - dal.offsetTop;
+  const sx = g.tintaIzq + (g.tintaDer - g.tintaIzq) * 0.46;
+  const sy = g.techoCap;
+  const px = d.offsetWidth / 2;
+  const py = d.offsetHeight;
+  const a = (inclinacion * Math.PI) / 180;
+  const rx = px + (sx - px) * Math.cos(a) - (sy - py) * Math.sin(a);
+  const ry = py + (sx - px) * Math.sin(a) + (sy - py) * Math.cos(a);
+  return { x: rDal.left + (lx + rx) * escala, y: rDal.top + (ly + ry) * escala };
+}
+
 function progresoHero(hero: HTMLElement): number {
   const rect = hero.getBoundingClientRect();
-  const total = hero.offsetHeight - window.innerHeight;
-  return total > 0 ? Math.max(0, Math.min(1, -rect.top / total)) : 0;
+  const total = hero.offsetHeight - altoVp();
+  return total > 0 ? clamp(-rect.top / total, 0, 1) : 0;
 }
 
-function clamp(n: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, n));
+function anclaDe(el: Element | null): Caja | null {
+  const h = el?.querySelector('h1, h2, h3');
+  if (!h) return null;
+  const r = document.createRange();
+  r.selectNodeContents(h);
+  let caja: Caja | null = null;
+  const rects = r.getClientRects();
+  for (let i = 0; i < rects.length; i++) caja = unir(aCaja(rects[i]), caja);
+  if (!caja || caja.y + caja.h < 0 || caja.y > altoVp()) return null;
+  return caja;
 }
 
-// Tamaño real del botón por fase -- tiene que ser el mismo número que el
-// className de más abajo, porque el bucle físico calcula posiciones (p.ej.
-// "centrado sobre la D") a partir de estas medidas.
-const GRANDE_W = 70;
-const GRANDE_H = 92;
-const VOLANDO_W = 62;
-const VOLANDO_H = 80;
+// ---------------------------------------------------------------- dibujo
 
-// Cuánto se hunden las piernas dentro de la letra al sentarse -- sin esto
-// el robot queda flotando justo encima de la D en vez de apoyado en ella.
-const SIT_OVERLAP = 22;
+// Piezas del cuerpo, cada una dibujada desde su articulación hacia abajo:
+// el bucle las gira con transform en la articulación.
+const BRAZO =
+  'M-4.6,-1 C-4.6,-4 4.6,-4 4.6,-1 L4.2,17 C7.2,18 8.2,22.5 6.2,25.6 C4.2,28.6 -4.2,28.6 -6.2,25.6 C-8.2,22.5 -7.2,18 -4.2,17 Z';
+const MUSLO = 'M-5.5,0 C-5.5,-3.2 5.5,-3.2 5.5,0 L5,14 C5,17.2 -5,17.2 -5,14 Z';
+const ESPINILLA =
+  'M-4.6,0 L-4.4,13 C-6.8,14 -7.4,18.6 -5.6,20.2 C-3,21.8 3,21.8 5.6,20.2 C7.4,18.6 6.8,14 4.4,13 L4.6,0 C4.6,-2.6 -4.6,-2.6 -4.6,0 Z';
+const LARGO_MUSLO = 14;
+const CADERA_I = { x: 41, y: 88 };
+const CADERA_D = { x: 59, y: 88 };
+const HOMBRO_I = { x: 31, y: 66 };
+const HOMBRO_D = { x: 69, y: 66 };
 
-// Posición (top-left del botón) para sentarse centrado en la D, con las
-// piernas metidas en el trazo de la letra.
-function posSentadaEnD(dRect: DOMRect) {
-  return {
-    left: dRect.left + dRect.width / 2 - GRANDE_W / 2,
-    top: dRect.top - GRANDE_H + SIT_OVERLAP,
-  };
+const TRAZO = { stroke: '#03131F', strokeOpacity: 0.85, strokeWidth: 1.6, strokeLinejoin: 'round' as const };
+
+type Modo = 'espera' | 'entrando' | 'sentado' | 'cayendo' | 'volando' | 'flotando' | 'posado' | 'guardado' | 'anclado';
+type Sistema = 'pantalla' | 'documento';
+
+interface Cta {
+  label: string;
+  href: string;
+}
+
+interface Mensaje {
+  id: number;
+  texto: string;
+  cta: Cta | null;
+}
+
+interface MensajeMedido extends Mensaje {
+  alto: number;
+}
+
+interface BurbujaVisible extends MensajeMedido {
+  lado: Lado;
 }
 
 export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
-  const t = contenido(idioma).comun;
+  const tc = contenido(idioma);
 
-  const [isDesktop, setIsDesktop] = useState(false);
-  const [hasHero, setHasHero] = useState(false);
-  const [fase, setFase] = useState<Fase>('roaming');
-  const [chatOpen, setChatOpen] = useState(false);
-  const [showBubble, setShowBubble] = useState(false);
-  const [bubbleMsg, setBubbleMsg] = useState('');
-  const [bubbleCta, setBubbleCta] = useState<{ label: string; href: string } | null>(null);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const [tam, setTam] = useState({ w: 64, h: 83 });
+  const [anchoBurbuja, setAnchoBurbuja] = useState(264);
+  const [pendiente, setPendiente] = useState<Mensaje | null>(null);
+  const [burbuja, setBurbuja] = useState<BurbujaVisible | null>(null);
+  const [visible, setVisible] = useState(false);
 
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const flameRef = useRef<HTMLDivElement>(null);
-  const headRef = useRef<SVGGElement>(null);
-  const faseRef = useRef<Fase>('roaming');
-  const perchesRef = useRef<Perch[]>([]);
-  const activePerchRef = useRef<Perch | null>(null);
-  const faseAntesDeDockRef = useRef<Fase>('roaming');
+  const raizRef = useRef<HTMLDivElement>(null);
+  const cuerpoRef = useRef<HTMLDivElement>(null);
+  const medidorRef = useRef<HTMLDivElement>(null);
+  const musloIRef = useRef<SVGGElement>(null);
+  const musloDRef = useRef<SVGGElement>(null);
+  const espinillaIRef = useRef<SVGGElement>(null);
+  const espinillaDRef = useRef<SVGGElement>(null);
+  const rodillaIRef = useRef<SVGCircleElement>(null);
+  const rodillaDRef = useRef<SVGCircleElement>(null);
+  const brazoIRef = useRef<SVGGElement>(null);
+  const brazoDRef = useRef<SVGGElement>(null);
+  const cabezaRef = useRef<SVGGElement>(null);
+  const antenaRef = useRef<SVGGElement>(null);
+  const ojosRef = useRef<SVGGElement>(null);
+  const llamaRef = useRef<SVGGElement>(null);
+
+  const medidoRef = useRef<MensajeMedido | null>(null);
+  const cerradaRef = useRef(false);
+  const chatRef = useRef(false);
+  const bienvenidaIdRef = useRef(-1);
 
   useEffect(() => {
-    faseRef.current = fase;
-  }, [fase]);
+    if (!pendiente || !medidorRef.current) return;
+    medidoRef.current = { ...pendiente, alto: medidorRef.current.offsetHeight };
+  }, [pendiente, anchoBurbuja]);
 
-  // Repinta la cara de la burbuja nativa en cuanto el widget la monta.
+  // La burbuja nativa queda invisible pero en el DOM (el panel depende de
+  // ella). Se reafirma sin parar: el widget re-impone su estilo por su cuenta.
   useEffect(() => {
-    let cancelado = false;
-    const intentar = () => {
-      const boton = burbujaNativa();
-      if (!boton || boton.dataset.iconoDalsat === 'robot') return false;
-      boton.innerHTML = ICONO_ROBOT;
-      boton.dataset.iconoDalsat = 'robot';
-      return true;
-    };
-    const reintento = setInterval(() => {
-      if (cancelado || intentar()) clearInterval(reintento);
-    }, 400);
-    const rendicion = setTimeout(() => clearInterval(reintento), 20000);
-    return () => {
-      cancelado = true;
-      clearInterval(reintento);
-      clearTimeout(rendicion);
-    };
-  }, []);
-
-  // Escritorio = vuela. Móvil = se queda la burbuja nativa tal cual.
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 768px)');
-    const aplicar = () => setIsDesktop(mq.matches);
-    aplicar();
-    mq.addEventListener('change', aplicar);
-    return () => mq.removeEventListener('change', aplicar);
-  }, []);
-
-  // Oculta (opacidad, no display) la burbuja nativa mientras el robot vuela.
-  useEffect(() => {
-    const aplicarVisibilidad = () => {
+    const ocultar = () => {
       const boton = burbujaNativa();
       if (!boton) return;
-      // Se reafirma sin parar (no solo una vez): el propio widget de
-      // terceros puede re-imponer su estilo por su cuenta -- se vio volver
-      // visible la burbuja nativa después de fijarle opacity:0 una sola vez.
-      boton.style.opacity = isDesktop ? '0' : '';
-      boton.style.pointerEvents = isDesktop ? 'none' : '';
+      boton.style.opacity = '0';
+      boton.style.pointerEvents = 'none';
     };
-    aplicarVisibilidad();
-    const reintento = setInterval(aplicarVisibilidad, 400);
-    return () => clearInterval(reintento);
-  }, [isDesktop]);
-
-  // Detecta el hero (home) y las preferencias de movimiento, y recoge los
-  // puntos de agarre marcados en la página.
-  useEffect(() => {
-    setHasHero(!!document.getElementById('hero'));
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setReducedMotion(true);
-    }
-    const nodos = Array.from(document.querySelectorAll<HTMLElement>('[data-mascot-perch]'));
-    perchesRef.current = nodos.map((el) => ({
-      el,
-      msg: el.dataset.mascotMsg || '',
-      cta: el.dataset.mascotCta,
-      ctaHref: el.dataset.mascotCtaHref,
-    }));
+    ocultar();
+    const id = setInterval(ocultar, 400);
+    return () => clearInterval(id);
   }, []);
 
-  // Fase inicial: sentada en la D si hay hero y hay movimiento; si no, directa
-  // a roaming (sin la coreografía de caída, que no pega sin el split).
-  //
-  // Se decide UNA sola vez (guardado en un ref): este efecto puede volver a
-  // ejecutarse -- p.ej. el doble-invoke de efectos en desarrollo, o cualquier
-  // recálculo tardío de isDesktop/hasHero -- y sin este guardado repetiría
-  // `setFase`, devolviendo el robot a 'roaming' después de que ya hubiera
-  // arrancado la caída o el scroll llevara un rato.
-  const faseInicialDecididaRef = useRef(false);
   useEffect(() => {
-    if (!isDesktop || faseInicialDecididaRef.current) return;
-    faseInicialDecididaRef.current = true;
-    setFase(hasHero ? 'perchada-d' : 'roaming');
-  }, [isDesktop, hasHero]);
-
-  // Bocadillo de bienvenida: sale a los pocos segundos de cargar, una sola
-  // vez, sin importar en qué fase esté el robot (sentado, roaming, lo que
-  // sea). Si ya se vio en esta sesión (sessionStorage), no vuelve a salir.
-  const bienvenidaMostradaRef = useRef(false);
-  useEffect(() => {
-    if (!isDesktop || bienvenidaMostradaRef.current) return;
-
-    let vistoYa = false;
-    try {
-      vistoYa = window.sessionStorage.getItem(CLAVE_VISTO) === 'visto';
-    } catch {
-      // Sin almacenamiento: se enseña igual, sin memoria entre páginas.
-    }
-    if (vistoYa) return;
-
-    bienvenidaMostradaRef.current = true;
-    const aparecer = setTimeout(() => {
-      // Si en estos 500ms ya se agarró a un punto de la web (scroll rápido,
-      // o la página no tiene hero y arranca directa en roaming con perch),
-      // ese mensaje manda: la bienvenida no lo pisa por detrás.
-      if (activePerchRef.current) return;
-      setBubbleMsg(t.avisoChat);
-      setBubbleCta(null);
-      setShowBubble(true);
+    let observador: MutationObserver | null = null;
+    const enganchar = () => {
+      const raiz = raizChat();
+      if (!raiz) return false;
+      const sync = () => {
+        chatRef.current = raiz.classList.contains('open');
+      };
+      sync();
+      observador = new MutationObserver(sync);
+      observador.observe(raiz, { attributes: true, attributeFilter: ['class'] });
+      return true;
+    };
+    if (enganchar()) return () => observador?.disconnect();
+    const id = setInterval(() => {
+      if (enganchar()) clearInterval(id);
     }, 500);
-    return () => clearTimeout(aparecer);
-  }, [isDesktop, t.avisoChat]);
-
-  // El widget avisa de que se abrió/cerró cambiando la clase del contenedor.
-  useEffect(() => {
-    const raiz = raizChat();
-    if (!raiz) return;
-    const sync = () => setChatOpen(raiz.classList.contains('open'));
-    sync();
-    const observador = new MutationObserver(sync);
-    observador.observe(raiz, { attributes: true, attributeFilter: ['class'] });
-    return () => observador.disconnect();
+    return () => {
+      clearInterval(id);
+      observador?.disconnect();
+    };
   }, []);
 
-  // Aparca/recupera la fase al abrir/cerrar el chat.
   useEffect(() => {
-    if (chatOpen) {
-      if (faseRef.current !== 'anclada') faseAntesDeDockRef.current = faseRef.current;
-      setFase('anclada');
-      setShowBubble(false);
-    } else if (faseRef.current === 'anclada') {
-      setFase(faseAntesDeDockRef.current);
-    }
-  }, [chatOpen]);
+    if (!raizRef.current || !cuerpoRef.current) return;
+    const raiz: HTMLDivElement = raizRef.current;
+    const cuerpo: HTMLDivElement = cuerpoRef.current;
 
-  function ocultarBurbuja() {
-    setShowBubble(false);
-    try {
-      window.sessionStorage.setItem(CLAVE_VISTO, 'visto');
-    } catch {
-      // Aceptable: volverá a salir en la siguiente página.
+    const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hero = document.getElementById('hero');
+    const letraD = document.querySelector<HTMLElement>('[data-mascot-anchor="hero-d"]');
+    const dal = letraD?.parentElement ?? null;
+    const perchas = Array.from(document.querySelectorAll<HTMLElement>('[data-mascot-perch]'));
+    const excluir = () => [raiz, medidorRef.current, raizChat()].filter(Boolean) as Element[];
+
+    let glifo: Glifo | null = null;
+    let dLiberada = false;
+    let modo: Modo = 'espera';
+    let sistema: Sistema = 'pantalla';
+    let x = -9999;
+    let y = -9999;
+    let rw = 64;
+    let rh = 83;
+    let bw = 264;
+    let posicionPintada = '';
+
+    let vuelo: {
+      x0: number;
+      y0: number;
+      x1: number;
+      y1: number;
+      t0: number;
+      dur: number;
+      arco: number;
+      giro: number;
+      fin: (ahora: number) => void;
+    } | null = null;
+
+    let vy = 0;
+    let vx = 0;
+    let velX = 0;
+    let caidaDesde = 0;
+    let tumbo = 0;
+    let giro = 0;
+    let banco = 0;
+    let aplastadoDesde = -1e9;
+    let dTilt = 0;
+    let dTiltVel = 0;
+    let mezclaSentado = 0;
+    let brazoI = 12;
+    let brazoD = -12;
+    let cabeza = 0;
+    let antena = 0;
+    let antenaVel = 0;
+    let empuje = 0;
+    let proximoParpadeo = performance.now() + 2500;
+    let parpadeoDesde = -1e9;
+    let anclando = false;
+    let escondido = false;
+
+    function mostrarRobot() {
+      if (!escondido) return;
+      escondido = false;
+      setVisible(true);
     }
-  }
+
+    let mensajeActual: MensajeMedido | null = null;
+    let burbujaActual: BurbujaVisible | null = null;
+    let burbujaDesde = 0;
+    let ocultarEn = Infinity;
+    let esperando: { id: number; tipo: 'bienvenida-sentado' | 'bienvenida' | 'seccion'; percha?: HTMLElement } | null = null;
+    let idMsg = 0;
+
+    let perchaActiva: HTMLElement | null = null;
+    let obstFijos: Caja[] = [];
+    let ultimoPlan = -1e9;
+    let ultimaRevision = 0;
+    let ultimosFijos = 0;
+    let ultimoScroll = window.scrollY;
+    let dirScroll = 1;
+    let redimensionado = false;
+    let ultimoFrame = performance.now();
+    let rafId = 0;
+
+    const techo = () => Math.max(0, document.querySelector('header')?.getBoundingClientRect().bottom ?? 0);
+    const calcBw = () => Math.min(264, anchoVp() - 24);
+    const tamSentado = () => clamp((glifo?.altoCap ?? 90) * 0.95, 48, 100);
+    const tamVuelo = () => clamp(anchoVp() * 0.052, 50, 82);
+    const TAM_GUARDADO = 54;
+
+    function fijarTam(h: number) {
+      const nh = Math.round(h);
+      if (nh === rh) return;
+      rh = nh;
+      rw = Math.round(nh * ASPECTO);
+      setTam({ w: rw, h: rh });
+    }
+
+    function cajaRobotPantalla(): Caja {
+      const ox = sistema === 'documento' ? window.scrollX : 0;
+      const oy = sistema === 'documento' ? window.scrollY : 0;
+      return { x: x - ox, y: y - oy, w: rw, h: rh };
+    }
+
+    function cajaTotalPantalla(): Caja {
+      const r = cajaRobotPantalla();
+      return burbujaActual ? unir(r, cajaBurbuja(r, bw, burbujaActual.alto, burbujaActual.lado)) : r;
+    }
+
+    function pedir(texto: string, cta: Cta | null, tipo: 'bienvenida-sentado' | 'bienvenida' | 'seccion', percha?: HTMLElement) {
+      idMsg += 1;
+      esperando = { id: idMsg, tipo, percha };
+      if (tipo !== 'seccion') bienvenidaIdRef.current = idMsg;
+      setPendiente({ id: idMsg, texto, cta });
+    }
+
+    function mostrarBurbuja(m: MensajeMedido, lado: Lado, ahora: number, dura: number) {
+      burbujaActual = { ...m, lado };
+      burbujaDesde = ahora;
+      if (mensajeActual?.id !== m.id) ocultarEn = ahora + dura;
+      mensajeActual = m;
+      setBurbuja(burbujaActual);
+    }
+
+    function esconderBurbuja(olvidar: boolean) {
+      if (burbujaActual) {
+        burbujaActual = null;
+        setBurbuja(null);
+      }
+      if (olvidar) mensajeActual = null;
+    }
+
+    function pasarA(nuevo: Sistema) {
+      if (nuevo === sistema) return;
+      const signo = nuevo === 'documento' ? 1 : -1;
+      x += signo * window.scrollX;
+      y += signo * window.scrollY;
+      sistema = nuevo;
+    }
+
+    function volarA(nx: number, ny: number, destino: Sistema, fin: (ahora: number) => void, ahora: number) {
+      pasarA(destino);
+      esconderBurbuja(false);
+      const dist = Math.hypot(nx - x, ny - y);
+      if (reducido || dist < 2) {
+        x = nx;
+        y = ny;
+        vuelo = null;
+        fin(ahora);
+        return;
+      }
+      modo = 'volando';
+      vuelo = {
+        x0: x,
+        y0: y,
+        x1: nx,
+        y1: ny,
+        t0: ahora,
+        dur: clamp(380 + dist * 0.8, 450, 1300),
+        arco: Math.min(90, dist * 0.22),
+        // Un tirabuzón solo si cruza de verdad la pantalla, repartido a lo
+        // largo del vuelo: nunca un giro seco al llegar.
+        giro: Math.abs(nx - x) > anchoVp() * 0.45 ? Math.sign(nx - x) : 0,
+        fin,
+      };
+    }
+
+    function aplastar(ahora: number) {
+      aplastadoDesde = ahora;
+    }
+
+    function buscarHueco(motivo: Motivo, alto: number, ancla: Caja | null): Plan | null {
+      const { todos, fijos } = recogerObstaculos(excluir());
+      obstFijos = fijos;
+      const rejilla = new Rejilla(anchoVp(), altoVp(), todos);
+      const r = cajaRobotPantalla();
+      const actual = x < -9000 ? { x: anchoVp() / 2, y: altoVp() / 3 } : { x: r.x + r.w / 2, y: r.y + r.h / 2 };
+      return planificar({ rejilla, techo: techo(), rw, rh, bw: alto ? bw : 0, bh: alto, actual, ancla, dir: dirScroll, motivo });
+    }
+
+    // Mueve el robot al mejor hueco libre. Si con bocadillo no cabe en
+    // ningún sitio, prueba sin él; si ni así, se guarda en una esquina.
+    function irAHueco(motivo: Motivo, ancla: Caja | null, msg: MensajeMedido | null, ahora: number, dura = 9000) {
+      ultimoPlan = ahora;
+      fijarTam(tamVuelo());
+      let plan = msg ? buscarHueco(motivo, msg.alto, ancla) : null;
+      const conMsg = !!plan;
+      if (!plan) plan = buscarHueco(motivo, 0, ancla);
+      if (!plan) {
+        guardar(ahora);
+        return;
+      }
+      mostrarRobot();
+      const destinoX = plan.robot.x + window.scrollX;
+      const destinoY = plan.robot.y + window.scrollY;
+      const lado = plan.lado;
+      const m = conMsg ? msg : null;
+      volarA(
+        destinoX,
+        destinoY,
+        'documento',
+        (t) => {
+          modo = 'posado';
+          aplastar(t);
+          if (m && lado) mostrarBurbuja(m, lado, t, dura);
+        },
+        ahora,
+      );
+    }
+
+    // Sin hueco para el robot normal: prueba más pequeño, primero en las
+    // esquinas y luego en cualquier sitio. Si ni así cabe sin tapar nada, se
+    // esconde hasta que lo haya (lo reintenta el bucle cada poco).
+    function guardar(ahora: number) {
+      ultimoPlan = ahora;
+      fijarTam(Math.min(TAM_GUARDADO, tamVuelo() * 0.85));
+      esconderBurbuja(true);
+      const vw = anchoVp();
+      const vh = altoVp();
+      const { todos } = recogerObstaculos(excluir());
+      const rejilla = new Rejilla(vw, vh, todos);
+      const m = 14;
+      const t = techo();
+      const esquinas = [
+        { x: vw - rw - m, y: vh - rh - m },
+        { x: m, y: vh - rh - m },
+        { x: vw - rw - m, y: t + m },
+        { x: m, y: t + m },
+      ];
+      let libre: { x: number; y: number } | null = esquinas.find((e) => !rejilla.ocupado({ ...e, w: rw, h: rh })) ?? null;
+      if (!libre) {
+        const r = cajaRobotPantalla();
+        const plan = planificar({
+          rejilla,
+          techo: t,
+          rw,
+          rh,
+          bw: 0,
+          bh: 0,
+          actual: { x: r.x + r.w / 2, y: r.y + r.h / 2 },
+          ancla: null,
+          dir: dirScroll,
+          motivo: 'obstaculo',
+        });
+        libre = plan ? { x: plan.robot.x, y: plan.robot.y } : null;
+      }
+      if (!libre) {
+        escondido = true;
+        setVisible(false);
+        pasarA('pantalla');
+        vuelo = null;
+        modo = 'guardado';
+        return;
+      }
+      const destino = libre;
+      mostrarRobot();
+      volarA(destino.x, destino.y, 'pantalla', () => {
+        modo = 'guardado';
+      }, ahora);
+    }
+
+    // Donde pinta el widget su burbuja (right:20 bottom:20, 56px): pulsar
+    // ahí con el chat abierto lo cierra, como haría la burbuja original.
+    function posicionNativa() {
+      return { x: anchoVp() - 48 - rw / 2, y: altoVp() - 48 - rh / 2 };
+    }
+
+    function anclar(ahora: number) {
+      anclando = true;
+      mostrarRobot();
+      fijarTam(TAM_GUARDADO);
+      esconderBurbuja(true);
+      const p = posicionNativa();
+      volarA(p.x, p.y, 'pantalla', () => {
+        modo = 'anclado';
+      }, ahora);
+    }
+
+    // Lado del bocadillo con el robot quieto (sentado en la D): el que no
+    // tape nada; si ninguno está libre, el que menos, pero siempre dentro.
+    function ladoFijo(r: Caja, alto: number): Lado | null {
+      const { todos } = recogerObstaculos(excluir());
+      const rejilla = new Rejilla(anchoVp(), altoVp(), todos);
+      const t = techo();
+      let mejor: Lado | null = null;
+      let menos = Infinity;
+      for (const lado of LADOS) {
+        const b = cajaBurbuja(r, bw, alto, lado);
+        if (b.x < 6 || b.y < t + 6 || b.x + b.w > anchoVp() - 6 || b.y + b.h > altoVp() - 6) continue;
+        const o = rejilla.ocupado(b);
+        if (o < menos) {
+          menos = o;
+          mejor = lado;
+        }
+      }
+      return mejor;
+    }
+
+    function liberarD() {
+      if (!letraD || dLiberada) return;
+      // La animación de entrada (fill forwards) es dueña del transform
+      // mientras exista; al quitarla, la regla base de .hero-letter es
+      // opacity:0, así que el estado final se fija a mano antes.
+      letraD.style.opacity = '1';
+      letraD.style.filter = 'none';
+      letraD.style.animation = 'none';
+      letraD.style.transformOrigin = 'bottom center';
+      dLiberada = true;
+    }
+
+    function asiento() {
+      return letraD && dal && glifo ? asientoEnPantalla(letraD, dal, glifo, dTilt) : null;
+    }
+
+    function perchaEnVista(): HTMLElement | null {
+      const vh = altoVp();
+      let elegida: HTMLElement | null = null;
+      for (const p of perchas) {
+        const r = p.getBoundingClientRect();
+        if (r.top <= vh * 0.5 && r.bottom >= vh * 0.35) elegida = p;
+      }
+      return elegida;
+    }
+
+    function mensajeDe(p: HTMLElement): { texto: string; cta: Cta | null } | null {
+      const id = p.dataset.mascotPerch || '';
+      const texto = tc.mascota.secciones[id];
+      if (!texto) return null;
+      const cta = id === 'servicios' ? { label: tc.mascota.ctaServicios, href: ruta('/contacto', idioma) } : null;
+      return { texto, cta };
+    }
+
+    const heroFijado = () => !!hero && hero.offsetHeight > altoVp() * 1.2;
+
+    function caer(ahora: number) {
+      modo = 'cayendo';
+      caidaDesde = ahora;
+      esconderBurbuja(true);
+      pasarA('pantalla');
+      vx = -0.12;
+      vy = -0.28;
+      if (reducido) caidaDesde = ahora - 10000;
+    }
+
+    function trasCaida(ahora: number) {
+      fijarTam(tamVuelo());
+      if (heroFijado() && hero && hero.getBoundingClientRect().bottom > altoVp() + 2) {
+        const plan = buscarHueco('hero', 0, null);
+        if (plan) {
+          volarA(plan.robot.x, plan.robot.y, 'pantalla', (t) => {
+            modo = 'flotando';
+            aplastar(t);
+          }, ahora);
+          return;
+        }
+      }
+      irAHueco('deriva', null, null, ahora);
+    }
+
+    function arrancar() {
+      bw = calcBw();
+      setAnchoBurbuja(bw);
+      if (letraD) glifo = medirGlifo(letraD);
+      const s = asiento();
+      const sentable =
+        !!s && !!hero && progresoHero(hero) < 0.1 && s.y > techo() + 40 && s.y < altoVp() - 20;
+      const ahora = performance.now();
+      if (sentable && s) {
+        liberarD();
+        fijarTam(tamSentado());
+        sistema = 'pantalla';
+        x = s.x - (ASIENTO_X / VB_W) * rw;
+        y = s.y - (ASIENTO_Y / VB_H) * rh - (reducido ? 0 : 120);
+        vy = 0;
+        mezclaSentado = 0;
+        modo = reducido ? 'sentado' : 'entrando';
+        if (reducido && !yaVisto()) pedir(tc.comun.avisoChat, null, 'bienvenida-sentado');
+      } else {
+        liberarD();
+        fijarTam(tamVuelo());
+        sistema = 'documento';
+        x = window.scrollX + anchoVp() + 20;
+        y = window.scrollY + altoVp() * 0.3;
+        modo = 'posado';
+        if (!yaVisto()) pedir(tc.comun.avisoChat, null, 'bienvenida');
+        else irAHueco('deriva', anclaDe(document.querySelector('main')), null, ahora);
+      }
+      setVisible(true);
+      // Margen para que el saludo pendiente se mida antes de replanificar.
+      ultimoPlan = ahora;
+      ultimoFrame = ahora;
+      rafId = requestAnimationFrame(bucle);
+    }
+
+    function pose(ahora: number, dt: number) {
+      const k = dt / 16.7;
+      const sentado = modo === 'sentado';
+      mezclaSentado += ((sentado ? 1 : 0) - mezclaSentado) * Math.min(1, 0.18 * k);
+      const s = mezclaSentado;
+      const vaiven = reducido ? 0 : Math.sin(ahora / 260);
+      const cuelgue = reducido ? 0 : Math.sin(ahora / 700);
+      const estela = clamp(-velX * 30, -28, 28);
+
+      // Piernas: sentado, el muslo viene hacia quien mira (escalado corto) y
+      // la espinilla cuelga por delante de la letra, balanceándose.
+      const escMuslo = lerp(1, 0.3, s);
+      const piernas: [SVGGElement | null, SVGGElement | null, SVGCircleElement | null, { x: number; y: number }, number][] = [
+        [musloIRef.current, espinillaIRef.current, rodillaIRef.current, CADERA_I, 1],
+        [musloDRef.current, espinillaDRef.current, rodillaDRef.current, CADERA_D, -1],
+      ];
+      for (const [muslo, espinilla, rodilla, cadera, lado] of piernas) {
+        const aCadera = lerp(estela + lado * (4 + 3 * cuelgue), lado * 12, s);
+        const rad = (aCadera * Math.PI) / 180;
+        const kx = cadera.x - LARGO_MUSLO * escMuslo * Math.sin(rad);
+        const ky = cadera.y + LARGO_MUSLO * escMuslo * Math.cos(rad);
+        const fase = lado > 0 ? vaiven : -vaiven;
+        const aRodilla = lerp(aCadera * 1.25, lado * 4 + 3 * fase, s);
+        const escEspinilla = lerp(1, 0.9 + 0.1 * fase, s);
+        muslo?.setAttribute('transform', `translate(${cadera.x} ${cadera.y}) rotate(${aCadera}) scale(1 ${escMuslo})`);
+        espinilla?.setAttribute('transform', `translate(${kx} ${ky}) rotate(${aRodilla}) scale(1 ${escEspinilla})`);
+        rodilla?.setAttribute('cx', String(kx));
+        rodilla?.setAttribute('cy', String(ky));
+        rodilla?.setAttribute('r', String(lerp(3.4, 5.6, s)));
+      }
+
+      // Brazos: saluda con la mano mientras dura la bienvenida.
+      const saludando =
+        !!burbujaActual && burbujaActual.id === bienvenidaIdRef.current && ahora - burbujaDesde < 2800;
+      let objI: number;
+      let objD: number;
+      if (modo === 'volando' || modo === 'cayendo') {
+        objI = 42 - estela * 0.5;
+        objD = -42 - estela * 0.5;
+      } else if (s > 0.5) {
+        objI = 10;
+        objD = -10;
+      } else {
+        objI = 16 + 3 * cuelgue;
+        objD = -16 - 3 * cuelgue;
+      }
+      if (saludando) objD = reducido ? -140 : -140 + 18 * Math.sin(ahora / 120);
+      brazoI += (objI - brazoI) * Math.min(1, 0.2 * k);
+      brazoD += (objD - brazoD) * Math.min(1, 0.2 * k);
+      brazoIRef.current?.setAttribute('transform', `translate(${HOMBRO_I.x} ${HOMBRO_I.y}) rotate(${brazoI})`);
+      brazoDRef.current?.setAttribute('transform', `translate(${HOMBRO_D.x} ${HOMBRO_D.y}) rotate(${brazoD})`);
+
+      // Cabeza: mira hacia su bocadillo; la antena va con retraso y rebota.
+      let objCabeza = 0;
+      if (burbujaActual) objCabeza = burbujaActual.lado.endsWith('izq') ? -7 : 7;
+      objCabeza -= banco * 0.25;
+      cabeza += (objCabeza - cabeza) * Math.min(1, 0.1 * k);
+      cabezaRef.current?.setAttribute('transform', `rotate(${cabeza} 50 58)`);
+      const objAntena = reducido ? 0 : clamp(-velX * 40 - cabeza * 0.6, -35, 35);
+      antenaVel += (objAntena - antena) * 0.04 * k - antenaVel * 0.12 * k;
+      antena += antenaVel * k;
+      antenaRef.current?.setAttribute('transform', `rotate(${antena} 50 11)`);
+
+      ojosRef.current?.setAttribute('transform', `translate(0 34) scale(1 ${parpado(ahora)}) translate(0 -34)`);
+
+      const objEmpuje =
+        modo === 'volando' ? 1 : modo === 'posado' || modo === 'flotando' ? 0.4 : modo === 'guardado' || modo === 'anclado' ? 0.3 : 0;
+      empuje += (objEmpuje - empuje) * Math.min(1, 0.15 * k);
+      const parpadeoLlama = reducido ? 1 : 0.8 + 0.2 * Math.sin(ahora / 45);
+      llamaRef.current?.setAttribute(
+        'transform',
+        `translate(50 92) scale(${0.6 + empuje * 0.4} ${Math.max(0.001, empuje * parpadeoLlama * 1.2)})`,
+      );
+      llamaRef.current?.setAttribute('opacity', String(clamp(empuje * 1.4, 0, 1)));
+    }
+
+    function parpado(ahora: number) {
+      if (reducido) return 1;
+      if (ahora > proximoParpadeo) {
+        parpadeoDesde = ahora;
+        proximoParpadeo = ahora + 2400 + Math.random() * 3200;
+      }
+      const k = (ahora - parpadeoDesde) / 150;
+      return k >= 0 && k <= 1 ? 1 - 0.9 * Math.sin(Math.PI * k) : 1;
+    }
+
+    function pintar(ahora: number) {
+      const pos = sistema === 'pantalla' ? 'fixed' : 'absolute';
+      if (pos !== posicionPintada) {
+        raiz.style.position = pos;
+        posicionPintada = pos;
+      }
+      raiz.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+
+      const tAplastado = ahora - aplastadoDesde;
+      const a = reducido || tAplastado > 500 ? 0 : 0.16 * Math.exp(-tAplastado / 110) * Math.cos(tAplastado / 45);
+      const flota = !reducido && (modo === 'posado' || modo === 'flotando' || modo === 'guardado') ? Math.sin(ahora / 900) * 3 : 0;
+      const angulo = banco + giro + tumbo;
+      cuerpo.style.transform = `translate3d(0, ${flota}px, 0) rotate(${angulo}deg) scale(${1 + a * 0.6}, ${1 - a})`;
+    }
+
+    function bucle(ahora: number) {
+      const dt = clamp(ahora - ultimoFrame, 1, 64);
+      ultimoFrame = ahora;
+      const k = dt / 16.7;
+      const px = x;
+
+      const sy = window.scrollY;
+      if (sy !== ultimoScroll) dirScroll = sy > ultimoScroll ? 1 : -1;
+      ultimoScroll = sy;
+
+      if (redimensionado) {
+        redimensionado = false;
+        bw = calcBw();
+        setAnchoBurbuja(bw);
+        if (letraD) glifo = medirGlifo(letraD);
+        if (modo === 'sentado') fijarTam(tamSentado());
+        else if (modo === 'posado' || modo === 'guardado') irAHueco('deriva', anclaDe(perchaActiva), mensajeActual, ahora);
+      }
+
+      if (chatRef.current && !anclando) {
+        anclar(ahora);
+      } else if (!chatRef.current && anclando) {
+        anclando = false;
+        vuelo = null;
+        irAHueco('deriva', anclaDe(perchaActiva), null, ahora);
+      }
+
+      if (cerradaRef.current) {
+        cerradaRef.current = false;
+        esconderBurbuja(true);
+      }
+
+      // Mensaje ya medido: ahora sí se sabe cuánto ocupa el bocadillo.
+      const medido = medidoRef.current;
+      if (esperando && medido && medido.id === esperando.id) {
+        const tipo = esperando.tipo;
+        const percha = esperando.percha;
+        esperando = null;
+        if (tipo === 'bienvenida-sentado') {
+          if (modo === 'sentado') {
+            const lado = ladoFijo(cajaRobotPantalla(), medido.alto);
+            if (lado) mostrarBurbuja(medido, lado, ahora, Infinity);
+          }
+        } else if (tipo === 'bienvenida') {
+          irAHueco('bienvenida', anclaDe(document.querySelector('main')), medido, ahora, 12000);
+        } else if (modo === 'posado' || modo === 'guardado' || modo === 'volando') {
+          irAHueco('seccion', anclaDe(percha ?? null), medido, ahora);
+        }
+      }
+
+      if (vuelo) {
+        const t = clamp((ahora - vuelo.t0) / vuelo.dur, 0, 1);
+        const e = suave(t);
+        x = lerp(vuelo.x0, vuelo.x1, e);
+        y = lerp(vuelo.y0, vuelo.y1, e) - vuelo.arco * Math.sin(Math.PI * e);
+        giro = vuelo.giro ? vuelo.giro * 360 * suave(clamp((t - 0.2) / 0.6, 0, 1)) : 0;
+        tumbo *= Math.pow(0.9, k);
+        if (t >= 1) {
+          const fin = vuelo.fin;
+          vuelo = null;
+          giro = 0;
+          fin(ahora);
+        }
+      } else if (modo === 'entrando') {
+        const s = asiento();
+        if (s) {
+          const destinoY = s.y - (ASIENTO_Y / VB_H) * rh;
+          x = s.x - (ASIENTO_X / VB_W) * rw;
+          if (vy !== 0 || y < destinoY) {
+            vy += 0.0024 * dt;
+            y += vy * dt;
+            if (y >= destinoY) {
+              y = destinoY;
+              vy = 0;
+              modo = 'sentado';
+              aplastar(ahora);
+              dTiltVel = -0.35;
+              if (!yaVisto()) pedir(tc.comun.avisoChat, null, 'bienvenida-sentado');
+            }
+          }
+        }
+      } else if (modo === 'sentado') {
+        const s = asiento();
+        if (!s || !hero) {
+          caer(ahora);
+        } else {
+          x = s.x - (ASIENTO_X / VB_W) * rw;
+          y = s.y - (ASIENTO_Y / VB_H) * rh;
+          const p = progresoHero(hero);
+          if (p > 0.02 && burbujaActual) esconderBurbuja(true);
+          if (p >= 0.15 || s.y < techo() + rh * 0.75) caer(ahora);
+        }
+      } else if (modo === 'cayendo') {
+        vy += 0.0022 * dt;
+        x += vx * dt;
+        y += vy * dt;
+        tumbo += (reducido ? 0 : 0.22) * dt;
+        if (ahora - caidaDesde > 420) trasCaida(ahora);
+      } else if (modo === 'flotando') {
+        if (!hero || hero.getBoundingClientRect().bottom <= altoVp() + 2) {
+          pasarA('documento');
+          modo = 'posado';
+          ultimoPlan = -1e9;
+        }
+      } else if (modo === 'posado' || modo === 'guardado') {
+        const p = perchaEnVista();
+        if (p && p !== perchaActiva) {
+          perchaActiva = p;
+          const m = mensajeDe(p);
+          if (m) pedir(m.texto, m.cta, 'seccion', p);
+        }
+
+        if (ahora - ultimosFijos > 600) {
+          ultimosFijos = ahora;
+          obstFijos = recogerFijos(excluir());
+        }
+
+        if (modo === 'posado') {
+          if (burbujaActual && ahora > ocultarEn) esconderBurbuja(true);
+          const caja = cajaTotalPantalla();
+          const fuera =
+            caja.y < techo() + 2 ||
+            caja.y + caja.h > altoVp() - 2 ||
+            caja.x < 0 ||
+            caja.x + caja.w > anchoVp() ||
+            obstFijos.some((f) => cruzan(f, caja));
+          if (fuera && ahora - ultimoPlan > 250) {
+            irAHueco('deriva', anclaDe(perchaActiva), burbujaActual ? mensajeActual : null, ahora);
+          } else if (ahora - ultimaRevision > 1200 && ahora - ultimoPlan > 800) {
+            // Lo que hay debajo puede cambiar sin scroll (tarjetas que entran
+            // con animación, el banner de cookies): se revisa de vez en cuando.
+            ultimaRevision = ahora;
+            const { todos } = recogerObstaculos(excluir());
+            const rejilla = new Rejilla(anchoVp(), altoVp(), todos);
+            const r = cajaRobotPantalla();
+            const tapa =
+              rejilla.ocupado(r) > 0 ||
+              (!!burbujaActual && rejilla.ocupado(cajaBurbuja(r, bw, burbujaActual.alto, burbujaActual.lado)) > 0);
+            if (tapa) irAHueco('obstaculo', anclaDe(perchaActiva), burbujaActual ? mensajeActual : null, ahora);
+          }
+        } else if (!escondido && ahora - ultimoPlan > 250 && obstFijos.some((f) => cruzan(f, cajaRobotPantalla()))) {
+          guardar(ahora);
+        } else if (ahora - ultimoPlan > 1500) {
+          irAHueco('deriva', anclaDe(perchaActiva), null, ahora);
+        }
+      }
+
+      // Inclinación de la D: muelle hacia -4° mientras lleva el robot encima.
+      if (dLiberada && letraD) {
+        const objD = modo === 'sentado' ? -4 : 0;
+        dTiltVel += (objD - dTilt) * 0.02 * k - dTiltVel * 0.14 * k;
+        dTilt += reducido ? objD - dTilt : dTiltVel * k;
+        letraD.style.transform = Math.abs(dTilt) > 0.02 ? `rotate(${dTilt}deg)` : '';
+      }
+
+      velX = sistema === 'pantalla' || modo === 'volando' ? (x - px) / dt : 0;
+      const objBanco = modo === 'sentado' || modo === 'entrando' ? dTilt : reducido ? 0 : clamp(velX * 22, -22, 22);
+      banco += (objBanco - banco) * Math.min(1, 0.2 * k);
+      if (modo !== 'cayendo' && !vuelo) tumbo *= Math.pow(0.85, k);
+
+      pose(ahora, dt);
+      pintar(ahora);
+      rafId = requestAnimationFrame(bucle);
+    }
+
+    const alRedimensionar = () => {
+      redimensionado = true;
+    };
+    window.addEventListener('resize', alRedimensionar);
+    document.fonts?.addEventListener?.('loadingdone', alRedimensionar);
+
+    let cancelado = false;
+    (async () => {
+      try {
+        await document.fonts?.ready;
+      } catch {
+        // Sin API de fuentes: se mide con lo que haya.
+      }
+      if (letraD) {
+        // En una pestaña en segundo plano las animaciones no avanzan: sin el
+        // tope, el robot no arrancaría nunca.
+        await Promise.race([
+          Promise.all(letraD.getAnimations().map((a) => a.finished.catch(() => undefined))),
+          new Promise((r) => setTimeout(r, 2000)),
+        ]);
+      }
+      if (!cancelado) arrancar();
+    })();
+
+    return () => {
+      cancelado = true;
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', alRedimensionar);
+      document.fonts?.removeEventListener?.('loadingdone', alRedimensionar);
+      if (letraD) letraD.style.transform = '';
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idioma]);
 
   function alPulsar() {
-    ocultarBurbuja();
+    if (burbuja && burbuja.id === bienvenidaIdRef.current) marcarVisto();
+    cerradaRef.current = true;
     abrirChatReal();
   }
 
-  // Bucle físico único: sitúa el robot según la fase, banca con la
-  // velocidad y alarga la llama del propulsor. Todo imperativo sobre refs
-  // -- sin setState -- para no repintar React a 60fps.
-  //
-  // OJO: este efecto no depende de `fase` a propósito. Si se reiniciara en
-  // cada cambio de fase perdería currentLeft/currentTop y la caída desde la
-  // D se vería como un salto, no como una caída continua. En su lugar lee
-  // faseRef.current en cada frame y, si está anclado (chat abierto), sigue
-  // vivo pero sin tocar la posición, para retomarla igual al cerrar.
-  useEffect(() => {
-    if (!isDesktop) return;
+  function alCerrar() {
+    if (burbuja && burbuja.id === bienvenidaIdRef.current) marcarVisto();
+    cerradaRef.current = true;
+  }
 
-    const wrap = wrapRef.current;
-    const flame = flameRef.current;
-    const head = headRef.current;
-    if (!wrap) return;
+  const cajaB = burbuja ? cajaBurbuja({ x: 0, y: 0, w: tam.w, h: tam.h }, anchoBurbuja, burbuja.alto, burbuja.lado) : null;
 
-    // Con menos movimiento la fase inicial ya es 'roaming' (más abajo), así
-    // que este bucle no dibuja ninguna caída: solo sigue puntos de agarre y
-    // enseña los mensajes, sin inercia ni banca -- salta directo al sitio.
-    const heroEl = hasHero ? document.getElementById('hero') : null;
-    const dLetra = hasHero ? document.querySelector<HTMLElement>('[data-mascot-anchor="hero-d"]') : null;
-
-    // Posición de arranque: sobre la D si existe (coincide con la fase
-    // 'perchada-d'/'roaming' inicial), y solo si no hay D cae al borde
-    // derecho -- antes siempre arrancaba ahí, que es justo el "aparece
-    // pegado a la derecha" que se veía con reduced-motion (sin caída, sin
-    // scroll todavía, ningún perch elegido aún).
-    let rafId = 0;
-    let currentLeft: number;
-    let currentTop: number;
-    if (dLetra) {
-      const pos = posSentadaEnD(dLetra.getBoundingClientRect());
-      currentLeft = pos.left;
-      currentTop = pos.top;
+  let colaEstilo: CSSProperties = {};
+  let colaClase = '';
+  if (burbuja && cajaB) {
+    if (burbuja.lado.startsWith('arriba')) {
+      colaEstilo = { left: clamp(tam.w / 2 - cajaB.x - 6, 14, anchoBurbuja - 26), bottom: -7 };
+      colaClase = 'border-b border-r';
+    } else if (burbuja.lado.startsWith('abajo')) {
+      colaEstilo = { left: clamp(tam.w / 2 - cajaB.x - 6, 14, anchoBurbuja - 26), top: -7 };
+      colaClase = 'border-t border-l';
+    } else if (burbuja.lado === 'izq') {
+      colaEstilo = { right: -7, top: clamp(tam.h * 0.25, 12, burbuja.alto - 24) };
+      colaClase = 'border-t border-r';
     } else {
-      currentLeft = window.innerWidth - 90;
-      currentTop = window.innerHeight * 0.4;
+      colaEstilo = { left: -7, top: clamp(tam.h * 0.25, 12, burbuja.alto - 24) };
+      colaClase = 'border-b border-l';
     }
-    let currentBank = 0;
-    let currentHeadBank = 0;
-    let currentFlame = 0.35;
-    let currentDTilt = 0;
-    let lastScrollY = window.scrollY;
-    let lastTime = performance.now();
-    let cayendoDesde = 0;
-    // Lado del viewport donde se posa en 'roaming': alterna en cada punto de
-    // agarre nuevo, para que de verdad cruce la pantalla de un lado a otro
-    // en vez de quedarse siempre en el mismo sitio centrado.
-    let ladoDerecha = true;
-    let spinDesde = -Infinity; // momento del último cambio de perch, para el "tirabuzón"
+  }
 
-    // La D se inclina un poco cuando el robot se sienta encima, como si
-    // notara el peso. `hero-letter` trae su propia animación de entrada
-    // (heroLetterIn, con fill forwards): mientras esa animación "posea" la
-    // propiedad transform, un transform puesto por JS no se ve. En cuanto
-    // termina, se apaga (animation: none) para poder inclinarla a mano --
-    // pero la regla base de `.hero-letter` es `opacity:0` (el punto de
-    // partida de la animación): si se quita la animación sin fijar antes
-    // el resultado final a mano, la letra vuelve a ese `opacity:0` de
-    // golpe y desaparece. Por eso aquí se congelan opacidad/filtro/blur en
-    // su valor final ANTES de soltar la animación.
-    if (dLetra) {
-      dLetra.style.transformOrigin = 'bottom center';
-      const soltarAnimacion = () => {
-        dLetra.style.opacity = '1';
-        dLetra.style.filter = 'none';
-        dLetra.style.animation = 'none';
-      };
-      dLetra.addEventListener('animationend', soltarAnimacion, { once: true });
-    }
-
-    // null si el scroll no ha llegado a ningún punto de agarre todavía --
-    // a propósito: antes caía en perches[0] como reserva, y eso disparaba el
-    // mensaje del primer perch nada más entrar en 'roaming', pisando la
-    // bienvenida sin que hubiera scroll real de por medio.
-    const elegirPerch = (): Perch | null => {
-      const perches = perchesRef.current;
-      const linea = window.innerHeight * 0.6;
-      let elegido: Perch | null = null;
-      for (const p of perches) {
-        const top = p.el.getBoundingClientRect().top;
-        if (top <= linea) elegido = p;
-      }
-      return elegido;
-    };
-
-    const loop = (now: number) => {
-      const dt = Math.max(1, now - lastTime);
-      lastTime = now;
-
-      if (faseRef.current === 'anclada') {
-        lastScrollY = window.scrollY;
-        rafId = requestAnimationFrame(loop);
-        return;
-      }
-
-      const scrollY = window.scrollY;
-      const velocity = (scrollY - lastScrollY) / dt; // px/ms
-      lastScrollY = scrollY;
-
-      let targetLeft = currentLeft;
-      let targetTop = currentTop;
-      let mostrarLlama = true;
-
-      if (faseRef.current === 'perchada-d' && heroEl && dLetra) {
-        const p = progresoHero(heroEl);
-        if (p >= HERO_FALL_AT) {
-          cayendoDesde = now;
-          setFase('cayendo');
-        } else {
-          const pos = posSentadaEnD(dLetra.getBoundingClientRect());
-          targetLeft = pos.left;
-          targetTop = pos.top;
-          mostrarLlama = false;
-        }
-      } else if (faseRef.current === 'cayendo') {
-        // Breve caída: tira hacia abajo con giro, luego pasa a esperar.
-        targetTop = currentTop + 480;
-        targetLeft = currentLeft + 40;
-        currentBank += (60 - currentBank) * 0.1;
-        if (now - cayendoDesde > 550) setFase('esperando');
-      } else if (faseRef.current === 'esperando' && heroEl) {
-        targetLeft = window.innerWidth * 0.5 - 35;
-        targetTop = window.innerHeight * 0.48 + Math.sin(now / 600) * 10;
-        if (progresoHero(heroEl) >= 1) setFase('roaming');
-      } else {
-        // roaming: se agarra al último punto de la web que ha pasado por
-        // el 60% superior del viewport.
-        const perch = elegirPerch();
-        if (perch !== activePerchRef.current) {
-          activePerchRef.current = perch;
-          if (perch) {
-            ladoDerecha = !ladoDerecha; // cruza de lado en cada punto nuevo
-            spinDesde = now; // dispara el tirabuzón
-            setBubbleMsg(perch.msg);
-            setBubbleCta(perch.cta && perch.ctaHref ? { label: perch.cta, href: perch.ctaHref } : null);
-            setShowBubble(true);
-          }
-        }
-        if (perch) {
-          const rect = perch.el.getBoundingClientRect();
-          // No se sigue el borde real de la sección ni se ancla siempre en
-          // el mismo sitio "centrado": eso es justo lo que tapaba el
-          // contenido (cayendo encima de texto y tarjetas) y lo que se veía
-          // como "el robot no se mueve, siempre está en el mismo lado". En
-          // su lugar se posa cerca del margen del viewport -- fuera de
-          // donde vive el contenido (que en esta web siempre va en una
-          // columna centrada con hueco a los lados) -- alternando entre
-          // el margen izquierdo y el derecho en cada punto de agarre nuevo,
-          // así cruza la pantalla de un lado a otro según se scrollea.
-          const margen = 26;
-          targetLeft = ladoDerecha ? window.innerWidth - VOLANDO_W - margen : margen;
-          // Vertical: deriva suavemente dentro de una banda cómoda según
-          // cuánto se ha entrado en la sección (0–1 acotado por
-          // construcción, nunca colapsa a un borde por muy larga que sea
-          // la sección o muy lejos que se haya scrolleado), y se mantiene
-          // alto (20%–42% del viewport) para no tapar cabeceras ni botones
-          // a media altura.
-          const profundidad = clamp(-rect.top / Math.max(rect.height, 1), 0, 1);
-          targetTop = window.innerHeight * (0.2 + profundidad * 0.22);
-        }
-      }
-
-      // Red de seguridad amplia, para todas las fases -- la fase 'roaming'
-      // ya se acota a su propia banda cómoda más arriba (con sitio para el
-      // bocadillo); esto solo evita que algo se salga por completo del
-      // viewport, sin pisar la posición exacta de sentarse en la D.
-      targetLeft = clamp(targetLeft, 10, window.innerWidth - 84);
-      targetTop = clamp(targetTop, 20, window.innerHeight - 70);
-
-      const ease = reducedMotion ? 1 : faseRef.current === 'cayendo' ? 0.22 : 0.1;
-      currentLeft += (targetLeft - currentLeft) * ease;
-      currentTop += (targetTop - currentTop) * ease;
-
-      const targetBank = reducedMotion
-        ? 0
-        : faseRef.current === 'cayendo'
-          ? currentBank
-          : clamp(velocity * 55, -16, 16);
-      currentBank += (targetBank - currentBank) * (reducedMotion ? 1 : 0.15);
-
-      const targetFlame = reducedMotion ? 0 : mostrarLlama ? Math.min(1, 0.35 + Math.abs(velocity) * 4.5) : 0;
-      currentFlame += (targetFlame - currentFlame) * (reducedMotion ? 1 : 0.18);
-
-      // Vaivén constante, sutil: un personaje vivo nunca está del todo
-      // quieto. Se suma solo al pintar, no a currentTop -- si entrara en la
-      // física se acumularía con el propio objetivo de cada fase.
-      const bob = reducedMotion ? 0 : Math.sin(now / 950) * 4;
-
-      // La cabeza (y la antena) van un pelín por detrás del cuerpo al
-      // bancar: sin este retraso todo el SVG gira como una sola pieza
-      // rígida, que es justo el aspecto "piezas pegadas" que se quería
-      // evitar. Con retraso, el cuerpo lidera y la cabeza le sigue.
-      currentHeadBank += (currentBank - currentHeadBank) * (reducedMotion ? 1 : 0.06);
-
-      // Tirabuzón: un giro completo, rápido, cada vez que cruza a un punto
-      // de agarre nuevo -- puro capricho decorativo, no física de vuelo.
-      // Con ease-out cúbico para que arranque fuerte y frene suave; a los
-      // 550ms ya completó la vuelta entera (360° ≡ nada) y no deja residuo.
-      const spinT = reducedMotion ? 1 : clamp((now - spinDesde) / 550, 0, 1);
-      const spinExtra = spinT < 1 ? (1 - Math.pow(1 - spinT, 3)) * 360 : 0;
-
-      wrap.style.left = `${currentLeft}px`;
-      wrap.style.top = `${currentTop + bob}px`;
-      wrap.style.right = 'auto';
-      wrap.style.transform = `rotate(${currentBank + spinExtra}deg)`;
-
-      if (flame) {
-        flame.style.opacity = String(0.15 + currentFlame * 0.85);
-        flame.style.transform = `scaleY(${0.4 + currentFlame * 1.2})`;
-      }
-
-      if (head) {
-        head.style.transform = `rotate(${(currentHeadBank - currentBank) * 0.6}deg)`;
-      }
-
-      if (dLetra) {
-        const targetDTilt = faseRef.current === 'perchada-d' ? -5 : 0;
-        currentDTilt += (targetDTilt - currentDTilt) * (reducedMotion ? 1 : 0.12);
-        dLetra.style.transform = Math.abs(currentDTilt) > 0.05 ? `rotate(${currentDTilt}deg)` : '';
-      }
-
-      rafId = requestAnimationFrame(loop);
-    };
-
-    rafId = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(rafId);
-  }, [isDesktop, hasHero, reducedMotion]);
-
-  if (!isDesktop) return null;
-
-  const anclada = fase === 'anclada';
-  const grande = fase === 'perchada-d';
+  const contenidoBurbuja = (m: Mensaje, interactivo: boolean) => (
+    <>
+      <p className="mb-1 pr-6 text-[10px] font-extrabold uppercase tracking-widest text-cian">{tc.mascota.etiqueta}</p>
+      {interactivo ? (
+        <button
+          type="button"
+          onClick={alPulsar}
+          className="block text-left text-sm font-semibold leading-snug text-white transition-colors hover:text-cian-light"
+        >
+          {m.texto}
+        </button>
+      ) : (
+        <p className="text-sm font-semibold leading-snug">{m.texto}</p>
+      )}
+      {m.cta &&
+        (interactivo ? (
+          <a
+            href={m.cta.href}
+            className="mt-2.5 block rounded-xl bg-terracota px-3.5 py-2 text-center text-xs font-extrabold text-navy transition-colors hover:bg-terracota-dark"
+          >
+            {m.cta.label} →
+          </a>
+        ) : (
+          <span className="mt-2.5 block px-3.5 py-2 text-xs font-extrabold">{m.cta.label} →</span>
+        ))}
+    </>
+  );
 
   return (
-    <div
-      ref={wrapRef}
-      className="fixed z-[2147482999] transition-[right,bottom,opacity] duration-[700ms] ease-out"
-      style={
-        anclada
-          ? { top: 'auto', bottom: '20px', right: '22px', left: 'auto', transform: 'none' }
-          : undefined
-      }
-      aria-hidden={anclada ? 'true' : undefined}
-    >
-      {/* Bocadillo: bienvenida, o comentario de la sección activa.
-          Posición absoluta a propósito: si contara para el tamaño de este
-          contenedor (p.ej. en un flex), su ancho empujaría al robot -- es
-          justo el bug que se veía como "se tira a la derecha" al aparecer
-          un mensaje largo. Aquí cuelga por su cuenta, anclado a la esquina
-          del robot, sin mover un píxel su posición. */}
-      {showBubble && !anclada && (
-        <div className="absolute bottom-full right-0 mb-2 w-max min-w-[11rem] max-w-[17rem] animate-fadeIn rounded-2xl border border-cian/40 bg-navy-900/95 px-4 py-3 text-left shadow-[0_12px_30px_rgba(0,0,0,0.55)] backdrop-blur-xl">
-          <span
-            className="absolute -bottom-[7px] right-9 h-3 w-3 rotate-45 border-b border-r border-cian/40 bg-navy-900"
-            aria-hidden="true"
-          />
-          <p className="mb-1 text-[10px] font-extrabold uppercase tracking-widest text-cian">
-            Soporte DALSAT
-          </p>
-          <button
-            type="button"
-            onClick={alPulsar}
-            className="block text-left text-sm font-semibold leading-snug text-white transition-colors hover:text-cian-light"
-          >
-            {bubbleMsg}
-          </button>
-          {bubbleCta && (
-            <a
-              href={bubbleCta.href}
-              className="mt-2.5 block rounded-xl bg-terracota px-3.5 py-2 text-center text-xs font-extrabold text-navy transition-colors hover:bg-terracota-dark"
-            >
-              {bubbleCta.label} →
-            </a>
-          )}
-          <button
-            type="button"
-            onClick={ocultarBurbuja}
-            aria-label={t.cerrarAviso}
-            className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full text-white/45 transition-colors hover:bg-white/10 hover:text-white"
-          >
-            <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      )}
-
-      {/* El robot, de cuerpo entero */}
-      <button
-        type="button"
-        onClick={alPulsar}
-        aria-label={t.avisoChat}
-        className={`group relative flex items-center justify-center bg-transparent transition-[width,height] duration-500 ease-out hover:scale-110 active:scale-95 ${
-          grande ? 'h-[92px] w-[70px]' : anclada ? 'h-16 w-12' : 'h-[80px] w-[62px]'
-        }`}
+    <>
+      {/* Medidor: mismo contenido y ancho que el bocadillo, fuera de pantalla,
+          para saber su alto real antes de decidir dónde cabe. */}
+      <div
+        ref={medidorRef}
+        aria-hidden="true"
+        className="pointer-events-none invisible fixed left-[-10000px] top-0 rounded-2xl border px-4 py-3"
+        style={{ width: anchoBurbuja }}
       >
-        {/* Llama del propulsor, entre las piernas */}
-        <div
-          ref={flameRef}
-          className="pointer-events-none absolute left-1/2 top-[80%] h-7 w-3 -translate-x-1/2 rounded-b-full"
-          style={{
-            background: 'linear-gradient(to bottom, #7FE4F5, #14CDEC 55%, transparent)',
-            filter: 'blur(1.5px)',
-            transformOrigin: 'top center',
-          }}
-          aria-hidden="true"
-        />
+        {pendiente && contenidoBurbuja(pendiente, false)}
+      </div>
 
-        <svg viewBox="0 0 92 130" className="relative h-full w-full drop-shadow-[0_10px_20px_rgba(20,205,236,0.35)]" aria-hidden="true">
-          <defs>
-            {/* userSpaceOnUse a propósito: con el valor por defecto
-                (objectBoundingBox) cada rect/circle/path calcula SU PROPIO
-                degradado ajustado a su propia caja, así que cada pieza queda
-                iluminada por su cuenta -- eso es lo que se veía como
-                "partes pegadas". Con coordenadas fijas del viewBox, todo el
-                cuerpo comparte un único foco de luz y se ve como una sola
-                figura. */}
-            <radialGradient id="dalsatBotBody" gradientUnits="userSpaceOnUse" cx="30" cy="25" r="110">
-              <stop offset="0%" stopColor="#1F6E9C" />
-              <stop offset="55%" stopColor="#0A3459" />
-              <stop offset="100%" stopColor="#03131F" />
-            </radialGradient>
-            <radialGradient id="dalsatBotEye" cx="45%" cy="40%" r="60%">
-              <stop offset="0%" stopColor="#E9FBFF" />
-              <stop offset="45%" stopColor="#7FE4F5" />
-              <stop offset="100%" stopColor="#14CDEC" />
-            </radialGradient>
-            <filter id="dalsatGlowBlur" x="-150%" y="-150%" width="400%" height="400%">
-              <feGaussianBlur stdDeviation="7" />
-            </filter>
-          </defs>
+      <div
+        ref={raizRef}
+        className="pointer-events-none absolute left-0 top-0 z-[9000]"
+        style={{
+          width: tam.w,
+          height: tam.h,
+          opacity: visible ? 1 : 0,
+          visibility: visible ? 'visible' : 'hidden',
+          transition: 'opacity .3s, visibility .3s',
+        }}
+      >
+        {burbuja && cajaB && (
+          <div
+            className="pointer-events-auto absolute animate-fadeIn rounded-2xl border border-cian/40 bg-navy-900/95 px-4 py-3 text-left shadow-[0_12px_30px_rgba(0,0,0,0.55)] backdrop-blur-xl"
+            style={{ left: cajaB.x, top: cajaB.y, width: anchoBurbuja }}
+          >
+            <span className={`absolute h-3 w-3 rotate-45 border-cian/40 bg-navy-900 ${colaClase}`} style={colaEstilo} aria-hidden="true" />
+            {contenidoBurbuja(burbuja, true)}
+            <button
+              type="button"
+              onClick={alCerrar}
+              aria-label={tc.comun.cerrarAviso}
+              className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full text-white/45 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        )}
 
-          {/* Destello: dentro del propio SVG, en la coordenada del pecho
-              (46,78 del viewBox), no como <span> HTML aparte posicionado en
-              porcentajes -- así queda perfectamente centrado en el cuerpo
-              pase lo que pase con el letterboxing del viewBox (el botón no
-              tiene el mismo aspect-ratio que el viewBox, así que un overlay
-              HTML centrado "al 50%" del botón no cae necesariamente sobre
-              el cuerpo dibujado dentro). */}
-          <circle
-            cx="46"
-            cy="78"
-            r="22"
-            fill="#14CDEC"
-            opacity="0.28"
-            filter="url(#dalsatGlowBlur)"
-            style={{
-              transformBox: 'fill-box',
-              transformOrigin: 'center',
-              animation: reducedMotion ? undefined : 'mascotaPulso 3.2s ease-in-out infinite',
-            }}
-          />
+        <button
+          type="button"
+          onClick={alPulsar}
+          aria-label={tc.comun.avisoChat}
+          className="pointer-events-auto absolute inset-0 bg-transparent transition-transform duration-200 hover:scale-105 active:scale-95"
+        >
+          <div
+            ref={cuerpoRef}
+            className="h-full w-full will-change-transform"
+            style={{ transformOrigin: `${(ASIENTO_X / VB_W) * 100}% ${(ASIENTO_Y / VB_H) * 100}%` }}
+          >
+            <svg
+              viewBox={`0 0 ${VB_W} ${VB_H}`}
+              className="h-full w-full drop-shadow-[0_6px_10px_rgba(3,19,31,0.5)]"
+              style={{ overflow: 'visible' }}
+              aria-hidden="true"
+            >
+              <defs>
+                {/* userSpaceOnUse: un único foco de luz para todo el cuerpo,
+                    no uno por pieza. */}
+                <radialGradient id="mascotaCasco" gradientUnits="userSpaceOnUse" cx="36" cy="24" r="104">
+                  <stop offset="0%" stopColor="#FFFFFF" />
+                  <stop offset="35%" stopColor="#F6F1E7" />
+                  <stop offset="75%" stopColor="#E2D9C7" />
+                  <stop offset="100%" stopColor="#C8BDA7" />
+                </radialGradient>
+                <linearGradient id="mascotaVisor" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#0A3459" />
+                  <stop offset="100%" stopColor="#03131F" />
+                </linearGradient>
+                <radialGradient id="mascotaOjo" cx="45%" cy="40%" r="60%">
+                  <stop offset="0%" stopColor="#E9FBFF" />
+                  <stop offset="50%" stopColor="#7FE4F5" />
+                  <stop offset="100%" stopColor="#14CDEC" />
+                </radialGradient>
+                <linearGradient id="mascotaLlama" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#E9FBFF" />
+                  <stop offset="35%" stopColor="#7FE4F5" />
+                  <stop offset="100%" stopColor="#14CDEC" stopOpacity="0" />
+                </linearGradient>
+                <filter id="mascotaDifuso" x="-150%" y="-150%" width="400%" height="400%">
+                  <feGaussianBlur stdDeviation="7" />
+                </filter>
+              </defs>
 
-          {/* Piernas y brazos: un único <path> curvo por miembro que nace
-              dentro del torso y sale hacia fuera (en vez de un rect recto +
-              un circle pegado en la punta), con el mismo degradado que el
-              resto del cuerpo -- así no hay costura visible en la unión. */}
-          {grande ? (
-            <>
-              {/* Sentado: piernas dobladas de verdad -- muslo horizontal que
-                  sale de la cadera, curva de rodilla, espinilla colgando. */}
-              <path d="M30,98 C14,98 4,101 3,108 C2.3,113 5,117 10,117.6 C15,118.2 18,115 18,110 C24,111 29,109 30,104 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
-              <path d="M8,110 C4,112 2,117 3,124 C3.6,129.5 9,131.5 14,129.6 C18,128 19,123 17.4,118.6 C16,114.6 12,111.6 8,110 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" strokeWidth="1.2" />
-              <path d="M62,98 C78,98 88,101 89,108 C89.7,113 87,117 82,117.6 C77,118.2 74,115 74,110 C68,111 63,109 62,104 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
-              <path d="M84,110 C88,112 90,117 89,124 C88.4,129.5 83,131.5 78,129.6 C74,128 73,123 74.6,118.6 C76,114.6 80,111.6 84,110 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" strokeWidth="1.2" />
+              <circle cx="50" cy="70" r="26" fill="#14CDEC" opacity="0.22" filter="url(#mascotaDifuso)" />
 
-              {/* Brazos apoyados en las rodillas */}
-              <path d="M22,74 C10,78 6,86 8,96 C9.4,103 15,106 20,103.5 C23,102 23.5,97.5 21,93 C18.5,88.5 19,80 25,75 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
-              <path d="M70,74 C82,78 86,86 84,96 C82.6,103 77,106 72,103.5 C69,102 68.5,97.5 71,93 C73.5,88.5 73,80 67,75 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
-            </>
-          ) : (
-            <>
-              {/* En vuelo: piernas juntas colgando bajo el propulsor */}
-              <path d="M35,98 C29,98 26,104 26,114 C26,122 28,128 32,129 C36,130 38,126 38,118 C38,111 38,104 35,98 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
-              <path d="M57,98 C63,98 66,104 66,114 C66,122 64,128 60,129 C56,130 54,126 54,118 C54,111 54,104 57,98 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
-              <ellipse cx="32" cy="124" rx="4" ry="2.2" fill="#03131F" opacity="0.8" />
-              <ellipse cx="60" cy="124" rx="4" ry="2.2" fill="#03131F" opacity="0.8" />
+              <g ref={llamaRef} opacity="0">
+                <path d="M-4.5,0 C-4.5,8 -1.6,14 0,23 C1.6,14 4.5,8 4.5,0 Z" fill="url(#mascotaLlama)" />
+                <path d="M-1.8,0 C-1.8,4 -0.6,8 0,12 C0.6,8 1.8,4 1.8,0 Z" fill="#FFFFFF" opacity="0.85" />
+              </g>
 
-              {/* Brazos levantados hacia fuera -- por encima de las piernas
-                  a propósito, para que se lean como brazos y no como un
-                  tercer par de patas */}
-              <path d="M23,70 C6,66 -3,72 -2,84 C-1.4,92 5,95 12,92 C17,90 18,85 15,80 C13,76.5 15,72 24,72 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
-              <path d="M69,70 C86,66 95,72 94,84 C93.4,92 87,95 80,92 C75,90 74,85 77,80 C79,76.5 77,72 68,72 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.3" />
-            </>
-          )}
+              <g ref={espinillaIRef}>
+                <path d={ESPINILLA} fill="url(#mascotaCasco)" {...TRAZO} />
+              </g>
+              <g ref={espinillaDRef}>
+                <path d={ESPINILLA} fill="url(#mascotaCasco)" {...TRAZO} />
+              </g>
 
-          {/* Cuerpo */}
-          <rect x="20" y="64" width="52" height="44" rx="19" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.4" strokeWidth="1.5" />
-          <circle cx="46" cy="86" r="7" fill="#03131F" opacity="0.8" />
-          <circle cx="46" cy="86" r="3.2" fill="#14CDEC" />
+              <rect x="30" y="58" width="40" height="36" rx="16" fill="url(#mascotaCasco)" {...TRAZO} />
+              <path d="M33 84 Q50 88 67 84" stroke="#03131F" strokeOpacity="0.25" strokeWidth="1.4" fill="none" />
+              <circle cx="50" cy="73" r="5.2" fill="#051E36" />
+              <circle cx="50" cy="73" r="2.6" fill="#14CDEC" />
 
-          {/* Cabeza, en su propio grupo: el bucle físico le aplica un ligero
-              retraso de rotación respecto al cuerpo (ver headRef en el
-              efecto) para que no gire como un bloque rígido de una pieza. */}
-          <g ref={headRef} style={{ transformOrigin: '46px 66px' }}>
-            <line x1="46" y1="4" x2="46" y2="13" stroke="#14CDEC" strokeWidth="2.4" strokeLinecap="round" />
-            <circle cx="46" cy="3" r="3.2" fill="#7FE4F5" />
-            <rect x="10" y="10" width="72" height="60" rx="27" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.45" strokeWidth="1.5" />
-            <ellipse cx="28" cy="25" rx="13" ry="7.5" fill="white" opacity="0.14" />
-            <rect x="20" y="30" width="52" height="22" rx="11" fill="#03131F" opacity="0.85" />
-            <circle cx="34" cy="41" r="6" fill="url(#dalsatBotEye)" />
-            <circle cx="58" cy="41" r="6" fill="url(#dalsatBotEye)" />
-            <path d="M37 60 Q46 65 55 60" stroke="#7FE4F5" strokeWidth="2.2" strokeLinecap="round" fill="none" opacity="0.85" />
-            <path d="M1,30 C-3,36 -3,44 1,48 C4,50 9,49 10,44 L10,34 C9,29 4,28 1,30 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" strokeWidth="1.2" />
-            <path d="M91,30 C95,36 95,44 91,48 C88,50 83,49 82,44 L82,34 C83,29 88,28 91,30 Z" fill="url(#dalsatBotBody)" stroke="#14CDEC" strokeOpacity="0.5" strokeWidth="1.2" />
-          </g>
-        </svg>
-      </button>
+              <g ref={musloIRef}>
+                <path d={MUSLO} fill="url(#mascotaCasco)" {...TRAZO} />
+              </g>
+              <g ref={musloDRef}>
+                <path d={MUSLO} fill="url(#mascotaCasco)" {...TRAZO} />
+              </g>
+              <circle ref={rodillaIRef} cx="41" cy="102" r="3.4" fill="url(#mascotaCasco)" {...TRAZO} />
+              <circle ref={rodillaDRef} cx="59" cy="102" r="3.4" fill="url(#mascotaCasco)" {...TRAZO} />
 
-      <style>{`
-        @keyframes mascotaPulso {
-          0%, 100% { opacity: 0.5; transform: scale(1); }
-          50% { opacity: 0.8; transform: scale(1.1); }
-        }
-      `}</style>
-    </div>
+              <g ref={brazoIRef}>
+                <path d={BRAZO} fill="url(#mascotaCasco)" {...TRAZO} />
+              </g>
+              <g ref={brazoDRef}>
+                <path d={BRAZO} fill="url(#mascotaCasco)" {...TRAZO} />
+              </g>
+              <circle cx={HOMBRO_I.x} cy={HOMBRO_I.y} r="3" fill="#0A3459" />
+              <circle cx={HOMBRO_D.x} cy={HOMBRO_D.y} r="3" fill="#0A3459" />
+
+              <g ref={cabezaRef}>
+                <g ref={antenaRef}>
+                  <line x1="50" y1="11" x2="50" y2="1.5" stroke="#03131F" strokeWidth="2.4" strokeLinecap="round" />
+                  <circle cx="50" cy="0" r="3.4" fill="#7FE4F5" stroke="#03131F" strokeWidth="1.2" />
+                </g>
+                <circle cx="15" cy="34" r="5.6" fill="#0A3459" {...TRAZO} />
+                <circle cx="85" cy="34" r="5.6" fill="#0A3459" {...TRAZO} />
+                <circle cx="15" cy="34" r="2" fill="#14CDEC" />
+                <circle cx="85" cy="34" r="2" fill="#14CDEC" />
+                <rect x="16" y="8" width="68" height="52" rx="24" fill="url(#mascotaCasco)" {...TRAZO} />
+                <ellipse cx="33" cy="15.5" rx="10" ry="3.8" fill="#FFFFFF" opacity="0.75" transform="rotate(-16 33 15.5)" />
+                <rect x="24" y="20" width="52" height="28" rx="14" fill="url(#mascotaVisor)" />
+                <g ref={ojosRef}>
+                  <ellipse cx="39" cy="34" rx="5" ry="6" fill="url(#mascotaOjo)" />
+                  <ellipse cx="61" cy="34" rx="5" ry="6" fill="url(#mascotaOjo)" />
+                  <circle cx="40.8" cy="31.4" r="1.6" fill="#FFFFFF" />
+                  <circle cx="62.8" cy="31.4" r="1.6" fill="#FFFFFF" />
+                </g>
+                <path d="M44 53 Q50 57 56 53" stroke="#0A3459" strokeWidth="2" strokeLinecap="round" fill="none" />
+              </g>
+            </svg>
+          </div>
+        </button>
+      </div>
+    </>
   );
 }

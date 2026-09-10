@@ -34,6 +34,19 @@ export const es = {
     probarDemo: 'Probar una demo',
   },
 
+  // Lo que dice la mascota de soporte. Las claves de `secciones` son los
+  // valores de `data-mascot-perch` en el marcado de la home.
+  mascota: {
+    etiqueta: 'Agente DALSAT',
+    secciones: {
+      clientes: 'Estos ya trabajan con nosotros. Lee lo que cuentan 👀',
+      're-digitalizacion': 'Aquí va lo importante: qué cambia cuando tu negocio funciona solo.',
+      servicios: '¿Alguno te suena a tu semana? Cuéntamelo y lo vemos.',
+      pruebalo: 'Si prefieres probarlo sin hablar con nadie, empieza por la demo.',
+    } as Record<string, string>,
+    ctaServicios: 'Hablar con nosotros',
+  },
+
   cierreContacto: {
     home: {
       titulo: 'Empieza por lo que más te pese',
