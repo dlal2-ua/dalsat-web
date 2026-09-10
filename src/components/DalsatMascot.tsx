@@ -87,6 +87,27 @@ function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
 }
 
+// Tamaño real del botón por fase -- tiene que ser el mismo número que el
+// className de más abajo, porque el bucle físico calcula posiciones (p.ej.
+// "centrado sobre la D") a partir de estas medidas.
+const GRANDE_W = 70;
+const GRANDE_H = 92;
+const VOLANDO_W = 62;
+const VOLANDO_H = 80;
+
+// Cuánto se hunden las piernas dentro de la letra al sentarse -- sin esto
+// el robot queda flotando justo encima de la D en vez de apoyado en ella.
+const SIT_OVERLAP = 22;
+
+// Posición (top-left del botón) para sentarse centrado en la D, con las
+// piernas metidas en el trazo de la letra.
+function posSentadaEnD(dRect: DOMRect) {
+  return {
+    left: dRect.left + dRect.width / 2 - GRANDE_W / 2,
+    top: dRect.top - GRANDE_H + SIT_OVERLAP,
+  };
+}
+
 export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   const t = contenido(idioma).comun;
 
@@ -284,9 +305,9 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     let currentLeft: number;
     let currentTop: number;
     if (dLetra) {
-      const rect = dLetra.getBoundingClientRect();
-      currentLeft = rect.left + rect.width * 0.55;
-      currentTop = rect.bottom - rect.height * 0.35;
+      const pos = posSentadaEnD(dLetra.getBoundingClientRect());
+      currentLeft = pos.left;
+      currentTop = pos.top;
     } else {
       currentLeft = window.innerWidth - 90;
       currentTop = window.innerHeight * 0.4;
@@ -294,9 +315,30 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     let currentBank = 0;
     let currentHeadBank = 0;
     let currentFlame = 0.35;
+    let currentDTilt = 0;
     let lastScrollY = window.scrollY;
     let lastTime = performance.now();
     let cayendoDesde = 0;
+
+    // La D se inclina un poco cuando el robot se sienta encima, como si
+    // notara el peso. `hero-letter` trae su propia animación de entrada
+    // (heroLetterIn, con fill forwards): mientras esa animación "posea" la
+    // propiedad transform, un transform puesto por JS no se ve. En cuanto
+    // termina, se apaga (animation: none) para poder inclinarla a mano --
+    // pero la regla base de `.hero-letter` es `opacity:0` (el punto de
+    // partida de la animación): si se quita la animación sin fijar antes
+    // el resultado final a mano, la letra vuelve a ese `opacity:0` de
+    // golpe y desaparece. Por eso aquí se congelan opacidad/filtro/blur en
+    // su valor final ANTES de soltar la animación.
+    if (dLetra) {
+      dLetra.style.transformOrigin = 'bottom center';
+      const soltarAnimacion = () => {
+        dLetra.style.opacity = '1';
+        dLetra.style.filter = 'none';
+        dLetra.style.animation = 'none';
+      };
+      dLetra.addEventListener('animationend', soltarAnimacion, { once: true });
+    }
 
     // null si el scroll no ha llegado a ningún punto de agarre todavía --
     // a propósito: antes caía en perches[0] como reserva, y eso disparaba el
@@ -337,9 +379,9 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
           cayendoDesde = now;
           setFase('cayendo');
         } else {
-          const rect = dLetra.getBoundingClientRect();
-          targetLeft = rect.left + rect.width * 0.55;
-          targetTop = rect.bottom - rect.height * 0.35;
+          const pos = posSentadaEnD(dLetra.getBoundingClientRect());
+          targetLeft = pos.left;
+          targetTop = pos.top;
           mostrarLlama = false;
         }
       } else if (faseRef.current === 'cayendo') {
@@ -366,13 +408,29 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         }
         if (perch) {
           const rect = perch.el.getBoundingClientRect();
-          targetLeft = rect.right - 58;
-          targetTop = rect.top + 18;
+          // No se sigue el borde real de la sección: en secciones a todo lo
+          // ancho, rect.right es literalmente el borde del viewport, y
+          // rect.top se va muy negativo en cuanto la sección lleva un rato
+          // scrolleada -- eso es justo lo que se veía como "pegado arriba a
+          // la derecha", con el bocadillo saliéndose de la pantalla por
+          // arriba. En su lugar se ancla sobre el contenido (62% del ancho
+          // de la sección) y, en vertical, deriva suavemente dentro de una
+          // banda cómoda según cuánto se ha entrado en esa sección --
+          // "cuánto" acotado a 0–1 por construcción, así que nunca colapsa
+          // al mismo borde por muy larga que sea la sección o muy lejos que
+          // se haya scrolleado.
+          const profundidad = clamp(-rect.top / Math.max(rect.height, 1), 0, 1);
+          targetLeft = rect.left + rect.width * 0.62;
+          targetTop = window.innerHeight * (0.2 + profundidad * 0.32);
         }
       }
 
+      // Red de seguridad amplia, para todas las fases -- la fase 'roaming'
+      // ya se acota a su propia banda cómoda más arriba (con sitio para el
+      // bocadillo); esto solo evita que algo se salga por completo del
+      // viewport, sin pisar la posición exacta de sentarse en la D.
       targetLeft = clamp(targetLeft, 10, window.innerWidth - 84);
-      targetTop = clamp(targetTop, 64, window.innerHeight - 96);
+      targetTop = clamp(targetTop, 20, window.innerHeight - 70);
 
       const ease = reducedMotion ? 1 : faseRef.current === 'cayendo' ? 0.22 : 0.1;
       currentLeft += (targetLeft - currentLeft) * ease;
@@ -413,6 +471,12 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         head.style.transform = `rotate(${(currentHeadBank - currentBank) * 0.6}deg)`;
       }
 
+      if (dLetra) {
+        const targetDTilt = faseRef.current === 'perchada-d' ? -5 : 0;
+        currentDTilt += (targetDTilt - currentDTilt) * (reducedMotion ? 1 : 0.12);
+        dLetra.style.transform = Math.abs(currentDTilt) > 0.05 ? `rotate(${currentDTilt}deg)` : '';
+      }
+
       rafId = requestAnimationFrame(loop);
     };
 
@@ -443,7 +507,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
           un mensaje largo. Aquí cuelga por su cuenta, anclado a la esquina
           del robot, sin mover un píxel su posición. */}
       {showBubble && !anclada && (
-        <div className="absolute bottom-full right-0 mb-2 max-w-[16rem] animate-fadeIn rounded-2xl border border-cian/40 bg-navy-900/95 px-4 py-3 text-left shadow-[0_12px_30px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+        <div className="absolute bottom-full right-0 mb-2 w-max min-w-[11rem] max-w-[17rem] animate-fadeIn rounded-2xl border border-cian/40 bg-navy-900/95 px-4 py-3 text-left shadow-[0_12px_30px_rgba(0,0,0,0.55)] backdrop-blur-xl">
           <span
             className="absolute -bottom-[7px] right-9 h-3 w-3 rotate-45 border-b border-r border-cian/40 bg-navy-900"
             aria-hidden="true"
@@ -485,7 +549,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         onClick={alPulsar}
         aria-label={t.avisoChat}
         className={`group relative flex items-center justify-center bg-transparent transition-[width,height] duration-500 ease-out hover:scale-110 active:scale-95 ${
-          grande ? 'h-[120px] w-[92px]' : anclada ? 'h-16 w-12' : 'h-[86px] w-[66px]'
+          grande ? 'h-[92px] w-[70px]' : anclada ? 'h-16 w-12' : 'h-[80px] w-[62px]'
         }`}
       >
         <span
