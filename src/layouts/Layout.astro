@@ -165,6 +165,15 @@ const schemaData = {
         que el revelado de abajo se re-arma en astro:page-load. */}
     <ClientRouter />
     <style is:global>
+      /* La burbuja del widget de chat no se enseña nunca: la sustituye la
+         mascota, que al pulsarse le hace clic por programa. Va aquí, en CSS
+         desde el primer pintado, y no desde la mascota: por JS se veía la
+         burbuja abajo a la derecha mientras la página terminaba de cargar. */
+      html.js [data-dalsat-chat] .dalsat-bubble {
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+
       @media (prefers-reduced-motion: no-preference) {
         html {
           scroll-behavior: smooth;
@@ -291,7 +300,7 @@ const schemaData = {
             burbuja real. OJO: dev.dalsats.com solo se deja embeber desde
             https://dalsats.com (frame-ancestors), así que en localhost o en
             previews de Vercel el panel se abre pero sale "rechazado". */}
-        <DalsatMascot client:idle idioma={idioma} />
+        <DalsatMascot client:load idioma={idioma} />
       </>
     )}
   </body>

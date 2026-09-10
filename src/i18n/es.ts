@@ -43,6 +43,8 @@ export const es = {
       servicios: '¿No tienes claro qué servicio encaja con tu negocio? Te orientamos sin compromiso.',
       clientes: 'Estas empresas ya trabajan con nosotros. Debajo de cada logo, su experiencia en sus propias palabras.',
       pruebalo: 'Puedes probar un agente real antes de hablar con nosotros. La demo no requiere registro.',
+      'preguntas-frecuentes': '¿No encuentras tu pregunta? Pulsa sobre mí y te la respondo al momento.',
+      contacto: 'Si prefieres una respuesta inmediata, pulsa sobre mí y lo resolvemos ahora.',
     } as Record<string, string>,
     ctaServicios: 'Hablar con nosotros',
   },

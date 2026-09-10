@@ -17,7 +17,14 @@ export default function FloatingWhatsApp({ idioma = IDIOMA_POR_DEFECTO }: Props)
     // quedar al lado y no taparlo nunca. El panel se abre sobre los dos.
     //
     // En movil no sale: ahi el contacto lo lleva la barra fija de abajo.
-    <div className="fixed bottom-4 right-[88px] z-[2147482999] hidden md:block">
+    //
+    // Mientras está el banner de cookies sube por encima de él
+    // (--alto-cookies lo pone el banner): antes lo tapaba y no se podía
+    // aceptar.
+    <div
+      className="fixed right-[88px] z-[2147482999] hidden transition-[bottom] duration-300 md:block"
+      style={{ bottom: 'calc(1rem + var(--alto-cookies, 0px))' }}
+    >
       <a
         href={urlWhatsApp(t.comun.mensajeWhatsApp)}
         target="_blank"

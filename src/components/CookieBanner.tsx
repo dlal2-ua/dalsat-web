@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { inject } from '@vercel/analytics';
 import { contenido } from '../i18n';
 import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
@@ -35,6 +35,27 @@ export default function CookieBanner({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   const t = contenido(idioma);
 
   const [visible, setVisible] = useState(false);
+  const cajaRef = useRef<HTMLDivElement>(null);
+
+  // Publica cuánto ocupa el banner (--alto-cookies) para que lo fijo abajo
+  // (el botón de WhatsApp) suba por encima: si no, se le montaba encima y no
+  // se podía pulsar "Aceptar".
+  useEffect(() => {
+    const raiz = document.documentElement;
+    const caja = cajaRef.current;
+    if (!visible || !caja) {
+      raiz.style.removeProperty('--alto-cookies');
+      return;
+    }
+    const medir = () => raiz.style.setProperty('--alto-cookies', `${caja.offsetHeight}px`);
+    medir();
+    const observador = new ResizeObserver(medir);
+    observador.observe(caja);
+    return () => {
+      observador.disconnect();
+      raiz.style.removeProperty('--alto-cookies');
+    };
+  }, [visible]);
 
   useEffect(() => {
     const decision = leerDecision();
@@ -60,6 +81,7 @@ export default function CookieBanner({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
   return (
     <div
+      ref={cajaRef}
       role="dialog"
       aria-live="polite"
       aria-label={t.cookies.aviso}

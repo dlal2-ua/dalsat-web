@@ -44,6 +44,8 @@ export const en: Contenido = {
       servicios: 'Not sure which service fits your business? We will point you in the right direction, no strings attached.',
       clientes: 'These businesses already work with us. Under each logo, their experience in their own words.',
       pruebalo: 'You can try a real agent before talking to us. The demo needs no sign-up.',
+      'preguntas-frecuentes': "Can't find your question? Click on me and I'll answer it right away.",
+      contacto: "If you'd rather have an answer straight away, click on me and we'll sort it out now.",
     },
     ctaServicios: 'Talk to us',
   },

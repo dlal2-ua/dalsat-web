@@ -74,7 +74,6 @@ const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(ma
 const anchoVp = () => document.documentElement.clientWidth;
 const altoVp = () => document.documentElement.clientHeight;
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-const suave = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 function unir(a: Caja, b: Caja | null): Caja {
   if (!b) return a;
@@ -424,7 +423,14 @@ const HOMBRO_D = { x: 69, y: 66 };
 
 const TRAZO = { stroke: '#03131F', strokeOpacity: 0.85, strokeWidth: 1.6, strokeLinejoin: 'round' as const };
 
-type Modo = 'espera' | 'entrando' | 'sentado' | 'cayendo' | 'volando' | 'flotando' | 'posado' | 'guardado' | 'anclado';
+type Modo = 'espera' | 'aterrizando' | 'sentado' | 'cayendo' | 'volando' | 'flotando' | 'posado' | 'guardado' | 'anclado';
+
+// Muelle del vuelo, por milisegundo. Amortiguado casi crítico: arranca y
+// frena suave, y si el destino cambia a medio camino conserva la velocidad
+// en vez de volver a empezar desde parado.
+const MUELLE = 0.0068;
+const MUELLE_LENTO = 0.0045;
+const VEL_MAX = 1.5;
 type Sistema = 'pantalla' | 'documento';
 
 interface Cta {
@@ -481,20 +487,6 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     medidoRef.current = { ...pendiente, alto: medidorRef.current.offsetHeight };
   }, [pendiente, anchoBurbuja]);
 
-  // La burbuja nativa queda invisible pero en el DOM (el panel depende de
-  // ella). Se reafirma sin parar: el widget re-impone su estilo por su cuenta.
-  useEffect(() => {
-    const ocultar = () => {
-      const boton = burbujaNativa();
-      if (!boton) return;
-      boton.style.opacity = '0';
-      boton.style.pointerEvents = 'none';
-    };
-    ocultar();
-    const id = setInterval(ocultar, 400);
-    return () => clearInterval(id);
-  }, []);
-
   useEffect(() => {
     let observador: MutationObserver | null = null;
     const enganchar = () => {
@@ -527,7 +519,17 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     const hero = document.getElementById('hero');
     const letraD = document.querySelector<HTMLElement>('[data-mascot-anchor="hero-d"]');
     const dal = letraD?.parentElement ?? null;
-    const perchas = Array.from(document.querySelectorAll<HTMLElement>('[data-mascot-perch]'));
+    // Ruta: las secciones marcadas y, en cualquier página, las secciones de
+    // primer nivel del <main> con titular. Así tiene recorrido en todas sin
+    // tener que marcar cada una.
+    const perchas = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-mascot-perch], main section'),
+    ).filter(
+      (s, _i, todas) =>
+        s.id !== 'hero' &&
+        (!!s.dataset.mascotPerch || !!s.querySelector('h1, h2')) &&
+        !todas.some((o) => o !== s && o.contains(s)),
+    );
     const excluir = () => [raiz, medidorRef.current, raizChat()].filter(Boolean) as Element[];
 
     let glifo: Glifo | null = null;
@@ -542,25 +544,27 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     let posicionPintada = '';
 
     let vuelo: {
-      x0: number;
-      y0: number;
-      x1: number;
-      y1: number;
-      t0: number;
-      dur: number;
-      arco: number;
-      giro: number;
+      tx: number;
+      ty: number;
+      // Destino que se mueve (el asiento de la D mientras el hero se abre).
+      objetivo?: () => { x: number; y: number } | null;
+      lento?: boolean;
       fin: (ahora: number) => void;
     } | null = null;
 
+    // Velocidad del robot en px/ms, en el sistema de coordenadas actual.
+    let vxv = 0;
+    let vyv = 0;
+    let vScroll = 0;
+    let velX = 0;
     let vy = 0;
     let vx = 0;
-    let velX = 0;
     let caidaDesde = 0;
     let tumbo = 0;
-    let giro = 0;
     let banco = 0;
+    let descendiendo = false;
     let aplastadoDesde = -1e9;
+    let fuerzaAplastado = 0.16;
     let dTilt = 0;
     let dTiltVel = 0;
     let mezclaSentado = 0;
@@ -595,6 +599,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     let ultimaRevision = 0;
     let ultimosFijos = 0;
     let ultimoScroll = window.scrollY;
+    let ultimoMovScroll = -1e9;
     let dirScroll = 1;
     let redimensionado = false;
     let ultimoFrame = performance.now();
@@ -648,43 +653,45 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       if (olvidar) mensajeActual = null;
     }
 
+    // Cambia de sistema conservando posición y velocidad en pantalla: sin
+    // esto, al pasar de ir con la página a ir fijo (o al revés) mientras se
+    // scrollea, el robot pegaría un tirón.
     function pasarA(nuevo: Sistema) {
       if (nuevo === sistema) return;
       const signo = nuevo === 'documento' ? 1 : -1;
       x += signo * window.scrollX;
       y += signo * window.scrollY;
+      vyv += signo * vScroll;
       sistema = nuevo;
     }
 
-    function volarA(nx: number, ny: number, destino: Sistema, fin: (ahora: number) => void, ahora: number) {
+    function volarA(
+      nx: number,
+      ny: number,
+      destino: Sistema,
+      fin: (ahora: number) => void,
+      ahora: number,
+      extra: Partial<NonNullable<typeof vuelo>> = {},
+    ) {
       pasarA(destino);
       esconderBurbuja(false);
-      const dist = Math.hypot(nx - x, ny - y);
-      if (reducido || dist < 2) {
-        x = nx;
-        y = ny;
+      if (reducido) {
+        const o = extra.objetivo?.() ?? { x: nx, y: ny };
+        x = o.x;
+        y = o.y;
+        vxv = 0;
+        vyv = 0;
         vuelo = null;
         fin(ahora);
         return;
       }
-      modo = 'volando';
-      vuelo = {
-        x0: x,
-        y0: y,
-        x1: nx,
-        y1: ny,
-        t0: ahora,
-        dur: clamp(260 + dist * 0.5, 320, 800),
-        arco: Math.min(90, dist * 0.22),
-        // Un tirabuzón solo si cruza de verdad la pantalla, repartido a lo
-        // largo del vuelo: nunca un giro seco al llegar.
-        giro: Math.abs(nx - x) > anchoVp() * 0.45 ? Math.sign(nx - x) : 0,
-        fin,
-      };
+      if (!extra.objetivo) modo = 'volando';
+      vuelo = { tx: nx, ty: ny, fin, ...extra };
     }
 
-    function aplastar(ahora: number) {
+    function aplastar(ahora: number, fuerza = 0.16) {
       aplastadoDesde = ahora;
+      fuerzaAplastado = fuerza;
     }
 
     function buscarHueco(motivo: Motivo, alto: number, ancla: Caja | null): Plan | null {
@@ -712,17 +719,17 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       const lado = plan.lado;
       const m = conMsg ? msg : null;
       const scrollAlPlanear = window.scrollY;
-      // Vuela en coordenadas de pantalla: si se sigue scrolleando durante el
-      // vuelo, llega igual al sitio planeado en vez de quedarse atrás con la
-      // página. Al posarse vuelve a ir anclado al documento.
+      // Vuela respecto a la pantalla: con scroll continuo, un destino fijado
+      // en la página se escapa antes de llegar y el robot se queda atrás. Se
+      // ancla a la página cuando el scroll se para (ver el bucle), momento en
+      // que las dos velocidades coinciden y no hay tirón.
       volarA(
         plan.robot.x,
         plan.robot.y,
         'pantalla',
         (t) => {
-          pasarA('documento');
           modo = 'posado';
-          aplastar(t);
+          aplastar(t, 0.06);
           if (Math.abs(window.scrollY - scrollAlPlanear) > 4) revisarYa = true;
           if (m && lado) mostrarBurbuja(m, lado, t, dura);
         },
@@ -845,7 +852,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     }
 
     function mensajeDe(p: HTMLElement): { texto: string; cta: Cta | null } | null {
-      const id = p.dataset.mascotPerch || '';
+      const id = p.dataset.mascotPerch || p.id;
       const texto = tc.mascota.secciones[id];
       if (!texto) return null;
       const cta = id === 'servicios' ? { label: tc.mascota.ctaServicios, href: ruta('/contacto', idioma) } : null;
@@ -857,26 +864,82 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     function caer(ahora: number) {
       modo = 'cayendo';
       caidaDesde = ahora;
+      vuelo = null;
+      descendiendo = false;
       esconderBurbuja(true);
       pasarA('pantalla');
-      vx = -0.12;
-      vy = -0.28;
+      vx = -0.08;
+      vy = -0.22;
       if (reducido) caidaDesde = ahora - 10000;
     }
 
+    // Tras la caída enciende el propulsor: la velocidad de caída pasa tal cual
+    // al muelle, así que traza una curva en vez de pararse en seco y salir.
     function trasCaida(ahora: number) {
       fijarTam(tamVuelo());
+      vxv = vx;
+      vyv = vy;
       if (heroFijado() && hero && hero.getBoundingClientRect().bottom > altoVp() + 2) {
         const plan = buscarHueco('hero', 0, null);
         if (plan) {
           volarA(plan.robot.x, plan.robot.y, 'pantalla', (t) => {
             modo = 'flotando';
-            aplastar(t);
+            aplastar(t, 0.06);
           }, ahora);
           return;
         }
       }
       irAHueco('deriva', null, null, ahora);
+    }
+
+    function destinoAsiento(sobre: number) {
+      const s = asiento();
+      if (!s) return null;
+      return { x: s.x - (ASIENTO_X / VB_W) * rw, y: s.y - (ASIENTO_Y / VB_H) * rh - sobre };
+    }
+
+    // Llega volando, se queda un instante suspendido sobre la D, baja
+    // doblando las piernas y al tocarla se sienta, la D cede y saluda.
+    function aterrizarEnD(ahora: number) {
+      esconderBurbuja(true);
+      mostrarRobot();
+      fijarTam(tamSentado());
+      modo = 'aterrizando';
+      descendiendo = false;
+      perchaActiva = null;
+      volarA(0, 0, 'pantalla', () => {
+        descendiendo = true;
+        vuelo = {
+          tx: 0,
+          ty: 0,
+          objetivo: () => destinoAsiento(0),
+          lento: true,
+          fin: sentarse,
+        };
+      }, ahora, { objetivo: () => destinoAsiento(Math.max(28, rh * 0.45)) });
+    }
+
+    function sentarse(ahora: number) {
+      descendiendo = false;
+      modo = 'sentado';
+      if (letraD) {
+        for (const a of letraD.getAnimations()) a.finish();
+        liberarD();
+      }
+      aplastar(ahora, 0.18);
+      dTiltVel = -0.45;
+      // Se presenta siempre: es lo primero que ve quien entra y tiene que
+      // saber que es un asistente al que se puede pulsar.
+      pedir(tc.comun.avisoChat, null, 'bienvenida-sentado');
+    }
+
+    // Vuelve a la D si se sube hasta que la letra está otra vez entera (con
+    // margen respecto al punto de caída para que no oscile en el límite).
+    function puedeVolverAD(): boolean {
+      if (!hero || !glifo) return false;
+      if (heroFijado() && progresoHero(hero) > 0.2) return false;
+      const s = asiento();
+      return !!s && s.y > techo() + tamSentado() * 0.75 + 40 && s.y < altoVp() - 20;
     }
 
     function arrancar() {
@@ -888,15 +951,15 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         !!s && !!hero && progresoHero(hero) < 0.1 && s.y > techo() + 40 && s.y < altoVp() - 20;
       const ahora = performance.now();
       if (sentable && s) {
-        liberarD();
         fijarTam(tamSentado());
         sistema = 'pantalla';
-        x = s.x - (ASIENTO_X / VB_W) * rw;
-        y = s.y - (ASIENTO_Y / VB_H) * rh - (reducido ? 0 : 120);
-        vy = 0;
+        // Entra volando desde fuera de la pantalla, por arriba a la derecha.
+        x = anchoVp() + 30;
+        y = Math.max(techo() + 10, s.y - rh * 2.2);
+        vxv = -1.2;
+        vyv = 0.1;
         mezclaSentado = 0;
-        modo = reducido ? 'sentado' : 'entrando';
-        if (reducido) pedir(tc.comun.avisoChat, null, 'bienvenida-sentado');
+        aterrizarEnD(ahora);
       } else {
         liberarD();
         fijarTam(tamVuelo());
@@ -916,7 +979,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
     function pose(ahora: number, dt: number) {
       const k = dt / 16.7;
-      const sentado = modo === 'sentado';
+      const sentado = modo === 'sentado' || descendiendo;
       mezclaSentado += ((sentado ? 1 : 0) - mezclaSentado) * Math.min(1, 0.18 * k);
       const s = mezclaSentado;
       const vaiven = reducido ? 0 : Math.sin(ahora / 260);
@@ -950,7 +1013,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         !!burbujaActual && burbujaActual.id === bienvenidaIdRef.current && ahora - burbujaDesde < 2800;
       let objI: number;
       let objD: number;
-      if (modo === 'volando' || modo === 'cayendo') {
+      if (modo === 'volando' || modo === 'cayendo' || (modo === 'aterrizando' && !descendiendo)) {
         objI = 42 - estela * 0.5;
         objD = -42 - estela * 0.5;
       } else if (s > 0.5) {
@@ -980,7 +1043,15 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       ojosRef.current?.setAttribute('transform', `translate(0 34) scale(1 ${parpado(ahora)}) translate(0 -34)`);
 
       const objEmpuje =
-        modo === 'volando' ? 1 : modo === 'posado' || modo === 'flotando' ? 0.4 : modo === 'guardado' || modo === 'anclado' ? 0.3 : 0;
+        modo === 'volando' || (modo === 'aterrizando' && !descendiendo)
+          ? 1
+          : descendiendo
+            ? 0.3
+            : modo === 'posado' || modo === 'flotando'
+              ? 0.4
+              : modo === 'guardado' || modo === 'anclado'
+                ? 0.3
+                : 0;
       empuje += (objEmpuje - empuje) * Math.min(1, 0.15 * k);
       const parpadeoLlama = reducido ? 1 : 0.8 + 0.2 * Math.sin(ahora / 45);
       llamaRef.current?.setAttribute(
@@ -1009,9 +1080,10 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       raiz.style.transform = `translate3d(${x}px, ${y}px, 0)`;
 
       const tAplastado = ahora - aplastadoDesde;
-      const a = reducido || tAplastado > 500 ? 0 : 0.16 * Math.exp(-tAplastado / 110) * Math.cos(tAplastado / 45);
+      const a =
+        reducido || tAplastado > 600 ? 0 : fuerzaAplastado * Math.exp(-tAplastado / 130) * Math.cos(tAplastado / 55);
       const flota = !reducido && (modo === 'posado' || modo === 'flotando' || modo === 'guardado') ? Math.sin(ahora / 900) * 3 : 0;
-      const angulo = banco + giro + tumbo;
+      const angulo = banco + tumbo;
       cuerpo.style.transform = `translate3d(0, ${flota}px, 0) rotate(${angulo}deg) scale(${1 + a * 0.6}, ${1 - a})`;
     }
 
@@ -1023,6 +1095,8 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
       const sy = window.scrollY;
       if (sy !== ultimoScroll) dirScroll = sy > ultimoScroll ? 1 : -1;
+      vScroll = (sy - ultimoScroll) / dt;
+      if (sy !== ultimoScroll) ultimoMovScroll = ahora;
       ultimoScroll = sy;
 
       if (redimensionado) {
@@ -1065,37 +1139,45 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         }
       }
 
+      // Aterrizando y la D se va (se ha vuelto a bajar): se suelta y cae.
+      if (modo === 'aterrizando' && hero && heroFijado() && progresoHero(hero) >= 0.35) caer(ahora);
+      // Volando hacia una sección y se ha subido hasta arriba: a la D.
+      else if (modo === 'volando' && !anclando && puedeVolverAD()) aterrizarEnD(ahora);
+
       if (vuelo) {
-        const t = clamp((ahora - vuelo.t0) / vuelo.dur, 0, 1);
-        const e = suave(t);
-        x = lerp(vuelo.x0, vuelo.x1, e);
-        y = lerp(vuelo.y0, vuelo.y1, e) - vuelo.arco * Math.sin(Math.PI * e);
-        giro = vuelo.giro ? vuelo.giro * 360 * suave(clamp((t - 0.2) / 0.6, 0, 1)) : 0;
-        tumbo *= Math.pow(0.9, k);
-        if (t >= 1) {
+        const obj = vuelo.objetivo ? vuelo.objetivo() : { x: vuelo.tx, y: vuelo.ty };
+        if (!obj) {
+          caer(ahora);
+        } else if (reducido) {
+          x = obj.x;
+          y = obj.y;
           const fin = vuelo.fin;
           vuelo = null;
-          giro = 0;
           fin(ahora);
-        }
-      } else if (modo === 'entrando') {
-        const s = asiento();
-        if (s) {
-          const destinoY = s.y - (ASIENTO_Y / VB_H) * rh;
-          x = s.x - (ASIENTO_X / VB_W) * rw;
-          if (vy !== 0 || y < destinoY) {
-            vy += 0.0024 * dt;
-            y += vy * dt;
-            if (y >= destinoY) {
-              y = destinoY;
-              vy = 0;
-              modo = 'sentado';
-              aplastar(ahora);
-              dTiltVel = -0.35;
-              // Sentado en la D se presenta siempre: es lo primero que ve
-              // quien entra y tiene que saber que es un asistente clicable.
-              pedir(tc.comun.avisoChat, null, 'bienvenida-sentado');
+        } else {
+          const w = vuelo.lento ? MUELLE_LENTO : MUELLE;
+          const z = vuelo.lento ? 1 : 0.9;
+          for (let resto = dt; resto > 0; resto -= 16) {
+            const h = Math.min(resto, 16);
+            vxv += (w * w * (obj.x - x) - 2 * z * w * vxv) * h;
+            vyv += (w * w * (obj.y - y) - 2 * z * w * vyv) * h;
+            const v = Math.hypot(vxv, vyv);
+            if (v > VEL_MAX) {
+              vxv *= VEL_MAX / v;
+              vyv *= VEL_MAX / v;
             }
+            x += vxv * h;
+            y += vyv * h;
+          }
+          tumbo *= Math.pow(0.94, k);
+          if (Math.hypot(obj.x - x, obj.y - y) < 1.2 && Math.hypot(vxv, vyv) < 0.05) {
+            x = obj.x;
+            y = obj.y;
+            vxv = 0;
+            vyv = 0;
+            const fin = vuelo.fin;
+            vuelo = null;
+            fin(ahora);
           }
         }
       } else if (modo === 'sentado') {
@@ -1114,20 +1196,32 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         vy += 0.0022 * dt;
         x += vx * dt;
         y += vy * dt;
-        tumbo += (reducido ? 0 : 0.22) * dt;
+        tumbo += (reducido ? 0 : 0.12) * dt;
         if (ahora - caidaDesde > 420) trasCaida(ahora);
       } else if (modo === 'flotando') {
-        if (!hero || hero.getBoundingClientRect().bottom <= altoVp() + 2) {
+        if (puedeVolverAD()) {
+          aterrizarEnD(ahora);
+        } else if (!hero || hero.getBoundingClientRect().bottom <= altoVp() + 2) {
           pasarA('documento');
+          vxv = 0;
+          vyv = 0;
           modo = 'posado';
           ultimoPlan = -1e9;
         }
+      } else if ((modo === 'posado' || modo === 'guardado') && puedeVolverAD()) {
+        aterrizarEnD(ahora);
       } else if (modo === 'posado' || modo === 'guardado') {
         const p = perchaEnVista();
         if (p && p !== perchaActiva) {
           perchaActiva = p;
           const m = mensajeDe(p);
-          if (m) pedir(m.texto, m.cta, 'seccion', p);
+          if (m) {
+            pedir(m.texto, m.cta, 'seccion', p);
+          } else {
+            // Sección sin nada que decir: igualmente se acerca a su titular.
+            esconderBurbuja(true);
+            irAHueco('seccion', anclaDe(p), null, ahora);
+          }
         }
 
         if (ahora - ultimosFijos > 600) {
@@ -1136,6 +1230,10 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         }
 
         if (modo === 'posado') {
+          // Se posó con el scroll aún en marcha: se queda fijo en pantalla y
+          // se ancla a la página en cuanto el scroll se para.
+          const fijoEnPantalla = sistema === 'pantalla';
+          if (fijoEnPantalla && ahora - ultimoMovScroll > 150) pasarA('documento');
           if (burbujaActual && ahora > ocultarEn) esconderBurbuja(true);
           const caja = cajaTotalPantalla();
           const fuera =
@@ -1146,7 +1244,13 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
             obstFijos.some((f) => cruzan(f, caja));
           if (fuera && ahora - ultimoPlan > 250) {
             irAHueco('deriva', anclaDe(perchaActiva), burbujaActual ? mensajeActual : null, ahora);
-          } else if (revisarYa || (ahora - ultimaRevision > 1200 && ahora - ultimoPlan > 800)) {
+          } else if (
+            revisarYa ||
+            // Fijo en pantalla la página le pasa por debajo: se revisa a menudo.
+            (fijoEnPantalla
+              ? ahora - ultimaRevision > 300 && ahora - ultimoPlan > 250
+              : ahora - ultimaRevision > 1200 && ahora - ultimoPlan > 800)
+          ) {
             revisarYa = false;
             // Lo que hay debajo puede cambiar sin scroll (tarjetas que entran
             // con animación, el banner de cookies): se revisa de vez en cuando.
@@ -1174,10 +1278,11 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         letraD.style.transform = Math.abs(dTilt) > 0.02 ? `rotate(${dTilt}deg)` : '';
       }
 
-      velX = sistema === 'pantalla' || modo === 'volando' ? (x - px) / dt : 0;
-      const objBanco = modo === 'sentado' || modo === 'entrando' ? dTilt : reducido ? 0 : clamp(velX * 22, -22, 22);
-      banco += (objBanco - banco) * Math.min(1, 0.2 * k);
-      if (modo !== 'cayendo' && !vuelo) tumbo *= Math.pow(0.85, k);
+      velX = modo === 'cayendo' ? (x - px) / dt : vuelo ? vxv : 0;
+      const objBanco =
+        modo === 'sentado' || descendiendo ? dTilt : reducido || modo === 'cayendo' ? 0 : clamp(velX * 18, -18, 18);
+      banco += (objBanco - banco) * Math.min(1, 0.12 * k);
+      if (modo !== 'cayendo' && !vuelo) tumbo *= Math.pow(0.9, k);
 
       pose(ahora, dt);
       pintar(ahora);
@@ -1192,19 +1297,9 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
     let cancelado = false;
     (async () => {
-      try {
-        await document.fonts?.ready;
-      } catch {
-        // Sin API de fuentes: se mide con lo que haya.
-      }
-      if (letraD) {
-        // En una pestaña en segundo plano las animaciones no avanzan: sin el
-        // tope, el robot no arrancaría nunca.
-        await Promise.race([
-          Promise.all(letraD.getAnimations().map((a) => a.finished.catch(() => undefined))),
-          new Promise((r) => setTimeout(r, 2000)),
-        ]);
-      }
+      // Solo se espera a la fuente (sin ella la D mide otra cosa), con tope:
+      // el robot entra volando mientras las letras terminan de aparecer.
+      await Promise.race([document.fonts?.ready.catch(() => undefined), new Promise((r) => setTimeout(r, 1500))]);
       if (!cancelado) arrancar();
     })();
 
