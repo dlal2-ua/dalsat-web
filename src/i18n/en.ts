@@ -28,7 +28,7 @@ export const en: Contenido = {
     volverArriba: 'Back to top',
     volverAlInicio: 'Back to home',
     escribirWhatsApp: 'Message us on WhatsApp',
-    avisoChat: 'Need a hand? Ask me anything.',
+    avisoChat: "Hi! I'm the DALSAT agent. Got any question at all — ask away.",
     cerrarAviso: 'Dismiss',
     mensajeWhatsApp: 'Hi, I am interested in what you do and would like to know more.',
     hablarWhatsApp: 'Shall we talk on WhatsApp?',

@@ -38,21 +38,40 @@ const ICONO_ROBOT = `
   <path d="M2.2 9.6v3.6M21.8 9.6v3.6"/>
 </svg>`;
 
+// El widget de dev.dalsats.com llega por un <script defer> externo: si se
+// pulsa el robot antes de que ese script termine de cargar y montar su
+// burbuja, `burbujaNativa()` no encuentra nada todavía. Un único intervalo
+// compartido (en vez de uno nuevo por cada clic, que se iban acumulando sin
+// limpiarse) sigue reintentando, y además se engancha al evento `load` del
+// propio script para no depender solo del sondeo.
+let reintentoAbrirChat: ReturnType<typeof setInterval> | null = null;
+
 function abrirChatReal() {
   const inmediata = burbujaNativa();
   if (inmediata) {
     inmediata.click();
     return;
   }
+  if (reintentoAbrirChat) return; // ya hay un intento en marcha, no se duplica
+
   let intentos = 0;
-  const reintento = setInterval(() => {
-    intentos += 1;
+  const probar = () => {
     const boton = burbujaNativa();
-    if (boton) {
-      boton.click();
-      clearInterval(reintento);
-    } else if (intentos > 40) {
-      clearInterval(reintento);
+    if (!boton) return false;
+    boton.click();
+    if (reintentoAbrirChat) clearInterval(reintentoAbrirChat);
+    reintentoAbrirChat = null;
+    return true;
+  };
+
+  const script = document.querySelector<HTMLScriptElement>('script[src*="dalsats.com/webchat/"]');
+  script?.addEventListener('load', probar, { once: true });
+
+  reintentoAbrirChat = setInterval(() => {
+    intentos += 1;
+    if (probar() || intentos > 60) {
+      if (reintentoAbrirChat) clearInterval(reintentoAbrirChat);
+      reintentoAbrirChat = null;
     }
   }, 300);
 }
@@ -319,6 +338,11 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     let lastScrollY = window.scrollY;
     let lastTime = performance.now();
     let cayendoDesde = 0;
+    // Lado del viewport donde se posa en 'roaming': alterna en cada punto de
+    // agarre nuevo, para que de verdad cruce la pantalla de un lado a otro
+    // en vez de quedarse siempre en el mismo sitio centrado.
+    let ladoDerecha = true;
+    let spinDesde = -Infinity; // momento del último cambio de perch, para el "tirabuzón"
 
     // La D se inclina un poco cuando el robot se sienta encima, como si
     // notara el peso. `hero-letter` trae su propia animación de entrada
@@ -401,6 +425,8 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         if (perch !== activePerchRef.current) {
           activePerchRef.current = perch;
           if (perch) {
+            ladoDerecha = !ladoDerecha; // cruza de lado en cada punto nuevo
+            spinDesde = now; // dispara el tirabuzón
             setBubbleMsg(perch.msg);
             setBubbleCta(perch.cta && perch.ctaHref ? { label: perch.cta, href: perch.ctaHref } : null);
             setShowBubble(true);
@@ -408,20 +434,25 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         }
         if (perch) {
           const rect = perch.el.getBoundingClientRect();
-          // No se sigue el borde real de la sección: en secciones a todo lo
-          // ancho, rect.right es literalmente el borde del viewport, y
-          // rect.top se va muy negativo en cuanto la sección lleva un rato
-          // scrolleada -- eso es justo lo que se veía como "pegado arriba a
-          // la derecha", con el bocadillo saliéndose de la pantalla por
-          // arriba. En su lugar se ancla sobre el contenido (62% del ancho
-          // de la sección) y, en vertical, deriva suavemente dentro de una
-          // banda cómoda según cuánto se ha entrado en esa sección --
-          // "cuánto" acotado a 0–1 por construcción, así que nunca colapsa
-          // al mismo borde por muy larga que sea la sección o muy lejos que
-          // se haya scrolleado.
+          // No se sigue el borde real de la sección ni se ancla siempre en
+          // el mismo sitio "centrado": eso es justo lo que tapaba el
+          // contenido (cayendo encima de texto y tarjetas) y lo que se veía
+          // como "el robot no se mueve, siempre está en el mismo lado". En
+          // su lugar se posa cerca del margen del viewport -- fuera de
+          // donde vive el contenido (que en esta web siempre va en una
+          // columna centrada con hueco a los lados) -- alternando entre
+          // el margen izquierdo y el derecho en cada punto de agarre nuevo,
+          // así cruza la pantalla de un lado a otro según se scrollea.
+          const margen = 26;
+          targetLeft = ladoDerecha ? window.innerWidth - VOLANDO_W - margen : margen;
+          // Vertical: deriva suavemente dentro de una banda cómoda según
+          // cuánto se ha entrado en la sección (0–1 acotado por
+          // construcción, nunca colapsa a un borde por muy larga que sea
+          // la sección o muy lejos que se haya scrolleado), y se mantiene
+          // alto (20%–42% del viewport) para no tapar cabeceras ni botones
+          // a media altura.
           const profundidad = clamp(-rect.top / Math.max(rect.height, 1), 0, 1);
-          targetLeft = rect.left + rect.width * 0.62;
-          targetTop = window.innerHeight * (0.2 + profundidad * 0.32);
+          targetTop = window.innerHeight * (0.2 + profundidad * 0.22);
         }
       }
 
@@ -457,10 +488,17 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       // evitar. Con retraso, el cuerpo lidera y la cabeza le sigue.
       currentHeadBank += (currentBank - currentHeadBank) * (reducedMotion ? 1 : 0.06);
 
+      // Tirabuzón: un giro completo, rápido, cada vez que cruza a un punto
+      // de agarre nuevo -- puro capricho decorativo, no física de vuelo.
+      // Con ease-out cúbico para que arranque fuerte y frene suave; a los
+      // 550ms ya completó la vuelta entera (360° ≡ nada) y no deja residuo.
+      const spinT = reducedMotion ? 1 : clamp((now - spinDesde) / 550, 0, 1);
+      const spinExtra = spinT < 1 ? (1 - Math.pow(1 - spinT, 3)) * 360 : 0;
+
       wrap.style.left = `${currentLeft}px`;
       wrap.style.top = `${currentTop + bob}px`;
       wrap.style.right = 'auto';
-      wrap.style.transform = `rotate(${currentBank}deg)`;
+      wrap.style.transform = `rotate(${currentBank + spinExtra}deg)`;
 
       if (flame) {
         flame.style.opacity = String(0.15 + currentFlame * 0.85);
@@ -552,12 +590,6 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
           grande ? 'h-[92px] w-[70px]' : anclada ? 'h-16 w-12' : 'h-[80px] w-[62px]'
         }`}
       >
-        <span
-          className="pointer-events-none absolute left-1/2 top-[45%] -z-10 h-12 w-12 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cian/25 blur-xl"
-          style={{ animation: reducedMotion ? undefined : 'mascotaPulso 3.2s ease-in-out infinite' }}
-          aria-hidden="true"
-        />
-
         {/* Llama del propulsor, entre las piernas */}
         <div
           ref={flameRef}
@@ -589,7 +621,31 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
               <stop offset="45%" stopColor="#7FE4F5" />
               <stop offset="100%" stopColor="#14CDEC" />
             </radialGradient>
+            <filter id="dalsatGlowBlur" x="-150%" y="-150%" width="400%" height="400%">
+              <feGaussianBlur stdDeviation="7" />
+            </filter>
           </defs>
+
+          {/* Destello: dentro del propio SVG, en la coordenada del pecho
+              (46,78 del viewBox), no como <span> HTML aparte posicionado en
+              porcentajes -- así queda perfectamente centrado en el cuerpo
+              pase lo que pase con el letterboxing del viewBox (el botón no
+              tiene el mismo aspect-ratio que el viewBox, así que un overlay
+              HTML centrado "al 50%" del botón no cae necesariamente sobre
+              el cuerpo dibujado dentro). */}
+          <circle
+            cx="46"
+            cy="78"
+            r="22"
+            fill="#14CDEC"
+            opacity="0.28"
+            filter="url(#dalsatGlowBlur)"
+            style={{
+              transformBox: 'fill-box',
+              transformOrigin: 'center',
+              animation: reducedMotion ? undefined : 'mascotaPulso 3.2s ease-in-out infinite',
+            }}
+          />
 
           {/* Piernas y brazos: un único <path> curvo por miembro que nace
               dentro del torso y sale hacia fuera (en vez de un rect recto +

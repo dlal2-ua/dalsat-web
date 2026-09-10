@@ -25,7 +25,7 @@ export const es = {
     volverArriba: 'Volver arriba',
     volverAlInicio: 'Volver al inicio',
     escribirWhatsApp: 'Escríbenos por WhatsApp',
-    avisoChat: '¿Necesitas ayuda? Pregúntame lo que quieras.',
+    avisoChat: '¡Hola! Soy el agente de DALSAT. Cualquier duda que tengas, pregúntamela.',
     cerrarAviso: 'Cerrar aviso',
     mensajeWhatsApp: 'Hola, me interesa lo que hacéis y me gustaría recibir más información.',
     hablarWhatsApp: '¿Hablamos por WhatsApp?',
