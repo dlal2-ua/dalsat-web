@@ -1,6 +1,6 @@
+import type { CSSProperties } from 'react';
 import { contenido } from '../i18n';
 import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
-import { useEffect, useRef, useState } from 'react';
 
 // Solo los iconos: el texto de cada paso vive en src/i18n. El orden manda.
 const ICONOS = [
@@ -13,6 +13,18 @@ interface Props {
   idioma?: Idioma;
 }
 
+// Linea de tiempo, no tarjetas: tres numerales grandes unidos por un filete.
+// En escritorio el filete corre en horizontal de un numero al siguiente; en
+// movil los pasos se apilan y el filete baja en vertical por la izquierda.
+//
+// Es la banda clara de /servicios: entre el CRM (navy) y el cierre (navy).
+// Sobre crema el cian a 1px no se ve, asi que el filete es navy tenue y el
+// cian va solo en un tramo corto y grueso junto a cada numero.
+//
+// Sin estado ni efectos a proposito. El revelado lo hace el sistema global
+// de Layout.astro ([data-reveal] + --reveal-delay), que ya contempla sin-JS
+// y prefers-reduced-motion. Asi el componente funciona igual hidratado que
+// sin hidratar, y nunca se puede quedar en opacity 0.
 export default function StepScroll({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   const t = contenido(idioma);
   const STEPS = t.pasos.lista.map((paso, i) => ({
@@ -22,109 +34,79 @@ export default function StepScroll({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     tag: paso.etiqueta,
     icon: ICONOS[i],
   }));
-
-  const sectionRef = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  // Los tres pasos se ven a la vez. Lo unico que hace el scroll es dispararlos
-  // al entrar en pantalla, escalonados, y una sola vez.
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setVisible(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const ULTIMO = STEPS.length - 1;
 
   return (
     <section
       id="como-funciona"
-      ref={sectionRef}
-      className="relative bg-navy-900 border-t border-white/10 py-20 sm:py-28 overflow-hidden"
+      className="relative bg-crema text-grafito py-20 sm:py-28 overflow-hidden"
     >
       <div
-        className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px]"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-cian/10 rounded-full blur-[160px] pointer-events-none"
+        className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_bottom_left,rgba(20,205,236,0.12),transparent_55%)]"
         aria-hidden="true"
       />
 
-      <style>{`
-        @keyframes stepIn {
-          from { opacity: 0; transform: translateY(24px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .step-card { opacity: 0; }
-        .step-card.is-in { animation: stepIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @media (prefers-reduced-motion: reduce) {
-          .step-card, .step-card.is-in { animation: none; opacity: 1; transform: none; }
-        }
-      `}</style>
-
-      <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Cabecera */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-cian border border-cian/30 bg-cian/10 px-4 py-1.5 rounded-full inline-block backdrop-blur-md shadow-[0_0_15px_rgba(20,205,236,0.2)] mb-4">
-            {t.pasos.etiqueta}
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
-            {t.pasos.titulo}
-          </h2>
-          <p className="text-white/70 text-base sm:text-lg">
+      <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-5 items-end mb-14 sm:mb-20" data-reveal>
+          <div className="lg:col-span-7">
+            <div className="flex items-center gap-4 mb-6">
+              <span className="h-[3px] w-10 bg-cian" aria-hidden="true" />
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-navy/70">
+                {t.pasos.etiqueta}
+              </span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-navy tracking-tight leading-tight">
+              {t.pasos.titulo}
+            </h2>
+          </div>
+          <p className="lg:col-span-5 lg:pb-2 text-grafito/80 text-base sm:text-lg leading-relaxed">
             {t.pasos.entradilla}
           </p>
         </div>
 
-        {/* Los tres pasos, a la vez */}
-        <ol className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 list-none p-0 m-0">
+        <ol className="grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-x-10 lg:gap-x-14 list-none p-0 m-0">
           {STEPS.map((step, idx) => (
             <li
               key={step.number}
-              className={`step-card${visible ? ' is-in' : ''} relative rounded-3xl p-7 sm:p-9 border border-white/15 bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl overflow-hidden flex flex-col`}
-              style={{ animationDelay: `${idx * 130}ms` }}
+              // content-start: los tres <li> se estiran a la altura del mas
+              // alto, y sin esto el hueco sobrante se reparte entre las filas
+              // y los numerales de los pasos cortos bajan unos pixeles.
+              className="grid content-start grid-cols-[3.5rem_1fr] gap-x-5 md:grid-cols-1 md:gap-x-0"
+              data-reveal
+              style={{ '--reveal-delay': `${idx * 140}ms` } as CSSProperties}
             >
-              <div
-                className="absolute top-0 right-0 w-52 h-52 bg-gradient-to-br from-cian/15 via-transparent to-transparent rounded-full blur-3xl opacity-60 pointer-events-none"
-                aria-hidden="true"
-              />
+              {/* Numeral y filete. En movil es una columna (numero arriba,
+                  filete bajando hasta el siguiente); en escritorio, una fila
+                  (numero a la izquierda, filete corriendo hasta el siguiente).
+                  aria-hidden: el numero ya lo anuncia el <ol>. */}
+              <div className="flex flex-col items-center md:flex-row md:gap-4 md:mb-8" aria-hidden="true">
+                <span className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-none tracking-tighter text-navy tabular-nums select-none">
+                  {step.number}
+                </span>
+                <span className="mt-3 h-6 w-[3px] shrink-0 bg-cian md:mt-0 md:h-[3px] md:w-10" />
+                {idx < ULTIMO ? (
+                  // Cruza el hueco entre pasos (-mb / -mr del mismo tamaño que
+                  // el gap) para que el filete llegue al numero siguiente.
+                  <span className="mt-2 -mb-12 w-px flex-1 bg-navy/20 md:mt-0 md:mb-0 md:h-px md:w-auto md:-mr-10 lg:-mr-14" />
+                ) : (
+                  <span className="hidden md:block md:h-px md:flex-1 bg-gradient-to-r from-navy/20 to-transparent" />
+                )}
+              </div>
 
-              <div className="relative z-10 flex flex-col h-full">
-                <div className="flex items-center gap-4 mb-6">
-                  <span className="font-extrabold text-5xl sm:text-6xl leading-none tracking-tighter bg-gradient-to-b from-cian to-cian-dark bg-clip-text text-transparent select-none">
-                    {step.number}
-                  </span>
-                  <span className="h-px flex-1 bg-gradient-to-r from-cian/40 to-transparent" aria-hidden="true" />
-                </div>
-
-                <h3 className="text-xl sm:text-2xl font-extrabold text-white mb-3 leading-snug">
+              <div className="pb-1">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-navy mb-3 leading-snug">
                   {step.title}
                 </h3>
-                <p className="text-white/70 text-sm sm:text-base leading-relaxed mb-7">
+                <p className="text-grafito/80 text-base leading-relaxed mb-6 max-w-md">
                   {step.desc}
                 </p>
 
-                <div className="mt-auto inline-flex items-center gap-2 self-start text-xs sm:text-sm font-extrabold text-cian bg-cian/10 py-2.5 px-4 rounded-2xl border border-cian/30">
-                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                <p className="inline-flex items-center gap-2 rounded-full border border-navy/15 px-3.5 py-1.5 text-xs sm:text-sm font-bold text-navy">
+                  <svg className="w-4 h-4 shrink-0 text-navy/70" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d={step.icon} />
                   </svg>
-                  <span>{step.tag}</span>
-                </div>
+                  {step.tag}
+                </p>
               </div>
             </li>
           ))}

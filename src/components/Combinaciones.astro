@@ -1,0 +1,101 @@
+---
+// Los servicios se combinan. Va en /servicios entre el catalogo y el CRM: el
+// catalogo acaba de enseñar seis piezas sueltas y esto dice que encajan, justo
+// antes de enseñar el sitio donde encajan (el CRM).
+//
+// No son tarjetas a proposito: el catalogo de encima ya es una rejilla de
+// fichas. Aqui cada combinacion es una fila que se lee como una suma de
+// piezas numeradas, con el mismo numero que llevan en el catalogo.
+//
+// Jerarquia: h1 en la portada de /servicios, h2 por servicio en el catalogo,
+// h2 para esta seccion y h3 para cada combinacion.
+//
+// Las piezas van por id y el nombre sale de src/i18n: nunca un nombre
+// escrito a mano, que en ingles saldria en castellano.
+import { SERVICIOS } from '../data/servicios';
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
+
+interface Props {
+  idioma?: Idioma;
+}
+
+const { idioma = IDIOMA_POR_DEFECTO } = Astro.props;
+const t = contenido(idioma);
+type IdServicio = keyof typeof t.servicios;
+
+const COMBINACIONES: { id: keyof typeof t.combinables.lista; piezas: IdServicio[] }[] = [
+  { id: 'captar', piezas: ['web', 'agentes', 'panel'] },
+  { id: 'medida', piezas: ['procesos', 'saas'] },
+  { id: 'encontrar', piezas: ['seo', 'web'] },
+];
+
+const ORDEN = Object.fromEntries(SERVICIOS.map((s) => [s.id, s.order]));
+---
+
+<section
+  id="combinables"
+  class="relative bg-navy-950 border-t border-white/10 py-20 sm:py-28 overflow-hidden"
+>
+  {/* Luz en la esquina como gradiente de la propia capa: antes era una
+      mancha con blur de 170px, que es cara de pintar al hacer scroll. */}
+  <div
+    class="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_100%_100%,rgba(20,205,236,0.10),transparent_50%)]"
+    aria-hidden="true"
+  ></div>
+
+  <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-10">
+      <div class="lg:col-span-5" data-reveal>
+        <div class="flex items-center gap-4 mb-6">
+          <span class="font-mono text-sm font-bold text-cian" aria-hidden="true">+</span>
+          <span class="h-px flex-1 max-w-[7rem] bg-cian/30" aria-hidden="true"></span>
+          <span class="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-white/60">
+            {t.combinables.etiqueta}
+          </span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-5">
+          {t.combinables.titulo}
+        </h2>
+        <p class="text-white/70 text-base sm:text-lg leading-relaxed">
+          {t.combinables.texto}
+        </p>
+      </div>
+
+      <ol class="lg:col-span-7 border-t border-white/10">
+        {COMBINACIONES.map((combo, i) => (
+          <li
+            class="border-b border-white/10 py-8 sm:py-10"
+            data-reveal
+            style={`--reveal-delay: ${i * 90}ms`}
+          >
+            <p class="flex flex-wrap items-center gap-x-2.5 gap-y-2 mb-5">
+              {combo.piezas.map((id, j) => (
+                <>
+                  {j > 0 && (
+                    <span class="font-mono text-lg font-bold text-cian" aria-hidden="true">+</span>
+                  )}
+                  <span class="inline-flex items-baseline gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3.5 py-1.5">
+                    <span class="font-mono text-[11px] font-bold text-cian/70 tabular-nums" aria-hidden="true">
+                      {ORDEN[id]}
+                    </span>
+                    <span class="text-sm font-bold text-white">{t.servicios[id].nombre}</span>
+                  </span>
+                </>
+              ))}
+            </p>
+            <h3 class="text-xl sm:text-2xl font-extrabold text-white leading-snug mb-2">
+              {t.combinables.lista[combo.id].titulo}
+            </h3>
+            <p class="text-white/70 text-sm sm:text-base leading-relaxed max-w-2xl">
+              {t.combinables.lista[combo.id].texto}
+            </p>
+          </li>
+        ))}
+        <li class="pt-8 text-white/60 text-sm sm:text-base" data-reveal style="--reveal-delay: 270ms">
+          {t.combinables.mas}
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>

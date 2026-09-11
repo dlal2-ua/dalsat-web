@@ -3,14 +3,15 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { urlWhatsApp } from '../data/contacto';
+import { ruta } from '../i18n';
 
 const WHATSAPP_URL = urlWhatsApp('Hola, acabo de escribiros por el formulario de la web.');
 
 // Mientras esperan, algo que mirar. Nada de esto pide otro formulario.
 const MIENTRAS = [
-  { href: '/demos', titulo: 'Prueba un agente', texto: 'Escríbele como si fueras un cliente tuyo y mira cómo contesta.' },
-  { href: '/calculadora', titulo: 'Calcula tu ahorro', texto: 'Cuántas horas te lleva hoy atender mensajes y llamadas.' },
-  { href: '/faq', titulo: 'Preguntas frecuentes', texto: 'Precios, plazos, permanencia y protección de datos.' },
+  { href: ruta('/demos#video-agentes', 'es'), titulo: 'Prueba un agente', texto: 'Mira cómo contesta un agente en tu sector y escúchalo por teléfono.' },
+  { href: ruta('/calculadora', 'es'), titulo: 'Calcula tu ahorro', texto: 'Cuántas horas te lleva hoy atender mensajes y llamadas.' },
+  { href: ruta('/faq', 'es'), titulo: 'Preguntas frecuentes', texto: 'Precios, plazos, permanencia y protección de datos.' },
 ];
 ---
 
@@ -21,14 +22,14 @@ const MIENTRAS = [
 >
   <Header client:load currentPath="/gracias" />
 
-  <main class="pt-16">
+  <main id="contenido" class="pt-16">
     <section class="relative min-h-[calc(100vh-64px)] flex items-center bg-gradient-to-b from-navy-950 via-navy-800 to-navy-900 py-16 sm:py-24 border-t border-white/10 overflow-hidden">
       <div
         class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"
         aria-hidden="true"
       ></div>
       <div
-        class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-cian/15 rounded-full blur-[150px] pointer-events-none"
+        class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_35%,rgba(20,205,236,0.14),transparent_60%)]"
         aria-hidden="true"
       ></div>
 
@@ -55,7 +56,7 @@ const MIENTRAS = [
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            class="w-full sm:w-auto inline-flex items-center justify-center bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm px-8 py-4 rounded-2xl transition-all shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-105"
+            class="w-full sm:w-auto inline-flex items-center justify-center bg-terracota hover:bg-terracota-light text-navy-950 font-extrabold text-sm px-8 py-4 rounded-2xl transition-all shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-105"
           >
             Escribirnos por WhatsApp
           </a>
@@ -67,14 +68,14 @@ const MIENTRAS = [
           </a>
         </div>
 
-        <p class="text-xs font-bold uppercase tracking-widest text-white/40 mb-4">
+        <p class="text-xs font-bold uppercase tracking-widest text-white/60 mb-4">
           Mientras tanto
         </p>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
           {MIENTRAS.map((m) => (
             <a
               href={m.href}
-              class="group rounded-2xl border border-white/12 bg-white/[0.04] p-5 transition-all hover:border-cian/50 hover:bg-white/[0.07]"
+              class="group rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition-all hover:border-cian/50 hover:bg-white/[0.07]"
             >
               <span class="block text-white font-bold text-sm mb-1 group-hover:text-cian transition-colors">
                 {m.titulo}
@@ -87,5 +88,5 @@ const MIENTRAS = [
     </section>
   </main>
 
-  <Footer client:visible />
+  <Footer />
 </Layout>

@@ -1,42 +1,40 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header';
-import SectorDemos from '../../components/SectorDemos';
-import AudioDemos from '../../components/AudioDemos';
+import ServiceVideos from '../../components/ServiceVideos';
 import Footer from '../../components/Footer';
 import CtaContacto from '../../components/CtaContacto.astro';
 ---
 
 <Layout
-  title="AI agent demos by sector | DALSAT"
-  description="Try a DALSAT AI agent built for your type of business and hear how it sounds on the phone. The voice samples are in Spanish, the language the agents work in."
+  title="AI agent demos and service videos | DALSAT"
+  description="See AI agent demos by industry and short videos for each service: custom software, AI-powered CRM, process mapping, SEO and web development from DALSAT."
 >
   <Header client:load currentPath="/demos" idioma="en" />
 
-  <main class="pt-16">
-    {/* La portada se aparta: lo que importa son los simuladores de abajo. */}
+  <main id="contenido" class="pt-16">
+    {/* La portada se aparta: lo que importa son los videos de abajo. */}
     <section class="relative py-14 sm:py-20 bg-gradient-to-b from-navy-800 via-navy-950 to-navy-900 overflow-hidden">
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cian/15 rounded-full blur-[160px] pointer-events-none" aria-hidden="true"></div>
+      <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_40%,rgba(20,205,236,0.12),transparent_60%)]" aria-hidden="true"></div>
 
       <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 text-center" data-reveal>
-        <p class="flex items-center justify-center gap-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-white/45 mb-6">
+        <p class="flex items-center justify-center gap-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-white/60 mb-6">
           <span class="relative flex h-2 w-2" aria-hidden="true">
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-cian opacity-70"></span>
+            <span class="absolute inline-flex h-full w-full motion-safe:animate-ping rounded-full bg-cian opacity-70"></span>
             <span class="relative inline-flex h-2 w-2 rounded-full bg-cian"></span>
           </span>
-          Service 02 · AI agents
+          The six services
         </p>
         <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-[1.05] mb-5 max-w-4xl mx-auto">
-          Try an agent built for your type of business
+          See what each service looks like
         </h1>
         <p class="text-white/70 text-base sm:text-lg font-light max-w-2xl mx-auto">
-          Write to the agent as if you were a customer, or hear how it sounds on the phone. Agents are one of the six services.
+          We are publishing a short video for each service. On the AI agents one, you can see how an agent answers in your sector and hear it on the phone. If it fits, we set one up with your data and you try it free.
         </p>
       </div>
     </section>
 
-    <SectorDemos client:load idioma="en" />
-    <AudioDemos client:load idioma="en" />
+    <ServiceVideos client:load idioma="en" />
 
     <CtaContacto
       titulo="And with your own business data?"
@@ -45,5 +43,5 @@ import CtaContacto from '../../components/CtaContacto.astro';
     />
   </main>
 
-  <Footer client:visible idioma="en" />
+  <Footer idioma="en" />
 </Layout>

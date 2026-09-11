@@ -7,19 +7,19 @@ import CtaContacto from '../../components/CtaContacto.astro';
 ---
 
 <Layout
-  title="Savings calculator | DALSAT"
-  description="Work out how many hours a month you get back by automating the messages and calls your business handles by hand."
+  title="Savings calculator for small businesses | DALSAT"
+  description="Work out how many hours a month your business gets back by automating messages, calls and repetitive tasks you handle by hand today. Instant result."
 >
   <Header client:load currentPath="/calculadora" idioma="en" />
 
-  <main class="pt-16">
+  <main id="contenido" class="pt-16">
     {/* Abre como una hoja de calculo: que entra y que sale, en mono. */}
     <section class="relative py-16 sm:py-24 bg-gradient-to-b from-navy-800 via-navy-950 to-navy-900 overflow-hidden">
-      <div class="absolute bottom-0 right-0 w-[560px] h-[400px] bg-cian-dark/15 rounded-full blur-[160px] pointer-events-none" aria-hidden="true"></div>
+      <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_100%_100%,rgba(15,168,196,0.15),transparent_60%)]" aria-hidden="true"></div>
 
       <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         <div class="max-w-3xl" data-reveal>
-          <p class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white/40 pb-5 mb-7 border-b border-white/10">
+          <p class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white/60 pb-5 mb-7 border-b border-white/10">
             <span>In</span>
             <span class="text-white/70">your week</span>
             <span class="text-cian-dark" aria-hidden="true">&rarr;</span>
@@ -45,5 +45,5 @@ import CtaContacto from '../../components/CtaContacto.astro';
     />
   </main>
 
-  <Footer client:visible idioma="en" />
+  <Footer idioma="en" />
 </Layout>

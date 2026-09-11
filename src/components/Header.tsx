@@ -40,13 +40,14 @@ export default function Header({ currentPath = '/', idioma = IDIOMA_POR_DEFECTO 
         </a>
 
         {/* Menú de Navegación de Escritorio */}
-        <nav className="hidden md:flex items-center gap-7 text-sm font-medium" aria-label={t.nav.principal}>
+        <nav className="hidden lg:flex items-center gap-7 text-sm font-medium" aria-label={t.nav.principal}>
           {NAV_ITEMS.map((item) => {
             const isActive = currentPath === item.href;
             return (
               <a
                 key={item.href}
                 href={ruta(item.href, idioma)}
+                aria-current={isActive ? 'page' : undefined}
                 className={`transition-colors py-1 relative ${
                   isActive
                     ? 'text-cian font-semibold'
@@ -74,11 +75,11 @@ export default function Header({ currentPath = '/', idioma = IDIOMA_POR_DEFECTO 
           </a>
           <a
             href={ruta('/contacto', idioma)}
-            className="hidden md:inline-flex bg-terracota hover:bg-terracota-dark text-navy text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(217,100,44,0.3)] hover:scale-105"
+            className="hidden lg:inline-flex bg-terracota hover:bg-terracota-light text-navy-950 text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(217,100,44,0.3)] hover:scale-105"
           >
             {t.nav.cta} →
           </a>
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <SelectorIdioma idioma={idioma} rutaActual={currentPath} />
           </div>
           <MobileMenu currentPath={currentPath} idioma={idioma} />

@@ -87,6 +87,7 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     let target = 0;
     let current = 0;
     let rafId = 0;
+    let animating = false;
     let inView = true;
 
     const computeTarget = () => {
@@ -120,19 +121,41 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       }
     };
 
-    const loop = () => {
-      if (inView) {
-        computeTarget();
-        current += (target - current) * 0.14;
-        if (Math.abs(target - current) < 0.0005) current = target;
-        apply(current);
+    // Antes este bucle llamaba a requestAnimationFrame sin condicion, asi que
+    // corria en cada frame para siempre aunque nadie hubiera hecho scroll.
+    // Ahora solo se arranca al recibir scroll/resize (o al entrar en
+    // viewport) y se para solo en cuanto `current` alcanza a `target`.
+    const step = () => {
+      if (!inView) {
+        animating = false;
+        return;
       }
-      rafId = requestAnimationFrame(loop);
+      computeTarget();
+      current += (target - current) * 0.14;
+      if (Math.abs(target - current) < 0.0005) {
+        current = target;
+        apply(current);
+        animating = false;
+        return;
+      }
+      apply(current);
+      rafId = requestAnimationFrame(step);
     };
+
+    const kick = () => {
+      if (animating) return;
+      animating = true;
+      rafId = requestAnimationFrame(step);
+    };
+
+    const onScrollOrResize = () => kick();
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize);
 
     const observer = new IntersectionObserver(
       (entries) => {
         inView = entries[0]?.isIntersecting ?? false;
+        if (inView) kick();
       },
       { rootMargin: '100px' },
     );
@@ -141,10 +164,11 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     computeTarget();
     current = target;
     apply(current);
-    rafId = requestAnimationFrame(loop);
 
     return () => {
       cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', onScrollOrResize);
+      window.removeEventListener('resize', onScrollOrResize);
       observer.disconnect();
     };
   }, []);
@@ -162,7 +186,7 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       ref={sectionRef}
       id="hero"
       className="relative bg-navy"
-      style={{ height: reducedMotion ? 'auto' : '150vh' }}
+      style={{ height: reducedMotion ? 'auto' : '120vh' }}
     >
       <style>{`
         @keyframes heroLetterIn {
@@ -183,15 +207,15 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         }
         .hero-subtitle {
           opacity: 0;
-          animation: heroFadeIn 0.9s ease-out 0.8s forwards;
+          animation: heroFadeIn 0.9s ease-out 0.3s forwards;
         }
         .hero-cta {
           opacity: 0;
-          animation: heroFadeIn 0.9s ease-out 1.1s forwards;
+          animation: heroFadeIn 0.9s ease-out 0.5s forwards;
         }
         .hero-hint {
           opacity: 0;
-          animation: heroFadeIn 0.9s ease-out 1.3s forwards;
+          animation: heroFadeIn 0.9s ease-out 0.6s forwards;
         }
         .hero-arrow {
           animation: heroArrowBounce 1.8s ease-in-out infinite;
@@ -248,7 +272,7 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         className={
           reducedMotion
             ? 'relative flex min-h-[100svh] flex-col items-center justify-center gap-12 overflow-hidden py-28'
-            : 'sticky top-0 flex h-screen items-center justify-center overflow-hidden'
+            : 'sticky top-0 flex h-[100svh] items-center justify-center overflow-hidden'
         }
       >
         {/* Nebulosa sutil */}
@@ -298,35 +322,46 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
         {/* Capa 1: DALSAT, se abre en dos mitades al scrollear */}
         <div className={reducedMotion ? 'relative z-10 flex flex-col items-center px-4 text-center' : 'absolute inset-0 z-10 flex flex-col items-center justify-center px-4 text-center'}>
-          <h1
-            aria-label="DALSAT"
-            className="flex font-display font-bold leading-none tracking-[0.12em] text-white text-[clamp(3.5rem,12vw,5rem)] md:text-[clamp(5rem,15vw,11rem)]"
-            style={{ textShadow: '0 0 40px rgba(20,205,236,0.3)' }}
-          >
-            <span ref={dalRef} className="inline-block will-change-transform" aria-hidden="true">
-              {['D', 'A', 'L'].map((letter, i) => (
-                <span
-                  key={i}
-                  className="hero-letter inline-block"
-                  style={{ animationDelay: `${0.1 + i * 0.08}s` }}
-                  {...(i === 0 ? { 'data-mascot-anchor': 'hero-d' } : {})}
-                >
-                  {letter}
-                </span>
-              ))}
+          {/* El wordmark "DALSAT" es decorativo (aria-hidden): el h1 semantico
+              lo envuelve junto con una segunda linea visible con la palabra
+              clave (t.hero.titulo), que es lo que de verdad lee un lector de
+              pantalla o un buscador como titular de la pagina. La mascota
+              ancla en la "D" via [data-mascot-anchor="hero-d"] y su
+              parentElement (el span de dalRef): esa estructura no se toca. */}
+          <h1 className="flex flex-col items-center gap-3 sm:gap-4">
+            <span
+              aria-hidden="true"
+              className="flex font-display font-bold leading-none tracking-[0.12em] text-white text-[clamp(3.5rem,12vw,5rem)] md:text-[clamp(5rem,15vw,11rem)]"
+              style={{ textShadow: '0 0 40px rgba(20,205,236,0.3)' }}
+            >
+              <span ref={dalRef} className="inline-block will-change-transform">
+                {['D', 'A', 'L'].map((letter, i) => (
+                  <span
+                    key={i}
+                    className="hero-letter inline-block"
+                    style={{ animationDelay: `${0.1 + i * 0.08}s` }}
+                    {...(i === 0 ? { 'data-mascot-anchor': 'hero-d' } : {})}
+                  >
+                    {letter}
+                  </span>
+                ))}
+              </span>
+              <span ref={satRef} className="inline-block will-change-transform">
+                {['S', 'A', 'T'].map((letter, i) => (
+                  <span key={i} className="hero-letter inline-block" style={{ animationDelay: `${0.34 + i * 0.08}s` }}>
+                    {letter}
+                  </span>
+                ))}
+              </span>
             </span>
-            <span ref={satRef} className="inline-block will-change-transform" aria-hidden="true">
-              {['S', 'A', 'T'].map((letter, i) => (
-                <span key={i} className="hero-letter inline-block" style={{ animationDelay: `${0.34 + i * 0.08}s` }}>
-                  {letter}
-                </span>
-              ))}
+            <span className="hero-subtitle block max-w-xl px-2 text-center font-display font-semibold tracking-wide text-cian text-[clamp(1rem,2.6vw,1.5rem)]">
+              {t.titulo}
             </span>
           </h1>
 
           <div ref={introRef} className="flex flex-col items-center">
-            <p className="hero-subtitle mt-6 max-w-md text-[clamp(1rem,2.5vw,1.25rem)] font-normal text-white/55">
-              {t.lema}
+            <p className="hero-subtitle mt-5 max-w-md text-[clamp(1rem,2.5vw,1.25rem)] font-normal text-white/80">
+              {t.subtitulo}
             </p>
 
             {/* La primera pantalla no tenia ninguna accion: habia que scrollear
@@ -334,7 +369,7 @@ export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
             <div className="hero-cta mt-7 flex flex-col items-center gap-3 sm:flex-row">
               <a
                 href={ruta('/contacto', idioma)}
-                className="inline-flex items-center justify-center rounded-2xl bg-terracota px-7 py-3.5 text-sm font-extrabold text-navy shadow-[0_0_25px_rgba(217,100,44,0.35)] transition-all hover:scale-105 hover:bg-terracota-dark"
+                className="inline-flex items-center justify-center rounded-2xl bg-terracota px-7 py-3.5 text-sm font-extrabold text-navy-950 shadow-[0_0_25px_rgba(217,100,44,0.35)] transition-all hover:scale-105 hover:bg-terracota-light"
               >
                 {t.ctaPrincipal}
               </a>

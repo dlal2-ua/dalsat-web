@@ -1607,7 +1607,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         (interactivo ? (
           <a
             href={m.cta.href}
-            className="mt-2.5 block rounded-xl bg-terracota px-3.5 py-2 text-center text-xs font-extrabold text-navy transition-colors hover:bg-terracota-dark"
+            className="mt-2.5 block rounded-xl bg-terracota px-3.5 py-2 text-center text-xs font-extrabold text-navy-950 transition-colors hover:bg-terracota-light"
           >
             {m.cta.label} →
           </a>

@@ -1,0 +1,14 @@
+---
+// English version of each service page. Same slugs as Spanish: `ruta()` only
+// adds the /en prefix. Markup lives in components/PaginaServicio.astro.
+import PaginaServicio from '../../../components/PaginaServicio.astro';
+import { SERVICIOS } from '../../../data/servicios';
+
+export function getStaticPaths() {
+  return SERVICIOS.map((s) => ({ params: { slug: s.slug }, props: { id: s.id } }));
+}
+
+const { id } = Astro.props;
+---
+
+<PaginaServicio idioma="en" id={id} />

@@ -3,22 +3,23 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header';
 import Services from '../../components/Services';
 import Platform from '../../components/Platform';
+import Combinaciones from '../../components/Combinaciones.astro';
 import StepScroll from '../../components/StepScroll';
 import Footer from '../../components/Footer';
 import CtaContacto from '../../components/CtaContacto.astro';
 ---
 
 <Layout
-  title="Services | Custom software, AI agents, automation, SEO and web"
-  description="DALSAT's six services for small businesses across Spain: custom software, AI agents on WhatsApp, Instagram and your site, a management panel, process mapping and automation, SEO and web development."
+  title="Custom software and AI agents for small businesses | DALSAT"
+  description="Custom software, AI agents for WhatsApp, an AI-powered CRM, process mapping, SEO and web development: DALSAT's six services for small businesses in Spain."
 >
   <Header client:load currentPath="/servicios" idioma="en" />
 
-  <main class="pt-16">
+  <main id="contenido" class="pt-16">
     {/* Misma portada de indice que la version en castellano: numero, regla y
         titulo a la izquierda, entradilla descolgada a la derecha. */}
     <section class="relative py-16 sm:py-28 bg-gradient-to-b from-navy-800 via-navy-950 to-navy-900 overflow-hidden">
-      <div class="absolute top-0 -left-40 w-[620px] h-[420px] bg-cian/15 rounded-full blur-[160px] pointer-events-none" aria-hidden="true"></div>
+      <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_10%_0%,rgba(20,205,236,0.14),transparent_60%)]" aria-hidden="true"></div>
 
       <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-8 items-end">
@@ -26,7 +27,7 @@ import CtaContacto from '../../components/CtaContacto.astro';
             <div class="flex items-center gap-4 mb-6 sm:mb-8">
               <span class="font-mono text-sm font-bold text-cian tabular-nums">06</span>
               <span class="h-px flex-1 max-w-[7rem] bg-cian/30" aria-hidden="true"></span>
-              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-white/40">
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-white/60">
                 Services
               </span>
             </div>
@@ -40,15 +41,16 @@ import CtaContacto from '../../components/CtaContacto.astro';
             data-reveal
             style="--reveal-delay: 120ms"
           >
-            You do not have to do it all at once. We start with whatever weighs on you most each week and go from there.
+            You do not have to do it all at once: take them one by one or combined. We start with whatever weighs on you most each week and go from there.
           </p>
         </div>
       </div>
     </section>
 
     <Services idioma="en" />
+    <Combinaciones idioma="en" />
     <Platform idioma="en" />
-    <StepScroll client:load idioma="en" />
+    <StepScroll idioma="en" />
 
     <CtaContacto
       titulo="Where would you start?"
@@ -57,5 +59,5 @@ import CtaContacto from '../../components/CtaContacto.astro';
     />
   </main>
 
-  <Footer client:visible idioma="en" />
+  <Footer idioma="en" />
 </Layout>

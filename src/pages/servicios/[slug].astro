@@ -1,0 +1,14 @@
+---
+// Una pagina por servicio: /servicios/software-a-medida, /servicios/agentes-ia...
+// El marcado vive en components/PaginaServicio.astro, compartido con /en.
+import PaginaServicio from '../../components/PaginaServicio.astro';
+import { SERVICIOS } from '../../data/servicios';
+
+export function getStaticPaths() {
+  return SERVICIOS.map((s) => ({ params: { slug: s.slug }, props: { id: s.id } }));
+}
+
+const { id } = Astro.props;
+---
+
+<PaginaServicio idioma="es" id={id} />

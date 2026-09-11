@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import SelectorIdioma from './SelectorIdioma';
 import { contenido } from '../i18n';
@@ -23,6 +23,10 @@ export default function MobileMenu({ currentPath = '/', idioma = IDIOMA_POR_DEFE
 
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -44,8 +48,35 @@ export default function MobileMenu({ currentPath = '/', idioma = IDIOMA_POR_DEFE
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  // Cerrado, el drawer no debe poder recibir foco ni tabulación (aunque
+  // esté fuera de pantalla con translate-x-full, sigue siendo tabulable sin
+  // esto). `inert` se pone a mano porque React todavía no lo modela como
+  // prop booleana fiable en JSX.
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    if (open) {
+      nav.removeAttribute('inert');
+    } else {
+      nav.setAttribute('inert', '');
+    }
+  }, [open, mounted]);
+
+  // Al abrir, el foco entra en el drawer (el botón de cerrar); al cerrar,
+  // vuelve al botón que lo abrió. Sin esto el foco se queda "perdido" en un
+  // botón que ya no se ve.
+  useEffect(() => {
+    if (open) {
+      previousFocusRef.current = document.activeElement as HTMLElement | null;
+      const id = requestAnimationFrame(() => closeButtonRef.current?.focus());
+      return () => cancelAnimationFrame(id);
+    }
+    previousFocusRef.current?.focus();
+    previousFocusRef.current = null;
+  }, [open]);
+
   const drawerContent = (
-    <div className="md:hidden">
+    <div className="lg:hidden">
       {/* Overlay */}
       <div
         onClick={() => setOpen(false)}
@@ -57,6 +88,7 @@ export default function MobileMenu({ currentPath = '/', idioma = IDIOMA_POR_DEFE
 
       {/* Drawer lateral */}
       <nav
+        ref={navRef}
         id="mobile-drawer"
         aria-label={t.nav.principal}
         className={`fixed right-0 top-0 z-[9999] flex h-full w-72 max-w-[85vw] flex-col bg-navy-900 border-l border-white/15 shadow-2xl transition-transform duration-300 ease-out motion-reduce:transition-none ${
@@ -69,6 +101,7 @@ export default function MobileMenu({ currentPath = '/', idioma = IDIOMA_POR_DEFE
             <span className="font-display text-lg font-bold tracking-widest text-white">DALSAT</span>
           </a>
           <button
+            ref={closeButtonRef}
             type="button"
             aria-label={t.nav.cerrarMenu}
             onClick={() => setOpen(false)}
@@ -106,7 +139,7 @@ export default function MobileMenu({ currentPath = '/', idioma = IDIOMA_POR_DEFE
           <a
             href={ruta('/contacto', idioma)}
             onClick={() => setOpen(false)}
-            className="flex min-h-[48px] items-center justify-center rounded-xl bg-terracota px-5 py-3 text-sm font-semibold text-navy transition-colors hover:bg-terracota-dark shadow-[0_0_15px_rgba(217,100,44,0.35)]"
+            className="flex min-h-[48px] items-center justify-center rounded-xl bg-terracota px-5 py-3 text-sm font-semibold text-navy-950 transition-colors hover:bg-terracota-light shadow-[0_0_15px_rgba(217,100,44,0.35)]"
           >
             {t.nav.cta} →
           </a>
@@ -117,8 +150,9 @@ export default function MobileMenu({ currentPath = '/', idioma = IDIOMA_POR_DEFE
   );
 
   return (
-    <div className="md:hidden">
+    <div className="lg:hidden">
       <button
+        ref={toggleRef}
         type="button"
         aria-label={open ? t.nav.cerrarMenu : t.nav.abrirMenu}
         aria-expanded={open}

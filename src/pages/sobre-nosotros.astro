@@ -8,21 +8,21 @@ import CtaContacto from '../components/CtaContacto.astro';
 
 <Layout
   title="Sobre nosotros | DALSAT"
-  description="Quiénes somos: un estudio de digitalización que trabaja con pymes de toda España."
+  description="Quiénes somos: un estudio de digitalización que ayuda a pymes de toda España a automatizar procesos y responder a clientes con inteligencia artificial."
 >
   <Header client:load currentPath="/sobre-nosotros" />
 
-  <main class="pt-16">
+  <main id="contenido" class="pt-16">
     {/* Componente Quiénes Somos */}
-    <AboutUs client:load />
+    <AboutUs />
 
     <CtaContacto
-      titulo="Trabaja con nosotros"
+      titulo="¿Hablamos de tu negocio?"
       texto="Te acompañamos desde el primer día y seguimos encima cuando ya está funcionando."
       cta="Habla con nosotros"
     />
 
   </main>
 
-  <Footer client:visible />
+  <Footer />
 </Layout>

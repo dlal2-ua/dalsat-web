@@ -21,10 +21,10 @@ y `missing`.
 
 Lo que no cabe explicar ahi va aqui:
 
-- **La CSP se aplica a todo menos a `citas.dalsats.com`** (por eso el
-  `missing` de la segunda regla). Ese host no sirve esta web: el `rewrite` de
-  arriba lo manda a una aplicacion externa que no esta en este repositorio y
-  cuyos recursos no podemos enumerar. Aplicarle nuestra politica la romperia.
+- **La CSP va en la misma regla que el resto de cabeceras y se aplica a todo
+  el sitio**, sin excepciones por host.
+- Las fuentes se sirven desde la propia web (Fontsource), asi que la CSP ya no
+  abre `fonts.googleapis.com` ni `fonts.gstatic.com`.
 - `script-src` lleva `'unsafe-inline'` porque Astro emite scripts de modulo en
   linea y la pagina lleva JSON-LD y el flag `.js` del `<head>`. Aun asi
   bloquea scripts de cualquier host que no este nombrado, que es el objetivo.

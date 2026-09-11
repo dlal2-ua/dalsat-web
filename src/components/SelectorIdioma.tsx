@@ -1,3 +1,4 @@
+import { contenido } from '../i18n';
 import { IDIOMAS, NOMBRE_IDIOMA, ruta, type Idioma } from '../i18n/config';
 
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 // Enlaza a la misma pagina, no al inicio: cambiar de idioma en /calculadora
 // deberia dejarte en la calculadora.
 export default function SelectorIdioma({ idioma, rutaActual, variante = 'barra' }: Props) {
+  const t = contenido(idioma);
   const enBarra = variante === 'barra';
 
   return (
@@ -42,7 +44,7 @@ export default function SelectorIdioma({ idioma, rutaActual, variante = 'barra' 
             key={codigo}
             href={ruta(rutaActual, codigo)}
             hrefLang={codigo}
-            aria-label={`Ver esta página en ${NOMBRE_IDIOMA[codigo]}`}
+            aria-label={`${t.nav.cambiarIdioma}: ${NOMBRE_IDIOMA[codigo]}`}
             className={`${base} text-white/55 hover:bg-white/5 hover:text-white`}
           >
             {codigo}

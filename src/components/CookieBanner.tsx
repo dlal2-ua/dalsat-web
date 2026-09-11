@@ -98,6 +98,11 @@ export default function CookieBanner({ idioma = IDIOMA_POR_DEFECTO }: Props) {
           </a>
         </p>
 
+        {/* Mismo peso visual en los dos botones: los dos van delineados, con
+            el mismo grosor de borde y el mismo padding. Antes "Aceptar" era
+            un boton relleno de cian y "Rechazar" solo un contorno, lo que
+            ademas de romper la regla de marca (cian nunca relleno en botones
+            de accion) empujaba visualmente hacia aceptar. */}
         <div className="flex shrink-0 gap-3">
           <button
             type="button"
@@ -109,7 +114,7 @@ export default function CookieBanner({ idioma = IDIOMA_POR_DEFECTO }: Props) {
           <button
             type="button"
             onClick={() => decidir('aceptado')}
-            className="flex-1 cursor-pointer rounded-xl bg-cian px-5 py-2.5 text-sm font-extrabold text-navy transition-colors hover:bg-cian-dark sm:flex-none"
+            className="flex-1 cursor-pointer rounded-xl border border-cian/50 px-5 py-2.5 text-sm font-bold text-cian transition-colors hover:bg-cian/10 hover:text-cian-light sm:flex-none"
           >
             {t.cookies.aceptar}
           </button>

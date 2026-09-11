@@ -11,16 +11,16 @@ const WHATSAPP_URL =
 
 <Layout
   title="Contact | DALSAT"
-  description="Tell us how your business works today and we will tell you what can be automated. We work with small businesses across Spain."
+  description="Tell us how your small business works today and we will tell you what can be automated with AI. Contact form and WhatsApp. Small businesses across Spain."
 >
   <Header client:load currentPath="/contacto" idioma="en" />
 
-  <main class="pt-16">
+  <main id="contenido" class="pt-16">
     <section
       id="contacto"
       class="relative min-h-[calc(100vh-64px)] flex items-center bg-gradient-to-b from-navy-950 via-navy-800 to-navy-900 py-16 sm:py-24 border-t border-white/10 overflow-hidden"
     >
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cian/15 rounded-full blur-[140px] pointer-events-none" aria-hidden="true"></div>
+      <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_40%,rgba(20,205,236,0.12),transparent_60%)]" aria-hidden="true"></div>
 
       <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         {/* Cabecera a izquierda, como en la version en castellano: debajo hay
@@ -50,13 +50,13 @@ const WHATSAPP_URL =
                 Would you rather talk on WhatsApp?
               </h2>
               <p class="text-white/70 text-xs sm:text-sm leading-relaxed">
-                We answer enquiries on WhatsApp straight away, Monday to Friday.
+                On WhatsApp we reply during working hours. The assistant on this site answers any time.
               </p>
               <a
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] block cursor-pointer flex items-center justify-center gap-2"
+                class="w-full py-4 rounded-2xl border border-cian/50 bg-cian/10 text-cian hover:bg-cian/20 font-extrabold text-sm transition-all duration-300 text-center block cursor-pointer flex items-center justify-center gap-2"
               >
                 Message us on WhatsApp →
               </a>
@@ -76,5 +76,5 @@ const WHATSAPP_URL =
     </section>
   </main>
 
-  <Footer client:visible idioma="en" />
+  <Footer idioma="en" />
 </Layout>

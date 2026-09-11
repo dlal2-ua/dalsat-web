@@ -12,9 +12,14 @@ export default function RoiCalculator({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   const [messagesPerDay, setMessagesPerDay] = useState<number>(60);
   const [hourlyCost, setHourlyCost] = useState<number>(25);
 
-  // Asumiendo 3 minutos promedio por atención manual de llamada/mensaje
-  const minutesSavedPerDay = messagesPerDay * 2.8;
-  const hoursSavedPerMonth = Math.round((minutesSavedPerDay * 30) / 60);
+  // Cuenta honesta: el agente no resuelve el 100% de los mensajes (una parte
+  // pasa a una persona) ni el negocio abre los 30 dias del mes. 2,8 minutos
+  // por mensaje/llamada atendidos a mano; el agente resuelve el 70% de ellos,
+  // sobre 22 dias laborables al mes.
+  const TASA_RESOLUCION = 0.7;
+  const DIAS_LABORABLES_MES = 22;
+  const minutesSavedPerDay = messagesPerDay * TASA_RESOLUCION * 2.8;
+  const hoursSavedPerMonth = Math.round((minutesSavedPerDay * DIAS_LABORABLES_MES) / 60);
   const moneySavedPerMonth = Math.round(hoursSavedPerMonth * hourlyCost);
   const moneySavedPerYear = moneySavedPerMonth * 12;
 
@@ -56,7 +61,7 @@ export default function RoiCalculator({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                   onChange={(e) => setMessagesPerDay(Number(e.target.value))}
                   className="w-full h-3 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cian"
                 />
-                <div className="flex justify-between text-[11px] font-mono text-white/40">
+                <div className="flex justify-between text-[11px] font-mono text-white/60">
                   <span>10 msgs</span>
                   <span>150 msgs</span>
                   <span>300+ msgs</span>
@@ -83,7 +88,7 @@ export default function RoiCalculator({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                   onChange={(e) => setHourlyCost(Number(e.target.value))}
                   className="w-full h-3 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cian"
                 />
-                <div className="flex justify-between text-[11px] font-mono text-white/40">
+                <div className="flex justify-between text-[11px] font-mono text-white/60">
                   <span>10 €/h</span>
                   <span>45 €/h</span>
                   <span>80 €/h</span>
@@ -104,7 +109,7 @@ export default function RoiCalculator({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
               <div>
                 <div className="text-xs font-mono font-bold uppercase tracking-wider text-cian mb-4">
-                  RESULTADO ESTIMADO DE AHORRO
+                  {t.calculadora.resultadoEstimado}
                 </div>
 
                 {/* Métricas destacadas */}
@@ -136,12 +141,18 @@ export default function RoiCalculator({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                     </div>
                   </div>
                 </div>
+
+                {/* La fórmula a la vista: para que quede claro de dónde sale
+                    la cuenta y que es una estimación, no una promesa. */}
+                <p className="mt-4 text-[10px] font-mono text-white/60 leading-relaxed">
+                  {t.calculadora.formula.replace('{mensajes}', String(messagesPerDay))}
+                </p>
               </div>
 
               {/* Botón CTA directo */}
               <a
                 href={ruta('/contacto', idioma)}
-                className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] block cursor-pointer"
+                className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-light text-navy-950 font-extrabold text-sm transition-all duration-300 text-center shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] block cursor-pointer"
               >
                 {t.calculadora.cta} →
               </a>

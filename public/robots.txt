@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-# Paginas que no aportan nada en un buscador
-Disallow: /gracias
+# /gracias, /404 y las paginas legales llevan noindex en la propia pagina.
+# No se bloquean aqui: si se bloquean, Google no puede leer ese noindex.
 
-Sitemap: https://dalsats.com/sitemap.xml
+Sitemap: https://dalsats.com/sitemap-index.xml

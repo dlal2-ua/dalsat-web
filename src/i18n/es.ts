@@ -11,10 +11,10 @@ export const es = {
     servicios: 'Servicios',
     demos: 'Demos',
     calculadora: 'Calculadora',
-    faq: 'Preguntas Frecuentes',
-    sobreNosotros: 'Sobre Nosotros',
+    faq: 'Preguntas frecuentes',
+    sobreNosotros: 'Sobre nosotros',
     contacto: 'Contacto',
-    panel: 'Entrar al panel',
+    panel: 'Entrar al CRM',
     cta: 'Hablar con nosotros',
     abrirMenu: 'Abrir menú',
     cerrarMenu: 'Cerrar menú',
@@ -23,6 +23,7 @@ export const es = {
 
   comun: {
     volverArriba: 'Volver arriba',
+    saltarContenido: 'Saltar al contenido',
     volverAlInicio: 'Volver al inicio',
     escribirWhatsApp: 'Escríbenos por WhatsApp',
     avisoChat: 'Hola, soy el asistente virtual de DALSAT. Si tienes cualquier duda, pulsa sobre mí y te atiendo al momento.',
@@ -32,6 +33,8 @@ export const es = {
     verCatalogo: 'Ver el catálogo completo',
     saberMas: 'Saber más',
     probarDemo: 'Probar una demo',
+    verVideo: 'Ver cómo funciona',
+    videoPendiente: 'Vídeo en camino',
   },
 
   // Lo que dice la mascota de soporte.
@@ -43,7 +46,7 @@ export const es = {
     etiqueta: 'Asistente DALSAT',
     paginas: {
       '/servicios': 'Seis servicios pensados para que tu negocio haga menos cosas a mano. Si no sabes por dónde empezar, pregúntame.',
-      '/demos': 'Aquí puedes probar agentes como yo. Spoiler: el que estás viendo ahora mismo también es uno.',
+      '/demos': 'Aquí vamos publicando un vídeo por servicio y ves cómo contestan agentes como yo. Spoiler: el que estás viendo ahora mismo también es uno.',
       '/calculadora': '¿Cuánto tiempo pierde tu equipo contestando siempre lo mismo? Baja y compruébalo con tus propios números.',
       '/faq': '¿No encuentras tu pregunta? Pulsa sobre mí y te la respondo al momento.',
       '/sobre-nosotros': 'Aquí te contamos quién hay detrás de DALSAT y cómo trabajamos.',
@@ -56,12 +59,14 @@ export const es = {
     secciones: {
       're-digitalizacion': 'Aquí explicamos qué cambia cuando los procesos de tu negocio pasan a funcionar solos.',
       servicios: '¿No tienes claro qué servicio encaja con tu negocio? Te orientamos sin compromiso.',
-      clientes: 'Estas empresas ya trabajan con nosotros. Debajo de cada logo, su experiencia en sus propias palabras.',
-      pruebalo: 'Puedes probar un agente real antes de hablar con nosotros. La demo no requiere registro.',
+      clientes: 'Estas empresas ya trabajan con nosotros. Debajo de cada logo, lo que nos cuentan.',
+      pruebalo: 'Aquí ves cómo contesta un agente. Si te encaja, te montamos uno con tus datos y lo pruebas gratis.',
       catalogo: 'Cada tarjeta es un servicio. Si dudas entre dos, pulsa sobre mí y te digo cuál encaja mejor con tu caso.',
       calculadora:
         'Mueve los dos controles con tus datos: mensajes al día y lo que vale una hora de tu equipo. Justo debajo verás las horas y el dinero que recuperarías.',
-      'demos-sector': 'Elige tu sector y escribe al agente como si fueras un cliente. Responde igual que lo haría en tu negocio.',
+      'demos-video': 'Elige un servicio y mira en qué consiste. Los vídeos van saliendo uno a uno.',
+      combinables: 'Si no sabes qué combinación te encaja, pregúntame y lo vemos con tu caso.',
+      'demos-sector': 'Elige tu sector y mira cómo contesta el agente a un cliente. Si quieres uno así, te lo montamos con tus datos.',
       'demos-voz': 'Dale al play y escucha cómo atiende una llamada un agente de voz.',
       'quienes-somos': 'Y ya que estás por aquí: ¿te gustaría tener un asistente como yo en tu web?',
       cierre: '¿Te gustaría tener un asistente como yo en tu web? Es justo lo que hacemos.',
@@ -82,19 +87,19 @@ export const es = {
       titulo: '¿Por dónde empezarías tú?',
       texto:
         'Cuéntanos cómo trabajas hoy y te decimos qué se puede quitar de en medio. Sin compromiso.',
-      cta: 'Habla con nosotros',
+      cta: 'Hablar con nosotros',
     },
     demos: {
       titulo: '¿Y con los datos de tu negocio?',
       texto:
-        'Te preparamos una prueba gratis con tus servicios, tus precios y tu forma de hablar.',
-      cta: 'Pedir una prueba con mis datos',
+        'Te montamos una demo con tus servicios, tus precios y tu forma de hablar, y la pruebas gratis antes de pagar nada.',
+      cta: 'Pedir mi demo gratis',
     },
     calculadora: {
       titulo: '¿Te cuadran los números?',
       texto:
         'Miramos tu caso concreto y te decimos qué se puede automatizar y qué no merece la pena.',
-      cta: 'Habla con nosotros',
+      cta: 'Hablar con nosotros',
     },
   },
 
@@ -118,12 +123,12 @@ export const es = {
 
   barraMovil: {
     cta: 'Hablar con nosotros',
-    whatsapp: 'Escribirnos por WhatsApp',
+    whatsapp: 'Escríbenos por WhatsApp',
   },
 
   servicios: {
     saas: {
-      nombre: 'SaaS a medida',
+      nombre: 'Software a medida',
       titulo: 'El programa que tu negocio necesita, hecho para ti',
       texto:
         'Dejas de pelearte con hojas de cálculo y con programas genéricos donde nada encaja. Construimos tu herramienta: clientes, citas, presupuestos, stock o lo que hoy llevas a mano.',
@@ -133,15 +138,15 @@ export const es = {
       nombre: 'Agentes de IA',
       titulo: 'Agentes que atienden por ti, cada uno para lo suyo',
       texto:
-        'Un agente que conoce tu negocio y responde como responderías tú. Por WhatsApp, por Instagram o dentro de tu propia web. Resuelve dudas, coge reservas y avisa a tu equipo cuando hace falta una persona.',
-      puntos: ['WhatsApp e Instagram', 'Agente dentro de tu web', 'Atención y reservas'],
+        'Un agente que conoce tu negocio y responde como responderías tú. Por WhatsApp, por Instagram, dentro de tu propia web o al teléfono, y en el idioma de tu cliente. Resuelve dudas, coge reservas y avisa a tu equipo cuando hace falta una persona.',
+      puntos: ['WhatsApp, Instagram y web', 'Llamadas con agente de voz', 'Atención y reservas'],
     },
     panel: {
-      nombre: 'Tu panel de gestión',
-      titulo: 'Un sitio desde el que lo llevas todo',
+      nombre: 'CRM con IA',
+      titulo: 'Tu CRM: clientes, reservas y agentes en un mismo sitio',
       texto:
-        'El panel donde cambias lo que responde tu agente de chat y el de voz, ves y mueves las reservas, lees las conversaciones y miras los números de tu negocio. Hace de CRM para todo lo que pasa por el agente.',
-      puntos: ['Agente, reservas y métricas', 'Desde el móvil o el ordenador', 'Entra con lo que contrates'],
+        'La plataforma desde la que llevas lo que pasa con tus clientes: lees cada conversación, ves y mueves las reservas, cambias lo que responden tus agentes de chat y de voz y miras los números de tu negocio. Un CRM para pymes con la IA ya dentro.',
+      puntos: ['Conversaciones, reservas y métricas', 'Desde el móvil o el ordenador', 'Entra con lo que contrates'],
     },
     procesos: {
       nombre: 'Mapeo y automatización',
@@ -167,12 +172,12 @@ export const es = {
   },
 
   sobreNosotros: {
-    etiqueta: 'Quiénes Somos',
-    titulo: 'Ingenieros enfocados en tu rentabilidad',
-    entradilla: 'Implantamos IA sólida para que dejes de perder tiempo en tareas repetitivas.',
+    etiqueta: 'Quiénes somos',
+    titulo: 'Montamos lo que te quita trabajo y lo dejamos funcionando',
+    entradilla: 'Somos un estudio pequeño: hablas con quien lo construye y lo revisa cada semana.',
     pilares: {
       real: {
-        titulo: 'Tecnología real, no demos',
+        titulo: 'Funciona en negocios reales',
         texto:
           'Todo lo que montamos está funcionando en un negocio real, cada día. Se adapta a tu información, no a un ejemplo genérico.',
         badge: 'Funcionando cada día',
@@ -182,11 +187,12 @@ export const es = {
         texto:
           'Sin tickets ni centralitas. Escribes por WhatsApp a las personas que han construido tu sistema.',
         enlace: 'Escribir por WhatsApp',
+        badge: 'Trato directo',
       },
       datos: {
-        titulo: 'Tus datos, en tu propio servidor',
+        titulo: 'Los datos de tus clientes, a salvo',
         texto:
-          'Todo se instala en tu servidor. Tus datos y tus conversaciones no salen de ahí ni se comparten con nadie.',
+          'Se guardan en nuestro servidor, junto a la información de tu negocio, y nosotros no tenemos acceso a los datos privados de tus clientes. No se comparten con nadie.',
       },
       mejora: {
         titulo: 'Lo revisamos y lo mejoramos',
@@ -195,11 +201,6 @@ export const es = {
         badge: 'Revisión semanal',
       },
     },
-    cifras: {
-      sistemas: 'Sistemas funcionando en negocios reales',
-      mensajes: 'Mensajes gestionados',
-      tiempo: 'Tiempo que están funcionando',
-    },
   },
 
   calculadora: {
@@ -207,17 +208,21 @@ export const es = {
     valorHora: 'Lo que vale una hora de tu equipo',
     horasMes: 'horas/mes',
     porAno: '/año',
-    cta: 'Ver qué se puede automatizar',
+    cta: 'Hablar con nosotros',
     porDia: '/día',
-    horasLibres: 'Horas Libres Recuperadas',
-    ahorroMes: 'Ahorro Estimado al Mes',
-    ahorroAno: 'Ahorro Proyectado al Año',
+    horasLibres: 'Horas libres recuperadas',
+    ahorroMes: 'Ahorro estimado al mes',
+    ahorroAno: 'Ahorro proyectado al año',
+    resultadoEstimado: 'Resultado estimado de ahorro',
+    formula: '{mensajes} mensajes/día × 70% que resuelve el agente × 2,8 min × 22 días laborables',
     nota:
-      'La cuenta sale de 2,8 minutos por mensaje o llamada atendidos a mano, y de que el agente resuelve solo la mayor parte. Es una estimación para hacerte una idea, no una promesa: lo que ahorre tu negocio se ve mirando tu caso.',
+      'La cuenta sale de 2,8 minutos por mensaje o llamada atendidos a mano, de que el agente resuelve solo unos 7 de cada 10 y de 22 días laborables al mes. Es una estimación para hacerte una idea, no una promesa: lo que ahorre tu negocio se ve mirando tu caso.',
   },
 
   hero: {
-    lema: 'Re-digitalizamos pymes de toda España',
+    lema: 'Automatizamos pymes de toda España',
+    titulo: 'Automatización e IA para pymes de toda España',
+    subtitulo: 'Quitamos a tu negocio el trabajo que se repite: mensajes, llamadas, citas y papeleo.',
     ctaPrincipal: 'Cuéntanos cómo trabajas',
     ctaSecundario: 'Ver qué hacemos',
     pista: 'Baja para ver qué hacemos',
@@ -236,99 +241,109 @@ export const es = {
   },
 
   audio: {
-    etiqueta: 'Demo de Voz IA Real',
-    titulo: 'Escucha cómo habla tu Agente',
-    entradilla: 'Locución en voz alta con entonación natural en español.',
+    etiqueta: 'Agente de voz',
+    titulo: 'Escucha cómo habla un agente de voz',
+    entradilla: 'Muestras grabadas, con entonación natural. Habla en el idioma de quien llama.',
     cargando: 'Cargando el audio…',
-    escuchar: 'Escuchar Muestra de Voz',
+    escuchar: 'Escuchar muestra de voz',
+    transcripcion: 'Transcripción',
+    reproductor: 'Reproductor de voz',
+    reproduciendo: 'Reproduciendo ({velocidad}x)…',
+    pausar: 'Pausar muestra de voz ({velocidad}x)',
+    fallo: 'No se ha podido reproducir el audio. Vuelve a intentarlo, y si sigue igual escríbenos y te lo mandamos por WhatsApp.',
     avisoIdioma: '',
     etiquetaTraduccion: '',
     lista: [
       {
         id: 'cita',
-        title: 'Nota de Voz: Reserva de Cita',
+        title: 'Nota de voz: reserva de cita',
         subtitle: 'Respuesta de voz inmediata para reservar mesa o consulta.',
         category: 'Voz WhatsApp',
-        sender: 'Agente Dalsat (Restaurante)',
+        sender: 'Agente DALSAT (restaurante)',
         traduccion: '',
       },
       {
         id: 'soporte',
-        title: 'Atención Telefónica 24/7',
+        title: 'Atención telefónica 24/7',
         subtitle: 'Resolución de dudas frecuentes de cliente con voz natural.',
         category: 'Agente de Voz',
-        sender: 'Agente Dalsat (Ingeniería)',
+        sender: 'Agente DALSAT (ingeniería)',
         traduccion: '',
       },
       {
         id: 'recordatorio',
-        title: 'Recordatorio de Peluquería',
+        title: 'Recordatorio de peluquería',
         subtitle: 'Aviso por audio para confirmar asistencia a la cita de peluquería.',
         category: 'Fidelización',
-        sender: 'Agente Dalsat (Peluquería)',
+        sender: 'Agente DALSAT (peluquería)',
         traduccion: '',
       },
     ],
   },
 
   sectores: {
-    etiqueta: 'Prueba en Tu Sector',
-    titulo: 'Demostración por Sector',
-    entradilla: 'Selecciona tu tipo de negocio y observa la simulación en tiempo real.',
-    probarEnVivo: 'Probar esta demo en mi WhatsApp en vivo',
-    repetir: 'Repetir Demo',
-    escribiendo: 'Agente IA redactando',
+    etiqueta: 'Ejemplos por sector',
+    titulo: 'Así contesta un agente en tu sector',
+    entradilla: 'Elige tu tipo de negocio y mira una conversación de ejemplo.',
+    probarEnVivo: 'Quiero una demo para mi negocio',
+    repetir: 'Repetir ejemplo',
+    escribiendo: 'El agente está escribiendo',
+    agenteIaPara: 'Agente de IA para {sector}',
+    agenteDalsat: 'Agente DALSAT',
+    enLinea: 'En línea',
+    respuestaInmediata: 'Respuesta inmediata',
+    escribiendoRespuesta: 'Escribiendo respuesta…',
     lista: [
       {
         id: 'tattoo',
-        name: 'Tatuajes & Estética',
-        badge: 'Caso Víbora Studio',
+        name: 'Tatuajes y estética',
+        badge: 'Ejemplo · estudio de tatuaje',
         description: 'Reserva de citas, consulta de estilos, precios orientativos y disponibilidad de agenda sin interrumpir el trabajo.',
-        whatsappMessage: 'Hola, me gustaría probar la demo de IA para un estudio de Tatuajes y Estética.',
+        whatsappMessage: 'Hola, me gustaría que me montarais una demo del agente para un estudio de tatuajes y estética.',
         chatMessages: [
           { sender: 'user' as 'user' | 'bot', text: '¡Buenas! Quería saber si tenéis hueco para un tatuaje pequeño en el brazo esta semana.', time: '17:40' },
-          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Sí, tenemos hueco libre este jueves a las 11:30h o el viernes a las 16:00h. ¿Cuál te viene mejor para agendar la cita?', time: '17:40' },
-          { sender: 'user' as 'user' | 'bot', text: 'El viernes a las 16:00 me va perfecto ', time: '17:41' },
-          { sender: 'bot' as 'user' | 'bot', text: '¡Genial! Cita reservada para el viernes 16:00h. Te enviamos la ubicación y recordatorio 24h antes. ', time: '17:41' },
+          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Sí, tenemos hueco libre este jueves a las 11:30 o el viernes a las 16:00. ¿Cuál te viene mejor para agendar la cita?', time: '17:40' },
+          { sender: 'user' as 'user' | 'bot', text: 'El viernes a las 16:00 me va perfecto', time: '17:41' },
+          { sender: 'bot' as 'user' | 'bot', text: '¡Genial! Cita reservada para el viernes 16:00. Te enviamos la ubicación y recordatorio 24h antes.', time: '17:41' },
         ],
       },
       {
         id: 'restaurante',
-        name: 'Restauración & Hostelería',
+        name: 'Restauración y hostelería',
         badge: 'Restaurantes',
         description: 'Reservas de mesas en terraza/comedor, consulta de carta, alérgenos y horarios automáticos 24/7.',
-        whatsappMessage: 'Hola, me gustaría probar la demo de IA para mi Restaurante u Hostelería.',
+        whatsappMessage: 'Hola, me gustaría que me montarais una demo del agente para mi restaurante.',
         chatMessages: [
           { sender: 'user' as 'user' | 'bot', text: 'Hola, me gustaría reservar una mesa para 4 personas este sábado por la noche.', time: '21:15' },
-          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Disponemos de mesa libre en comedor interior a las 21:30h o en terraza a las 22:15h. ¿En qué zona prefieres?', time: '21:15' },
-          { sender: 'user' as 'user' | 'bot', text: 'En terraza a las 22:15h por favor.', time: '21:16' },
-          { sender: 'bot' as 'user' | 'bot', text: '¡Mesa en terraza para 4 a las 22:15h reservada a tu nombre! Nos vemos el sábado. ', time: '21:16' },
+          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Tenemos mesa libre en comedor interior a las 21:30 o en terraza a las 22:15. ¿En qué zona prefieres?', time: '21:15' },
+          { sender: 'user' as 'user' | 'bot', text: 'En terraza a las 22:15 por favor.', time: '21:16' },
+          { sender: 'bot' as 'user' | 'bot', text: '¡Mesa en terraza para 4 a las 22:15 reservada a tu nombre! Nos vemos el sábado.', time: '21:16' },
         ],
       },
       {
         id: 'salud',
-        name: 'Clínicas & Salud',
-        badge: 'Clínicas & Médicos',
-        description: 'Citas médicas, odontológicas o fisioterapia con recordatorios automáticos para reducir plantones a cero.',
-        whatsappMessage: 'Hola, me gustaría probar la demo de IA para mi Clínica o Centro de Salud.',
+        name: 'Clínicas y salud',
+        badge: 'Clínicas y médicos',
+        description: 'Citas médicas, odontológicas o fisioterapia con recordatorios automáticos para que se te queden menos huecos sin avisar.',
+        whatsappMessage: 'Hola, me gustaría que me montarais una demo del agente para mi clínica.',
         chatMessages: [
           { sender: 'user' as 'user' | 'bot', text: 'Hola, necesito cita con el fisioterapeuta para un dolor de espalda.', time: '10:05' },
-          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Disponemos de consulta libre mañana a las 10:15h o el jueves a las 17:00h. ¿Te agendamos la de mañana?', time: '10:05' },
-          { sender: 'user' as 'user' | 'bot', text: 'Sí, mañana a las 10:15h perfecto.', time: '10:06' },
-          { sender: 'bot' as 'user' | 'bot', text: 'Cita confirmada para mañana a las 10:15h. Recibirás un aviso 2h antes. ¡Que te mejore la espalda! ', time: '10:06' },
+          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Tenemos consulta libre mañana a las 10:15 o el jueves a las 17:00. ¿Te agendamos la de mañana?', time: '10:05' },
+          { sender: 'user' as 'user' | 'bot', text: 'Sí, mañana a las 10:15 perfecto.', time: '10:06' },
+          { sender: 'bot' as 'user' | 'bot', text: 'Cita confirmada para mañana a las 10:15. Recibirás un aviso 2h antes. ¡Que te mejore la espalda!', time: '10:06' },
         ],
       },
       {
         id: 'asesoria',
-        name: 'Asesorías & Servicios',
-        badge: 'Caso Atrio Asesores',
+        name: 'Asesorías y servicios',
+        badge: 'Ejemplo · asesoría',
         description: 'Atención de dudas sobre facturación, Renta, documentación de clientes y cita directa con el especialista.',
-        whatsappMessage: 'Hola, me gustaría probar la demo de IA para mi Asesoría o Gestoría.',
+        whatsappMessage: 'Hola, me gustaría que me montarais una demo del agente para mi asesoría.',
         chatMessages: [
           { sender: 'user' as 'user' | 'bot', text: 'Buenas, ¿qué documentación necesito aportar para la campaña de la Renta?', time: '12:30' },
           { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Necesitaremos tu borrador, certificado de retenciones y datos catastrales. ¿Te agendo cita con tu asesor fiscal?', time: '12:30' },
           { sender: 'user' as 'user' | 'bot', text: 'Sí por favor, para la semana que viene.', time: '12:31' },
-          { sender: 'bot' as 'user' | 'bot', text: 'Te he reservado cita con tu asesor para el martes a las 11:00h. Te enviamos el listado detallado de documentos a tu email. ', time: '12:31' },
+          { sender: 'bot' as 'user' | 'bot', text: 'Te he reservado cita con tu asesor para el martes a las 11:00. Te enviamos el listado detallado de documentos a tu email.', time: '12:31' },
         ],
       },
     ],
@@ -340,6 +355,11 @@ export const es = {
     entradilla: 'Si te falta algo, escríbenos y te lo contamos.',
     sinResultados: 'No hay preguntas en esta categoría.',
     todas: 'Todas',
+    borrar: 'Borrar',
+    preguntarWhatsApp: 'Preguntar por WhatsApp',
+    masCategorias: 'Ver todas las demás categorías ({n} preguntas en total)',
+    soporteDirecto: 'Soporte directo DALSAT',
+    consultarMensaje: 'Hola, quiero consultar mi caso con alguien de DALSAT.',
     dudaWhatsApp: 'Hola, tengo una duda sobre:',
     consultar: 'Consultar mi caso',
     buscar: 'Buscar una duda (ej. WhatsApp, voz, contrato, RGPD...)',
@@ -350,7 +370,7 @@ export const es = {
     utilVota: 'Sí, me sirve',
     utilSi: 'Respuesta útil',
     cierreTitulo: '¿Tienes una duda específica sobre tu negocio?',
-    cierreTexto: 'Analizamos tu caso sin compromiso y te mostramos cómo adaptar la IA a tu empresa.',
+    cierreTexto: 'Miramos tu caso sin compromiso y te decimos qué te compensa automatizar.',
     items: [
       {
         id: 'empezar',
@@ -371,19 +391,26 @@ export const es = {
         category: 'Servicios',
         badge: 'Incluido',
         question: '¿Desde dónde gestiono mi agente y mis reservas?',
-        answer: 'Desde tu panel, con tu usuario y tu contraseña, en app.dalsats.com. Ahí cambias lo que responde el agente de chat y el de voz, ves y mueves las reservas que han cogido, lees las conversaciones y tienes los números de tu negocio: cuánto se ha respondido solo, a qué horas te escriben más y cuántas horas te has ahorrado. Hace las veces de CRM para lo que pasa por el agente. Entra con lo que contrates, no se paga aparte y no hay que instalar nada.',
+        answer: 'Desde tu CRM de DALSAT, con tu usuario y tu contraseña, en app.dalsats.com. Ahí cambias lo que responde el agente de chat y el de voz, ves y mueves las reservas que han cogido, lees las conversaciones y tienes los números de tu negocio: cuánto se ha respondido solo, a qué horas te escriben más y cuántas horas te has ahorrado. Es el CRM de todo lo que pasa por tus agentes. Entra con lo que contrates, no se paga aparte y no hay que instalar nada.',
       },
       {
         id: 'que-haceis',
         category: 'Servicios',
         badge: 'Seis servicios',
         question: '¿Solo hacéis agentes de IA?',
-        answer: 'No. Hacemos seis cosas: programas a medida para tu negocio, agentes de IA que atienden por WhatsApp, Instagram o dentro de tu web, el panel desde el que gestionas todo eso, mapeo y automatización de procesos, SEO para que te encuentren en Google y desarrollo web. Los agentes son la parte más visible, pero rara vez es por donde más se gana.',
+        answer: 'No. Hacemos seis cosas: programas a medida para tu negocio, agentes de IA que atienden por WhatsApp, Instagram, dentro de tu web o por teléfono, el CRM desde el que gestionas todo eso, mapeo y automatización de procesos, SEO para que te encuentren en Google y desarrollo web. Los agentes son la parte más visible, pero rara vez es por donde más se gana.',
+      },
+      {
+        id: 'combinar',
+        category: 'Servicios',
+        badge: 'Combinables',
+        question: '¿Tengo que contratarlo todo o puedo coger solo una cosa?',
+        answer: 'Puedes coger solo una. Cada servicio funciona por su cuenta, pero están hechos para encajar: la web se conecta con el agente, el agente apunta las reservas en tu CRM y el mapeo de procesos dice qué conviene automatizar primero. Lo normal es empezar por lo que más te pesa y sumar lo demás cuando tenga sentido.',
       },
       {
         id: 'saas-medida',
         category: 'Servicios',
-        badge: 'SaaS a medida',
+        badge: 'Software a medida',
         question: '¿Qué es eso de un programa a medida y en qué se diferencia de uno normal?',
         answer: 'Un programa hecho para cómo trabajas tú, en vez de uno genérico donde acabas peleándote con campos que no usas y echando de menos los que necesitas. Suele sustituir a la hoja de cálculo y a los papeles: clientes, citas, presupuestos, stock. Solo lleva lo que usáis y entra tu equipo desde el móvil.',
       },
@@ -409,6 +436,13 @@ export const es = {
         answer: 'Trabajamos con pymes de toda España. El mapeo inicial sale mejor cara a cara, así que si estás cerca vamos en persona, y si no lo hacemos por videollamada. El resto lo llevamos en remoto sin que se note la distancia.',
       },
       {
+        id: 'idiomas',
+        category: 'Servicios',
+        badge: 'Cualquier idioma',
+        question: '¿En qué idiomas atiende el agente?',
+        answer: 'En el que use tu cliente. Si te escriben o te llaman en inglés, en francés o en alemán, el agente contesta en ese idioma.',
+      },
+      {
         id: 'numero',
         category: 'WhatsApp',
         badge: 'Sin cambio de número',
@@ -418,99 +452,85 @@ export const es = {
       {
         id: 'multimedia',
         category: 'WhatsApp',
-        badge: 'Archivos & Multimedia',
+        badge: 'Archivos y multimedia',
         question: '¿El agente de WhatsApp puede enviar catálogos, imágenes o documentos PDF?',
         answer: 'Sí. Manda catálogos en PDF, fotos de tus servicios, listas de precios o la ubicación en Google Maps, según lo que le pida el cliente.',
-      },
-      {
-        id: 'pagos',
-        category: 'WhatsApp',
-        badge: 'Cobros automáticos',
-        question: '¿Puede el agente de WhatsApp enviar enlaces de pago o señal de reserva?',
-        answer: 'Sí. Lo conectamos con Stripe, Bizum o Redsys para que el agente mande un enlace de cobro seguro y no confirme la cita hasta que esté pagada la señal.',
       },
       {
         id: 'notas_voz',
         category: 'WhatsApp',
         badge: 'Notas de voz',
-        question: '¿Qué ocurre si un cliente envía un audio de WhatsApp en lugar de escribir?',
+        question: '¿Y si el cliente manda un audio en vez de escribir?',
         answer: 'Lo escucha, entiende lo que le piden y contesta al momento, por escrito o con otra nota de voz.',
       },
       {
         id: 'limite',
         category: 'WhatsApp',
         badge: 'Sin esperas',
-        question: '¿Hay algún límite en el número de clientes atendidos simultáneamente?',
-        answer: 'Ninguno. Lleva cientos de conversaciones a la vez sin ir más lento y sin dejar a nadie esperando.',
+        question: '¿Cuántas conversaciones lleva a la vez?',
+        answer: 'Muchas. No atiende de una en una, así que nadie se queda esperando a que termine con otro cliente.',
       },
       {
         id: 'voz',
-        category: 'Agentes de Voz',
-        badge: 'Voz Natural',
+        category: 'Agentes de voz',
+        badge: 'Voz natural',
         question: '¿Cómo suena la voz de las llamadas telefónicas?',
-        answer: 'Suena a persona: español de España, con sus pausas y su entonación. En la página de demos puedes escuchar muestras reales y juzgarlo tú.',
+        answer: 'Suena a persona, con sus pausas y su entonación, y habla en el idioma de quien llama. En la página de demos puedes escuchar muestras grabadas y juzgarlo tú.',
       },
       {
         id: 'llamadas_salientes',
-        category: 'Agentes de Voz',
+        category: 'Agentes de voz',
         badge: 'Llamadas automáticas',
         question: '¿Puede el agente realizar llamadas salientes para recordar citas?',
         answer: 'Sí. Llama uno o dos días antes para confirmar, y el cliente puede confirmar o cambiar la cita en esa misma llamada. Así se te quedan muchos menos huecos sin avisar.',
       },
       {
         id: 'horario_voz',
-        category: 'Agentes de Voz',
+        category: 'Agentes de voz',
         badge: 'Atención 24/7',
         question: '¿El agente telefónico atiende fuera del horario comercial?',
         answer: 'Sí, las 24 horas y todos los días del año. Si te llaman de madrugada o un domingo, el agente coge el recado, da la cita o resuelve la duda.',
       },
       {
-        id: 'agenda',
+        id: 'conectar',
         category: 'Integraciones',
-        badge: 'Citas automáticas',
-        question: '¿Se conecta a mi agenda actual (Google Calendar, Booksy, etc.)?',
-        answer: 'Sí. Mira los huecos libres en Google Calendar, Outlook, Booksy o Calendly antes de dar una cita, y la guarda ahí mismo. No coge dos citas para la misma hora.',
-      },
-      {
-        id: 'crm',
-        category: 'Integraciones',
-        badge: 'CRM & ERP',
-        question: '¿Se puede integrar con mi programa de facturación o sistema propio?',
-        answer: 'Sí. Nos conectamos con tu programa de facturación, tu software de gestión o el que uses en tu sector, para que los datos de un cliente no haya que meterlos dos veces.',
+        badge: 'Lo que ya usas',
+        question: '¿Se puede conectar con las herramientas que ya uso?',
+        answer: 'Depende de la herramienta. Cuéntanos qué usas (tu agenda, tu programa de facturación o de gestión) y te decimos si se puede conectar y cómo. Si no se puede, te lo decimos antes de empezar.',
       },
       {
         id: 'fallo',
-        category: 'Seguridad & RGPD',
+        category: 'Seguridad y RGPD',
         badge: 'Traspaso a humano',
-        question: '¿Qué ocurre si la IA no sabe responder una consulta o el cliente requiere atención personalizada?',
+        question: '¿Y si el agente no sabe contestar?',
         answer: 'Te lo pasa a ti. Cuando la consulta se sale de lo que sabe o hace falta el criterio de una persona, avisa a tu equipo con el resumen de lo hablado y seguís vosotros desde ahí. No se inventa una respuesta para salir del paso.',
       },
       {
         id: 'rgpd',
-        category: 'Seguridad & RGPD',
-        badge: 'RGPD Europeo',
-        question: '¿Cumple con la Ley de Protección de Datos (RGPD)?',
-        answer: 'Sí. Los datos van cifrados y se guardan en servidores europeos. Los de tus clientes no se comparten con nadie ni se usan para entrenar modelos públicos.',
+        category: 'Seguridad y RGPD',
+        badge: 'RGPD',
+        question: '¿Cumple el RGPD?',
+        answer: 'Sí. Los datos se guardan en nuestro servidor, junto a la información de tu negocio, y nosotros no tenemos acceso a los datos privados de tus clientes: no los vemos ni los compartimos con nadie.',
       },
       {
         id: 'precio',
-        category: 'Contrato & Tiempos',
+        category: 'Contrato y plazos',
         badge: 'Precio',
         question: '¿Cuánto cuesta?',
-        answer: 'Depende de lo que montemos: no cuesta lo mismo un agente de WhatsApp que un programa a medida para tu negocio. Miramos tu caso, te decimos qué merece la pena y qué no, y te pasamos un precio cerrado antes de empezar. La primera reunión no se cobra y no te compromete a nada.',
+        answer: 'Depende de lo que montemos: no cuesta lo mismo un agente de WhatsApp que un programa a medida para tu negocio. Miramos tu caso, te decimos qué merece la pena y qué no, y te pasamos un precio cerrado antes de empezar. Antes de pagar nada, te montamos una demo con tus datos y la pruebas gratis durante un periodo de prueba. La primera reunión no se cobra y no te compromete a nada.',
       },
       {
         id: 'tiempo',
-        category: 'Contrato & Tiempos',
-        badge: '48-72 Horas',
+        category: 'Contrato y plazos',
+        badge: '2-3 días',
         question: '¿En cuánto tiempo queda instalado y funcionando?',
-        answer: 'Un agente, entre 48 y 72 horas laborables. Lo montamos nosotros: le enseñamos tus precios, tus horarios y tus servicios, lo probamos y te lo entregamos funcionando. Un programa a medida o una web llevan más, y te decimos el plazo antes de empezar.',
+        answer: 'Un agente, en 2 o 3 días laborables desde que tenemos tu información. Lo montamos nosotros: le enseñamos tus precios, tus horarios y tus servicios, lo probamos y te lo entregamos funcionando. Un programa a medida o una web llevan más, y te decimos el plazo antes de empezar.',
       },
       {
         id: 'permanencia',
-        category: 'Contrato & Tiempos',
+        category: 'Contrato y plazos',
         badge: 'Sin permanencia',
-        question: '¿Existe algún tipo de contrato o permanencia obligatoria?',
+        question: '¿Hay permanencia?',
         answer: 'No. Vamos mes a mes, sin permanencia y sin penalización si lo dejas. Si no te compensa, avisas y se acaba.',
       },
     ],
@@ -526,7 +546,7 @@ export const es = {
     mensaje: 'Mensaje',
     mensajePista: 'Cuéntanos sobre tu negocio o qué te gustaría automatizar',
     opcional: '(opcional)',
-    enviar: 'Empezar ahora',
+    enviar: 'Enviar mensaje',
     enviando: 'Enviando…',
     enviandoAviso: 'Enviando el formulario',
     errores: {
@@ -553,13 +573,13 @@ export const es = {
         titulo: 'Miramos cómo trabajas',
         texto:
           'Nos cuentas tu día a día y dibujamos tu negocio paso a paso. Ahí se ve solo lo que se repite cada semana.',
-        etiqueta: 'Una reunión de 30 minutos',
+        etiqueta: 'Una reunión de 30 minutos, gratis',
       },
       {
         titulo: 'Lo construimos',
         texto:
           'Montamos lo que haga falta: tu programa a medida, tu agente, la automatización o la web. Conectado con lo que ya usas.',
-        etiqueta: 'Días, no meses',
+        etiqueta: 'Plazo cerrado antes de empezar',
       },
       {
         titulo: 'Lo ponemos en marcha',
@@ -571,15 +591,15 @@ export const es = {
   },
 
   plataforma: {
-    etiqueta: 'Tu panel',
+    etiqueta: 'Tu CRM',
     titulo: 'No te dejamos con una caja negra',
     texto:
-      'Todo lo que montamos se gestiona desde un mismo sitio, con tu usuario y tu contraseña. Entras desde el móvil o desde el ordenador y ves qué está pasando en tu negocio sin llamar a nadie.',
+      'Todo lo que montamos se gestiona desde tu CRM, con tu usuario y tu contraseña. Entras desde el móvil o desde el ordenador y ves qué está pasando en tu negocio sin llamar a nadie.',
     pieCaptura: 'Lo primero que ves al entrar. Los datos son de una cuenta de pruebas.',
     altCaptura:
-      'Pantalla de inicio del panel de DALSAT: reservas de la semana, facturación estimada, clientes únicos, mensajes atendidos por el agente y tiempo medio de respuesta.',
-    incluido: 'El panel entra con lo que contrates. No se paga aparte ni hay que instalar nada.',
-    entrar: 'Ya soy cliente, entrar al panel',
+      'Pantalla de inicio del CRM de DALSAT: reservas de la semana, facturación estimada, clientes únicos, mensajes atendidos por el agente y tiempo medio de respuesta.',
+    incluido: 'El CRM entra con lo que contrates. No se paga aparte ni hay que instalar nada.',
+    entrar: 'Ya soy cliente, entrar al CRM',
     capacidades: {
       chat: {
         titulo: 'Tu agente de chat',
@@ -604,6 +624,178 @@ export const es = {
     },
   },
 
+  // Paginas de cada servicio (/servicios/{slug}). Solo lo que ya dice el
+  // resto de la web: nada de funciones, integraciones ni cifras que no esten
+  // confirmadas. `faq` son ids de faq.items que se repiten en esa pagina.
+  paginaServicio: {
+    migas: 'Servicios',
+    paraQuien: 'Para quién es',
+    incluye: 'Qué incluye',
+    video: 'Así funciona',
+    preguntas: 'Preguntas sobre este servicio',
+    otros: 'Los otros servicios',
+    verServicio: 'Ver el servicio',
+    lista: {
+      saas: {
+        h1: 'Software a medida para pymes',
+        seoTitulo: 'Software a medida para pymes | DALSAT',
+        seoDescripcion:
+          'Un programa hecho para cómo trabaja tu pyme: clientes, citas, presupuestos o stock, desde el móvil. Solo lo que usas, con precio y plazo cerrados.',
+        intro: [
+          'Dejas de pelearte con hojas de cálculo y con programas genéricos donde nada encaja. Construimos la herramienta que tu negocio necesita: clientes, citas, presupuestos, stock o lo que hoy llevas a mano.',
+          'Lleva solo lo que usáis, sin campos que sobran ni pantallas que nadie abre. Tu equipo entra desde el móvil o desde el ordenador, y el programa crece contigo cuando cambia tu forma de trabajar.',
+        ],
+        paraQuien: [
+          'Negocios que llevan clientes, citas o presupuestos en hojas de cálculo o en papel.',
+          'Equipos que usan un programa genérico donde sobran campos y faltan los que necesitan.',
+          'Pymes que quieren que su gente trabaje desde el móvil, esté donde esté.',
+        ],
+        incluye: [
+          'Una reunión para ver cómo trabajáis antes de diseñar nada',
+          'Solo las pantallas y los datos que usáis de verdad',
+          'Acceso de tu equipo desde el móvil o el ordenador',
+          'Precio y plazo cerrados antes de empezar',
+        ],
+        faq: ['saas-medida', 'precio', 'tiempo'],
+      },
+      agentes: {
+        h1: 'Agentes de IA para WhatsApp, Instagram, web y teléfono',
+        seoTitulo: 'Agente de IA para WhatsApp y teléfono | DALSAT',
+        seoDescripcion:
+          'Un agente de IA que atiende a tus clientes por WhatsApp, Instagram, tu web o teléfono, en su idioma: resuelve dudas, coge reservas y te avisa si hace falta.',
+        intro: [
+          'Un agente que conoce tu negocio y responde como responderías tú. Por WhatsApp, por Instagram, dentro de tu propia web o al teléfono, y en el idioma de tu cliente. Resuelve dudas, coge reservas y avisa a tu equipo cuando hace falta una persona.',
+          'Se conecta al número de WhatsApp Business que ya usas, así que tus clientes no notan ningún cambio. Si le mandan un audio, lo escucha y contesta. Y cuando algo se sale de lo que sabe, no se inventa la respuesta: te lo pasa con el resumen de lo hablado.',
+        ],
+        paraQuien: [
+          'Negocios que pierden tiempo contestando siempre las mismas preguntas.',
+          'Quien coge reservas o citas por WhatsApp o por teléfono y no llega a todo.',
+          'Negocios a los que escriben o llaman fuera de horario.',
+        ],
+        incluye: [
+          'Agente de chat para WhatsApp, Instagram y tu web',
+          'Agente de voz que coge el teléfono y puede llamar para recordar citas',
+          'Atiende en el idioma de tu cliente, a cualquier hora',
+          'Traspaso a tu equipo cuando hace falta una persona',
+          'Lo gestionas desde tu CRM: qué responde, sus precios y sus horarios',
+        ],
+        faq: ['numero', 'notas_voz', 'fallo', 'idiomas', 'tiempo'],
+      },
+      panel: {
+        h1: 'CRM con IA para pymes',
+        seoTitulo: 'CRM con IA para pymes | DALSAT',
+        seoDescripcion:
+          'El CRM desde el que llevas tu negocio: conversaciones, reservas, lo que responden tus agentes de chat y voz y los números de la semana. Incluido, sin instalar nada.',
+        intro: [
+          'La plataforma desde la que llevas lo que pasa con tus clientes: lees cada conversación, ves y mueves las reservas, cambias lo que responden tus agentes de chat y de voz y miras los números de tu negocio. Un CRM para pymes con la IA ya dentro.',
+          'Entras en app.dalsats.com con tu usuario y tu contraseña, desde el móvil o desde el ordenador, y ves qué está pasando en tu negocio sin llamar a nadie. Entra con lo que contrates: no se paga aparte y no hay que instalar nada.',
+        ],
+        paraQuien: [
+          'Negocios que ya tienen, o van a tener, un agente atendiendo a sus clientes.',
+          'Quien quiere ver las reservas y las conversaciones en un solo sitio.',
+          'Dueños que quieren saber cuánto trabajo se han quitado de encima cada semana.',
+        ],
+        incluye: [
+          'Tu agente de chat: qué responde, sus precios y sus horarios',
+          'Tu agente de voz: su voz, qué puede decir y cuándo te pasa la llamada',
+          'Las reservas en un calendario: moverlas, cancelarlas o meter una a mano',
+          'Los números: cuánto se ha respondido solo, a qué horas te escriben más y cuántas horas te has ahorrado',
+        ],
+        faq: ['panel', 'rgpd', 'combinar'],
+      },
+      procesos: {
+        h1: 'Mapeo y automatización de procesos para pymes',
+        seoTitulo: 'Automatización de procesos para pymes | DALSAT',
+        seoDescripcion:
+          'Dibujamos cómo funciona tu negocio paso a paso, vemos lo que se repite cada semana y lo automatizamos. A veces la conclusión es que no hace falta IA.',
+        intro: [
+          'Nos sentamos contigo y dibujamos cómo funciona tu negocio de verdad, paso a paso: qué entra, quién lo toca, qué se apunta y dónde. Cuando está dibujado, se ve solo lo que se repite cada semana. Eso es lo que quitamos de en medio.',
+          'Es el punto de partida de casi todo lo demás. De ahí sale la lista de lo que conviene automatizar primero, lo que no merece la pena y, a veces, la conclusión de que no hace falta ninguna IA.',
+        ],
+        paraQuien: [
+          'Negocios que notan que se les va el día en tareas que se repiten.',
+          'Quien no tiene claro por dónde empezar a automatizar.',
+          'Pymes que ya tienen web y redes, pero siguen haciéndolo casi todo a mano.',
+        ],
+        incluye: [
+          'Una reunión, cara a cara si estás cerca o por videollamada',
+          'El mapa de tu negocio, paso a paso',
+          'La lista de lo que se repite y de lo que no compensa tocar',
+          'La automatización de lo que decidamos quitar de en medio',
+        ],
+        faq: ['mapeo', 'empezar', 'ya-tengo-web'],
+      },
+      seo: {
+        h1: 'SEO para pymes: que te encuentren en Google',
+        seoTitulo: 'SEO para pymes y negocios locales | DALSAT',
+        seoDescripcion:
+          'Trabajamos para que tu negocio salga cuando alguien de tu zona busca en Google lo que ofreces: ficha de Google al día, contenido útil y una web rápida.',
+        intro: [
+          'Trabajamos para que tu negocio aparezca cuando alguien de tu zona busca en Google lo que tú ofreces. Ficha de Google al día, contenido útil y una web que carga rápido en el móvil.',
+          'Sin trucos raros: lo que funciona a medio plazo es que Google entienda qué haces y dónde, y que quien entra encuentre lo que buscaba. Y si además tienes un agente, quien llega desde Google puede pedir cita en ese mismo momento.',
+        ],
+        paraQuien: [
+          'Negocios que dependen de clientes de su zona.',
+          'Quien tiene web pero no sale cuando le buscan.',
+          'Pymes con la ficha de Google a medio hacer o sin tocar desde hace tiempo.',
+        ],
+        incluye: [
+          'Trabajo sobre las búsquedas de tu zona',
+          'Ficha de Google al día',
+          'Contenido útil para quien te busca',
+          'Una web que carga rápido en el móvil',
+        ],
+        faq: ['seo-web', 'zona', 'combinar'],
+      },
+      web: {
+        h1: 'Desarrollo web para pymes',
+        seoTitulo: 'Desarrollo web para pymes | DALSAT',
+        seoDescripcion:
+          'Webs rápidas y claras, pensadas para que quien entre pida cita, te escriba o compre. Conectadas con tu agente de IA y con las herramientas que ya usas.',
+        intro: [
+          'Una web rápida y clara, pensada para que quien entre haga algo: pedir cita, escribirte o comprar. Y conectada con las herramientas que ya usas.',
+          'No hacemos folletos. Cada página tiene un trabajo, y la web entera está pensada para el móvil, que es desde donde te van a ver casi siempre. Si tienes un agente, vive dentro de la web y atiende a quien entra.',
+        ],
+        paraQuien: [
+          'Negocios sin web, o con una que no les trae clientes.',
+          'Quien quiere que la web sirva para pedir cita o escribir, no solo para estar.',
+          'Pymes que quieren juntar web, agente y SEO en un mismo proyecto.',
+        ],
+        incluye: [
+          'Diseño pensado primero para el móvil',
+          'Páginas hechas para que te escriban o pidan cita',
+          'Conexión con tu agente de IA',
+          'Una base preparada para el SEO',
+        ],
+        faq: ['seo-web', 'combinar', 'tiempo'],
+      },
+    },
+  },
+
+  // Sección "se combinan" de /servicios. Los servicios de cada combinación
+  // van por id en components/Combinaciones.astro; aquí solo el texto.
+  combinables: {
+    etiqueta: 'Se combinan',
+    titulo: 'Coge uno o júntalos: están hechos para encajar',
+    texto:
+      'Cada servicio funciona por su cuenta, pero rinden más juntos. Todo se conecta entre sí y se gestiona desde el mismo CRM. Estas son las combinaciones que más montamos.',
+    lista: {
+      captar: {
+        titulo: 'De la visita a la reserva, sin tocar nada',
+        texto: 'Tu web capta, el agente atiende y coge la cita, y todo queda apuntado en tu CRM sin copiar nada a mano.',
+      },
+      medida: {
+        titulo: 'Un programa que encaja a la primera',
+        texto: 'Primero dibujamos cómo trabajas; después te hacemos el programa justo para eso, sin pantallas de más.',
+      },
+      encontrar: {
+        titulo: 'Que te encuentren y te escriban',
+        texto: 'El SEO trae a quien busca lo tuyo en tu zona, y la web está hecha para que, al entrar, pida cita o te escriba.',
+      },
+    },
+    mas: '¿Tienes otra combinación en mente? Casi seguro que se puede.',
+  },
+
   legal: {
     actualizado: 'Última actualización',
     otros: 'Los otros documentos',
@@ -616,16 +808,15 @@ export const es = {
   footer: {
     descripcion:
       'Estudio de digitalización para pymes de toda España. Programas a medida, agentes de IA, automatización de procesos, SEO y desarrollo web.',
-    estado: 'Sistemas funcionando ahora mismo',
     navegacion: 'Navegación',
-    calculadoraAhorro: 'Calculadora Ahorro',
+    calculadoraAhorro: 'Calculadora de ahorro',
     servicios: 'Servicios',
-    saas: 'SaaS a medida',
+    saas: 'Software a medida',
     agentes: 'Agentes de IA',
-    panel: 'Panel de gestión',
+    panel: 'CRM con IA',
     procesos: 'Mapeo y automatización',
     seoWeb: 'SEO y desarrollo web',
-    contactoRapido: 'Contacto Rápido',
+    contactoRapido: 'Contacto rápido',
     invitacion: '¿Quieres ver una demo personalizada para tu negocio? Escríbenos directamente.',
     instagram: 'DALSAT en Instagram (@dalsat.co)',
     legal: 'Información legal',

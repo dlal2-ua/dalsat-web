@@ -30,16 +30,20 @@ export default function StickyMobileCta({ idioma = IDIOMA_POR_DEFECTO }: Props) 
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-40 md:hidden transition-transform duration-300 ${
+      // Sube por encima del banner de cookies igual que el flotante de
+      // WhatsApp (--alto-cookies lo publica CookieBanner): si no, el banner
+      // se le monta encima y "Aceptar" queda debajo de esta barra.
+      className={`fixed inset-x-0 z-40 md:hidden transition-transform duration-300 ${
         visible ? 'translate-y-0' : 'translate-y-full'
       }`}
+      style={{ bottom: 'var(--alto-cookies, 0px)' }}
       aria-hidden={!visible}
     >
-      <div className="flex items-center gap-2.5 border-t border-white/12 bg-navy-950/95 px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl">
+      <div className="flex items-center gap-2.5 border-t border-white/10 bg-navy-950/95 px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl">
         <a
           href={ruta('/contacto', idioma)}
           tabIndex={visible ? undefined : -1}
-          className="flex-1 rounded-xl bg-terracota px-4 py-3.5 text-center text-sm font-extrabold text-navy transition-colors hover:bg-terracota-dark"
+          className="flex-1 rounded-xl bg-terracota px-4 py-3.5 text-center text-sm font-extrabold text-navy-950 transition-colors hover:bg-terracota-light"
         >
           {t.barraMovil.cta}
         </a>

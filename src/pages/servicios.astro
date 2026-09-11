@@ -3,25 +3,26 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header';
 import Services from '../components/Services';
 import Platform from '../components/Platform';
+import Combinaciones from '../components/Combinaciones.astro';
 import StepScroll from '../components/StepScroll';
 import Footer from '../components/Footer';
 import CtaContacto from '../components/CtaContacto.astro';
 ---
 
 <Layout
-  title="Servicios | SaaS a medida, agentes de IA, automatización, SEO y web"
-  description="Los seis servicios de DALSAT para pymes de toda España: programas a medida, agentes de IA por WhatsApp, Instagram y web, panel de gestión, mapeo y automatización de procesos, SEO y desarrollo web."
+  title="Software a medida y agentes de IA para pymes | DALSAT"
+  description="Software a medida, agentes de IA para WhatsApp, CRM con IA, mapeo de procesos, SEO y desarrollo web: los seis servicios de DALSAT para pymes de España."
 >
   <Header client:load currentPath="/servicios" />
 
-  <main class="pt-16">
+  <main id="contenido" class="pt-16">
     {/* Portada del catalogo. Esta pagina es un indice de seis piezas
         numeradas, asi que abre como un indice: numero, regla y titulo a la
         izquierda, entradilla descolgada a la derecha. El resto del sitio abre
         con badge + titulo centrado; aqui no, para que se note que entras en
         otra cosa. El badge decia "Que hacemos" y el h1 lo repetia. */}
     <section class="relative py-16 sm:py-28 bg-gradient-to-b from-navy-800 via-navy-950 to-navy-900 overflow-hidden">
-      <div class="absolute top-0 -left-40 w-[620px] h-[420px] bg-cian/15 rounded-full blur-[160px] pointer-events-none" aria-hidden="true"></div>
+      <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_10%_0%,rgba(20,205,236,0.14),transparent_60%)]" aria-hidden="true"></div>
 
       <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-8 items-end">
@@ -29,7 +30,7 @@ import CtaContacto from '../components/CtaContacto.astro';
             <div class="flex items-center gap-4 mb-6 sm:mb-8">
               <span class="font-mono text-sm font-bold text-cian tabular-nums">06</span>
               <span class="h-px flex-1 max-w-[7rem] bg-cian/30" aria-hidden="true"></span>
-              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-white/40">
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-white/60">
                 Servicios
               </span>
             </div>
@@ -39,7 +40,7 @@ import CtaContacto from '../components/CtaContacto.astro';
           </div>
 
           <p class="lg:col-span-5 lg:pb-2 text-white/70 text-base sm:text-lg font-light leading-relaxed border-l-2 border-cian/30 pl-5" data-reveal style="--reveal-delay: 120ms">
-            No hace falta hacerlo todo a la vez. Empezamos por lo que más te pesa cada semana y seguimos desde ahí.
+            No hace falta hacerlo todo a la vez: se contratan sueltos o combinados. Empezamos por lo que más te pesa cada semana y seguimos desde ahí.
           </p>
         </div>
       </div>
@@ -48,11 +49,14 @@ import CtaContacto from '../components/CtaContacto.astro';
     {/* Catálogo completo, en orden de prioridad */}
     <Services />
 
-    {/* El panel desde el que se gestiona todo */}
+    {/* Se combinan entre si, y encajan en el CRM de justo debajo */}
+    <Combinaciones />
+
+    {/* El CRM desde el que se gestiona todo */}
     <Platform />
 
     {/* Proceso en 3 Pasos */}
-    <StepScroll client:load />
+    <StepScroll />
 
     <CtaContacto
       titulo="¿Por dónde empezarías tú?"
@@ -61,5 +65,5 @@ import CtaContacto from '../components/CtaContacto.astro';
     />
   </main>
 
-  <Footer client:visible />
+  <Footer />
 </Layout>

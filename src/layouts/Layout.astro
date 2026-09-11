@@ -5,6 +5,17 @@ import VolverArriba from '../components/VolverArriba';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import DalsatMascot from '../components/DalsatMascot';
 import { ClientRouter } from 'astro:transitions';
+// Fuentes servidas desde la propia web, no desde Google Fonts: la hoja de
+// Google bloqueaba el primer pintado y mandaba la IP de cada visitante a
+// Google (riesgo RGPD). Mismas familias y pesos que antes; tailwind.config
+// sigue diciendo 'Inter' y 'Space Grotesk'.
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/inter/800.css';
+import '@fontsource/space-grotesk/500.css';
+import '@fontsource/space-grotesk/700.css';
 import { contenido } from '../i18n';
 import {
   ETIQUETA_HTML,
@@ -24,8 +35,8 @@ interface Props {
 }
 
 const {
-  title = 'DALSAT | Re-digitalización de pymes en toda España',
-  description = 'SaaS a medida, agentes de IA, mapeo y automatización de procesos, panel de gestión, SEO y desarrollo web para pymes de toda España. Miramos cómo funciona tu negocio y automatizamos lo que se repite.',
+  title = 'Automatización e IA para pymes | DALSAT',
+  description = 'Software a medida, agentes de IA, CRM con IA, mapeo y automatización de procesos, SEO y desarrollo web para pymes de toda España. Miramos cómo funciona tu negocio y automatizamos lo que se repite.',
   // Tarjeta 1200x630 propia. El logo suelto se recortaba en WhatsApp.
   image = '/og-dalsat.png',
   noindex = false,
@@ -57,14 +68,37 @@ const SIN_BARRA_MOVIL = ['/contacto', '/gracias'];
 const mostrarBarraMovil = !SIN_BARRA_MOVIL.includes(RUTA);
 const canonicalURL = new URL(Astro.url.pathname, SITE_URL);
 
+// Los hreflang tienen que apuntar a la misma forma de URL que la canonica y el
+// sitemap (con barra final en el build). ruta('/', 'en') devuelve '/en' sin
+// barra, y el home ingles quedaba enlazado a una URL que no era la canonica.
+const CON_BARRA = Astro.url.pathname.endsWith('/');
+const alternativa = (idiomaDestino: typeof idioma) => {
+  const camino = ruta(RUTA_NEUTRA, idiomaDestino);
+  return new URL(CON_BARRA && !camino.endsWith('/') ? `${camino}/` : camino, SITE_URL);
+};
+
+const DESCRIPCION_ORG = {
+  es: 'Estudio de digitalización para pymes de toda España: software a medida, agentes de IA especializados por negocio, CRM con IA, mapeo y automatización de procesos, SEO y desarrollo web.',
+  en: 'Digitalisation studio for small businesses across Spain: custom software, AI agents built for each business, an AI-powered CRM, process mapping and automation, SEO and web development.',
+};
+
 const schemaData = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": new URL('/#organizacion', SITE_URL).toString(),
   "name": "DALSAT",
   "url": SITE_URL.toString(),
   "logo": new URL('/logo-dalsat.png', SITE_URL).toString(),
-  "description": "Estudio de digitalización para pymes de toda España: SaaS a medida, agentes de IA especializados por negocio, panel de gestión, mapeo y automatización de procesos, SEO y desarrollo web.",
+  "description": DESCRIPCION_ORG[idioma],
   "email": "dalsat.soluciones@gmail.com",
+  "sameAs": ["https://www.instagram.com/dalsat.co/"],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "email": "dalsat.soluciones@gmail.com",
+    "areaServed": "ES",
+    "availableLanguage": ["es", "en"]
+  },
   "address": {
     "@type": "PostalAddress",
     "addressCountry": "ES"
@@ -74,17 +108,24 @@ const schemaData = {
     "name": "España"
   },
   "knowsAbout": [
-    "SaaS a medida",
+    "Software a medida",
     "Agentes de IA para empresas",
-    "Panel de gestión de agentes y reservas",
+    "CRM con IA para pymes",
     "Mapeo y automatización de procesos",
     "SEO y posicionamiento en Google",
     "Desarrollo web"
-  ],
-  "offers": {
-    "@type": "Offer",
-    "category": "Digitalización y automatización para pymes"
-  }
+  ]
+};
+
+// Nodo WebSite: dice a Google el nombre del sitio y en que idioma esta cada
+// version. Va aparte del Organization, enlazado por @id.
+const schemaWeb = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "DALSAT",
+  "url": new URL(ruta('/', idioma), SITE_URL).toString(),
+  "inLanguage": ETIQUETA_HTML[idioma],
+  "publisher": { "@id": new URL('/#organizacion', SITE_URL).toString() }
 };
 ---
 
@@ -95,12 +136,11 @@ const schemaData = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content="saas a medida, software a medida pymes, agentes de IA para empresas, agente IA whatsapp, agente IA instagram, automatizacion de procesos, mapeo de procesos empresariales, seo para pymes, posicionamiento en Google, desarrollo web pymes, digitalizacion de pymes en España, CRM para pymes, ERP para pymes, panel de gestion de reservas, agente de voz para empresas" />
     <meta name="author" content="DALSAT" />
     <meta
       name="robots"
       content={noindex
-        ? 'noindex, nofollow'
+        ? 'noindex, follow'
         : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
     />
     <link rel="canonical" href={canonicalURL} />
@@ -112,13 +152,13 @@ const schemaData = {
       <link
         rel="alternate"
         hreflang={ETIQUETA_HTML[codigo]}
-        href={new URL(ruta(RUTA_NEUTRA, codigo), SITE_URL)}
+        href={alternativa(codigo)}
       />
     ))}
     <link
       rel="alternate"
       hreflang="x-default"
-      href={new URL(ruta(RUTA_NEUTRA, IDIOMA_POR_DEFECTO), SITE_URL)}
+      href={alternativa(IDIOMA_POR_DEFECTO)}
     />
 
     <!-- OpenGraph / Facebook / WhatsApp / LinkedIn -->
@@ -129,8 +169,14 @@ const schemaData = {
     <meta property="og:image" content={new URL(image, canonicalURL)} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="DALSAT: ya tienes web, redes y Google Maps. Ahora toca automatizar." />
-    <meta property="og:locale" content={idioma === 'es' ? 'es_ES' : 'en'} />
+    <meta
+      property="og:image:alt"
+      content={idioma === 'es'
+        ? 'DALSAT: ya tienes web, redes y Google Maps. Ahora toca automatizar.'
+        : 'DALSAT: you already have a site, social accounts and Google Maps. Now comes automation.'}
+    />
+    <meta property="og:locale" content={idioma === 'es' ? 'es_ES' : 'en_GB'} />
+    <meta property="og:locale:alternate" content={idioma === 'es' ? 'en_GB' : 'es_ES'} />
     <meta property="og:site_name" content="DALSAT" />
 
     <!-- Twitter Cards -->
@@ -142,13 +188,8 @@ const schemaData = {
 
     <!-- Datos Estructurados JSON-LD Schema de Google -->
     <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+    <script type="application/ld+json" set:html={JSON.stringify(schemaWeb)} />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
-      rel="stylesheet"
-    />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
@@ -172,6 +213,21 @@ const schemaData = {
       html.js [data-dalsat-chat] .dalsat-bubble {
         opacity: 0 !important;
         pointer-events: none !important;
+      }
+
+      /* Con el chat abierto la mascota se posa en la esquina de abajo a la
+         derecha para hacer de botón de cerrar, justo donde vive el botón de
+         WhatsApp. Se aparta mientras tanto para no quedar uno encima del otro. */
+      /* Foco visible en todo el sitio para quien navega con teclado. Solo con
+         :focus-visible, asi que el clic con raton no deja el anillo puesto. */
+      :focus-visible {
+        outline: 2px solid theme('colors.cian.DEFAULT');
+        outline-offset: 3px;
+      }
+
+      html:has([data-dalsat-chat].open) .whatsapp-flotante {
+        opacity: 0;
+        pointer-events: none;
       }
 
       @media (prefers-reduced-motion: no-preference) {
@@ -203,17 +259,25 @@ const schemaData = {
     </style>
   </head>
   <body class="font-sans antialiased bg-crema text-grafito">
+    {/* Primer elemento tabulable: salta la cabecera. Cada pagina marca su
+        <main> con id="contenido". */}
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[2147483647] focus:rounded-xl focus:bg-navy-950 focus:px-4 focus:py-3 focus:text-sm focus:font-bold focus:text-white"
+    >
+      {t.comun.saltarContenido}
+    </a>
     <slot />
     <VolverArriba client:idle etiqueta={t.comun.volverArriba} />
 
-    {/* WhatsApp y el chat conviven en la misma esquina: el widget fija su
-        burbuja en right:20px y este se pone a su izquierda. En movil no sale
-        ninguno de los dos aqui, que la barra fija de abajo ya lleva WhatsApp. */}
+    {/* WhatsApp va pegado a la esquina de abajo a la derecha (la burbuja
+        nativa del chat, que tambien estaba ahi, esta escondida). En movil no
+        sale, que la barra fija de abajo ya lleva WhatsApp. */}
     <FloatingWhatsApp client:idle idioma={idioma} />
     {mostrarBarraMovil && <StickyMobileCta client:idle idioma={idioma} />}
     {/* La analitica de Vercel ya no se carga aqui: la inyecta el banner solo
         si el visitante acepta. Antes se cargaba siempre y el aviso era humo. */}
-    <CookieBanner client:load idioma={idioma} />
+    <CookieBanner client:idle idioma={idioma} />
 
     {/* Revelado al hacer scroll para todo el sitio. Sin libreria de animacion:
         IntersectionObserver y una clase. El escalonado lo pone cada elemento

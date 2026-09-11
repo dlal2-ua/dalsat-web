@@ -176,7 +176,7 @@ export default function ContactForm({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
       <div>
         <label className="block text-sm font-semibold text-white/90 mb-1.5" htmlFor="business">
-          {t.negocio} <span className="font-normal text-white/45">{t.opcional}</span>
+          {t.negocio} <span className="font-normal text-white/60">{t.opcional}</span>
         </label>
         <input
           id="business"
@@ -191,7 +191,7 @@ export default function ContactForm({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
       <div>
         <label className="block text-sm font-semibold text-white/90 mb-1.5" htmlFor="message">
-          {t.mensaje} <span className="font-normal text-white/45">{t.opcional}</span>
+          {t.mensaje} <span className="font-normal text-white/60">{t.opcional}</span>
         </label>
         <textarea
           id="message"
@@ -210,7 +210,7 @@ export default function ContactForm({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       <button
         type="submit"
         disabled={status === 'sending'}
-        className="w-full flex items-center justify-center gap-2.5 bg-terracota hover:bg-terracota-dark text-navy disabled:cursor-wait disabled:opacity-70 disabled:hover:bg-terracota font-bold py-4 rounded-xl transition-all duration-300 text-sm shadow-[0_0_25px_rgba(217,100,44,0.3)] hover:shadow-[0_0_35px_rgba(217,100,44,0.5)] hover:scale-[1.02] disabled:hover:scale-100 cursor-pointer"
+        className="w-full flex items-center justify-center gap-2.5 bg-terracota hover:bg-terracota-light text-navy-950 disabled:cursor-wait disabled:opacity-70 disabled:hover:bg-terracota font-bold py-4 rounded-xl transition-all duration-300 text-sm shadow-[0_0_25px_rgba(217,100,44,0.3)] hover:shadow-[0_0_35px_rgba(217,100,44,0.5)] hover:scale-[1.02] disabled:hover:scale-100 cursor-pointer"
       >
         {status === 'sending' && (
           <span

@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { contenido } from '../i18n';
 import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
 
@@ -5,7 +6,17 @@ interface ClientLogo {
   id: string;
   name: string;
   logo: string;
-  logoBg: string;
+  /** Medidas reales del fichero, para reservar el hueco antes de que cargue. */
+  width: number;
+  height: number;
+  /**
+   * Fondo de la pieza del logo. Los que van sobre crema se funden con
+   * mix-blend-multiply: el JPG de Atrio trae fondo blanco y, sin eso, se
+   * veria un rectangulo blanco dentro de la pieza.
+   */
+  logoBg: 'bg-navy-950' | 'bg-crema';
+  /** Relleno de la pieza: el de Víbora es un cartel cuadrado y va casi a sangre. */
+  logoPad: string;
   /**
    * Frase publicada debajo del logo, atribuida al cliente.
    *
@@ -23,13 +34,16 @@ interface ClientLogo {
 
 }
 
-// Los clientes, para el carrusel de logos.
+// Los clientes y lo que dicen. El orden de este array es el orden en pantalla.
 const LOGOS: ClientLogo[] = [
   {
     id: 'vibora-studio',
     name: 'Víbora Studio',
     logo: '/vibora-studio.webp',
+    width: 320,
+    height: 360,
     logoBg: 'bg-navy-950',
+    logoPad: 'p-1',
     frase:
       'Antes parábamos de tatuar para coger el móvil, y aun así se nos escapaban mensajes por la noche. Ahora la cita entra sola mientras trabajamos y por la mañana solo miramos la agenda.',
   },
@@ -37,7 +51,10 @@ const LOGOS: ClientLogo[] = [
     id: 'atrio-asesores',
     name: 'Atrio Asesores',
     logo: '/atrio-asesores.jpg',
+    width: 300,
+    height: 95,
     logoBg: 'bg-crema',
+    logoPad: 'p-4',
     frase:
       'En campaña de Renta nos llovían las mismas cuatro preguntas todo el día. Ahora las contesta el agente y a nosotros nos llega solo el caso que hay que mirar de verdad.',
   },
@@ -45,18 +62,20 @@ const LOGOS: ClientLogo[] = [
     id: 'beniabogados',
     name: 'Beniabogados',
     logo: '/beniabogados.svg',
+    width: 340,
+    height: 150,
     logoBg: 'bg-crema',
+    logoPad: 'p-3',
     // El logo lo dibujamos nosotros: el despacho no tenia uno.
     frase:
       'No teníamos ni logo, y explicábamos el despacho por teléfono uno a uno. Ahora tenemos imagen propia y una web que lo cuenta por nosotros antes de que llamen.',
   },
 ];
 
-// Con tres logos la tira se ve corta, asi que el juego se repite hasta llenar
-// el ancho y luego se duplica entero: la animacion va de 0 a -50% y al saltar
-// de vuelta cae en un punto identico, sin costura.
-const REPETICIONES = 4;
-const TIRA = Array.from({ length: REPETICIONES }, () => LOGOS).flat();
+// Antes esto era una tira que se movia sola sin parar (los tres clientes
+// repetidos 24 veces, en bucle de 55 s): las citas no se podian leer enteras
+// y no habia forma de pararla (WCAG 2.2.2). Ahora son tres citas quietas, y es
+// la unica banda clara de la home: rompe la sucesion de azules.
 
 interface Props {
   idioma?: Idioma;
@@ -68,107 +87,103 @@ export default function SatisfiedClients({ idioma = IDIOMA_POR_DEFECTO }: Props)
   return (
     <section
       id="clientes"
-      className="relative py-20 sm:py-28 bg-navy-900 border-t border-white/10 overflow-hidden"
+      className="relative py-20 sm:py-28 bg-crema text-grafito overflow-hidden"
       data-mascot-perch="clientes"
     >
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[750px] h-[400px] sm:h-[550px] bg-gradient-to-tr from-cian/15 via-cian-dark/15 to-transparent rounded-full blur-[170px] pointer-events-none" />
+      {/* Profundidad barata: una retícula de puntos navy casi invisible y una
+          luz cian en la esquina, las dos como fondo de la propia capa. Nada de
+          blur: sobre crema no hace falta y cuesta pintarlo. */}
+      <div
+        className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top_right,rgba(20,205,236,0.14),transparent_55%),radial-gradient(circle_at_1px_1px,rgba(7,40,71,0.07)_1px,transparent_0)] bg-[size:auto,22px_22px]"
+        aria-hidden="true"
+      />
 
-      <style>{`
-        @keyframes clientesMarquee {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-        /* Las piezas son mas grandes que antes, asi que la tira recorre mas
-           distancia. Se sube la duracion de 38s a 55s para que la velocidad
-           en pantalla siga siendo la misma. */
-        .marquee-track {
-          animation: clientesMarquee 55s linear infinite;
-          width: max-content;
-        }
-        /* Solo se para mientras se mantiene pulsado (ratón o dedo), no al
-           pasar el ratón por encima. */
-        .marquee { -webkit-touch-callout: none; user-select: none; }
-        .marquee:active .marquee-track { animation-play-state: paused; }
-        @media (prefers-reduced-motion: reduce) {
-          .marquee-track { animation: none; }
-          .marquee { overflow-x: auto; }
-        }
-      `}</style>
-
-      <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-        {/* Cabecera */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cian/10 border border-cian/30 backdrop-blur-xl shadow-[0_0_20px_rgba(20,205,236,0.25)] mb-4">
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cian opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-cian"></span>
-            </span>
-            <span className="text-xs font-extrabold tracking-widest uppercase text-cian">
-              {t.clientes.etiqueta}
-            </span>
+      <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative">
+        {/* Cabecera a la izquierda, entradilla descolgada: la misma forma que
+            "Se combinan" en /servicios, no el badge centrado del resto. */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-5 items-end mb-14 sm:mb-20" data-reveal>
+          <div className="lg:col-span-7">
+            <div className="flex items-center gap-4 mb-6">
+              <span className="h-[3px] w-10 bg-cian" aria-hidden="true" />
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-navy/70">
+                {t.clientes.etiqueta}
+              </span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-navy tracking-tight leading-tight">
+              {t.clientes.titulo}
+            </h2>
           </div>
-
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3">
-            {t.clientes.titulo}
-          </h2>
-          <p className="text-white/70 text-base sm:text-lg font-light">
+          <p className="lg:col-span-5 lg:pb-2 text-grafito/80 text-base sm:text-lg leading-relaxed">
             {t.clientes.entradilla}
           </p>
         </div>
-      </div>
 
-      {/* Carrusel de logos: sale por la izquierda y vuelve a entrar por la derecha */}
-      {/* data-mascot-obstacle: la tira se mueve sola, así que la mascota la
-          trata como un bloque entero -- si mirara logo a logo, un hueco
-          libre ahora dejaría de estarlo al pasar el siguiente. */}
-      <div className="marquee relative w-full overflow-hidden" aria-label={t.clientes.titulo} data-mascot-obstacle>
-        {/* Difuminado en los bordes para que no se corten de golpe */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 sm:w-32 bg-gradient-to-r from-navy-900 to-transparent" aria-hidden="true" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 sm:w-32 bg-gradient-to-l from-navy-900 to-transparent" aria-hidden="true" />
-
-        <ul className="marquee-track flex list-none items-center gap-6 sm:gap-10 p-0 m-0">
-          {[...TIRA, ...TIRA].map((client, i) => (
-            <li
-              key={`${client.id}-${i}`}
-              aria-hidden={i >= TIRA.length ? 'true' : undefined}
-              className="shrink-0 w-56 sm:w-80"
+        {/* Tres citas quietas. Cada una es su propio <figure>: logo arriba,
+            la cita, y el nombre del negocio como pie. Sin nombres de persona:
+            las citas las redactamos nosotros y las aprobo cada negocio. */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-10 xl:gap-x-14 gap-y-16">
+          {LOGOS.filter((client) => client.frase).map((client, i) => (
+            <figure
+              key={client.id}
+              className="relative m-0 flex flex-col border-t border-navy/20 pt-8"
+              data-reveal
+              style={{ '--reveal-delay': `${i * 120}ms` } as CSSProperties}
             >
+              {/* Tramo cian grueso sobre el filete: a 1px el cian no se ve
+                  sobre crema, con masa si. */}
+              <span className="absolute -top-[2px] left-0 h-[3px] w-14 bg-cian" aria-hidden="true" />
+
+              {/* alt vacio a proposito: el nombre del negocio va en el pie de
+                  esta misma figura, y con alt se leeria dos veces seguidas. */}
               <div
-                className={`${client.logoBg} flex items-center justify-center rounded-3xl border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.35)] h-36 sm:h-44 p-6 sm:p-8`}
+                className={`${client.logoBg} ${client.logoPad} flex h-24 w-44 items-center justify-center overflow-hidden rounded-2xl border border-navy/10`}
               >
                 <img
                   src={client.logo}
-                  alt={`Logo de ${client.name}`}
+                  alt=""
+                  width={client.width}
+                  height={client.height}
                   loading="lazy"
+                  decoding="async"
                   draggable={false}
-                  className="max-h-full max-w-full object-contain"
+                  className={`h-full w-full object-contain${client.logoBg === 'bg-crema' ? ' mix-blend-multiply' : ''}`}
                 />
               </div>
-              {client.frase && (
-                <figcaption className="mt-4 px-1 text-center text-base leading-relaxed text-white/80">
-                  <q className="italic">{client.frase}</q>
 
-                  {/* La cita no se traduce: es literal de quien la dijo. En
-                      ingles se pone debajo la traduccion, marcada, para que un
-                      visitante que no lea castellano sepa que dice. */}
-                  {t.clientes.etiquetaTraduccion && t.clientes.traducciones[client.id] && (
-                    <span className="mt-2 block text-sm not-italic leading-snug text-white/55">
-                      <span className="mr-1.5 font-bold text-cian/70">
-                        {t.clientes.etiquetaTraduccion}
-                      </span>
-                      {t.clientes.traducciones[client.id]}
-                    </span>
-                  )}
+              <span
+                className="mt-8 block h-10 font-display text-7xl font-bold leading-none text-cian select-none"
+                aria-hidden="true"
+              >
+                &ldquo;
+              </span>
 
-                  <span className="mt-2 block text-sm font-bold not-italic text-cian/80">
-                    {client.name}
+              {/* La cita no se traduce: es literal y va en castellano, marcada
+                  con lang para que un lector de pantalla en ingles no la lea
+                  con acento ingles. */}
+              <blockquote className="m-0 flex-1" lang={idioma === 'es' ? undefined : 'es'}>
+                <p className="font-display text-xl sm:text-2xl font-medium leading-snug tracking-tight text-navy">
+                  {client.frase}
+                </p>
+              </blockquote>
+
+              {/* En ingles, la traduccion debajo y marcada como tal, para que
+                  un visitante que no lea castellano sepa que dice. */}
+              {t.clientes.etiquetaTraduccion && t.clientes.traducciones[client.id] && (
+                <p className="mt-5 text-sm leading-relaxed text-grafito/80">
+                  <span className="mr-1.5 font-bold text-navy">
+                    {t.clientes.etiquetaTraduccion}
                   </span>
-                </figcaption>
+                  {t.clientes.traducciones[client.id]}
+                </p>
               )}
-            </li>
+
+              <figcaption className="mt-7 flex items-center gap-3 border-t border-navy/10 pt-5 text-sm font-bold text-navy">
+                <span className="h-px w-6 bg-navy/40" aria-hidden="true" />
+                {client.name}
+              </figcaption>
+            </figure>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   );

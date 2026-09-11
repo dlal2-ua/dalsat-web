@@ -29,14 +29,21 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   const categories = Array.from(new Set(FAQS.map((f) => f.category)));
   const allCategories = [PRIMERA, ...categories.filter((c) => c !== PRIMERA), TODAS];
 
-  const filteredFaqs = FAQS.filter((faq) => {
+  // Se decide que cada pregunta es visible o no, pero no se quitan del DOM:
+  // todas las preguntas y respuestas tienen que estar en el HTML servido
+  // (SEO / rich results), y el filtro de categoria/busqueda solo las oculta.
+  const isVisible = (faq: (typeof FAQS)[number]) => {
     const matchesCategory = activeCategory === TODAS || faq.category === activeCategory;
     const matchesSearch =
       faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchTerm.toLowerCase()) ||
       faq.category.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
-  });
+  };
+  const visibleFaqs = FAQS.filter(isVisible);
+  // Numeracion (01, 02...) solo de las visibles, para no romper la UX previa
+  // aunque ahora se rendericen todas las preguntas siempre.
+  const visibleIndexById = new Map(visibleFaqs.map((f, i) => [f.id, i + 1]));
 
   const toggleFaq = (id: string) => {
     setOpenId(openId === id ? '' : id);
@@ -61,9 +68,9 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
             {t.titulo}
-          </h2>
+          </h1>
           <p className="text-white/70 text-base sm:text-lg font-light max-w-2xl mx-auto">
             {t.entradilla}
           </p>
@@ -74,6 +81,7 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
               <input
                 type="text"
                 placeholder={t.buscar}
+                aria-label={t.buscar}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full bg-white/[0.05] border border-white/20 rounded-2xl py-3.5 pl-5 pr-12 text-sm text-white placeholder-white/40 focus:outline-none focus:border-cian focus:bg-white/[0.08] focus:shadow-[0_0_20px_rgba(20,205,236,0.25)] transition-all"
@@ -84,7 +92,7 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                   onClick={() => setSearchTerm('')}
                   className="absolute right-4 text-xs font-mono bg-white/10 text-white/70 hover:text-white px-2 py-1 rounded-full cursor-pointer"
                 >
-                   Borrar
+                  {t.borrar}
                 </button>
               )}
             </div>
@@ -95,14 +103,16 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10">
           {allCategories.map((cat) => {
             const isSelected = activeCategory === cat;
-            const count = cat === 'Todas' ? FAQS.length : FAQS.filter((f) => f.category === cat).length;
+            const count = cat === TODAS ? FAQS.length : FAQS.filter((f) => f.category === cat).length;
+            const label = cat === TODAS ? t.todas : cat;
             return (
               <button
                 key={cat}
                 type="button"
+                aria-pressed={isSelected}
                 onClick={() => {
                   setActiveCategory(cat);
-                  const firstOfCat = FAQS.find((f) => cat === 'Todas' || f.category === cat);
+                  const firstOfCat = FAQS.find((f) => cat === TODAS || f.category === cat);
                   if (firstOfCat) setOpenId(firstOfCat.id);
                 }}
                 className={`px-4 py-2.5 rounded-2xl font-bold text-xs transition-all duration-300 flex items-center gap-2 border cursor-pointer ${
@@ -111,7 +121,7 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                     : 'bg-white/[0.03] border-white/10 text-white/70 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                <span>{cat}</span>
+                <span>{label}</span>
                 <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-black/30 text-white' : 'bg-white/10 text-white/60'}`}>
                   {count}
                 </span>
@@ -121,7 +131,7 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         </div>
 
         {/* Si no hay resultados de búsqueda */}
-        {filteredFaqs.length === 0 && (
+        {visibleFaqs.length === 0 && (
           <div className="text-center py-12 bg-white/[0.02] border border-white/10 rounded-3xl p-8 backdrop-blur-xl">
             <h3 className="text-lg font-bold text-white mb-2">{t.sinNada.replace('{q}', searchTerm)}</h3>
             <p className="text-white/60 text-xs sm:text-sm mb-6">{t.sinNadaPista}</p>
@@ -135,15 +145,20 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
           </div>
         )}
 
-        {/* Lista de Acordeones de la Categoría Seleccionada */}
+        {/* Lista de Acordeones. Se renderizan TODAS las preguntas (SEO: hay
+            que servir el HTML completo); el filtro de categoria/busqueda
+            solo oculta con `hidden`, no las quita del DOM. */}
         <div className="space-y-4">
-          {filteredFaqs.map((faq, idx) => {
+          {FAQS.map((faq) => {
+            const visible = isVisible(faq);
             const isOpen = openId === faq.id;
             const hasReacted = reactions[faq.id];
+            const answerId = `faq-answer-${faq.id}`;
 
             return (
               <div
                 key={faq.id}
+                hidden={!visible}
                 className={`rounded-2xl border transition-all duration-300 overflow-hidden backdrop-blur-xl ${
                   isOpen
                     ? 'bg-gradient-to-b from-white/[0.1] to-white/[0.03] border-cian/50 shadow-[0_0_25px_rgba(20,205,236,0.15)]'
@@ -156,10 +171,11 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                   onClick={() => toggleFaq(faq.id)}
                   className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 cursor-pointer group"
                   aria-expanded={isOpen}
+                  aria-controls={answerId}
                 >
                   <div className="flex items-center gap-3.5">
                     <span className="text-xs font-mono font-bold text-cian bg-cian/10 border border-cian/20 px-2.5 py-1 rounded-lg shrink-0">
-                      {String(idx + 1).padStart(2, '0')}
+                      {String(visibleIndexById.get(faq.id) ?? 0).padStart(2, '0')}
                     </span>
 
                     <div>
@@ -186,54 +202,57 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                   </div>
                 </button>
 
-                {/* Contenido Desplegable Animado */}
-                {isOpen && (
-                  <div className="px-5 pb-6 sm:px-6 sm:pb-6 text-white/70 text-sm sm:text-base font-light leading-relaxed border-t border-white/10 pt-4 animate-fadeIn space-y-4">
-                    <p>{faq.answer}</p>
+                {/* Contenido Desplegable. Siempre en el HTML (SEO); `hidden`
+                    controla si se ve, no si existe. */}
+                <div
+                  id={answerId}
+                  hidden={!isOpen}
+                  className="px-5 pb-6 sm:px-6 sm:pb-6 text-white/70 text-sm sm:text-base font-light leading-relaxed border-t border-white/10 pt-4 motion-safe:animate-fadeIn space-y-4"
+                >
+                  <p>{faq.answer}</p>
 
-                    {/* Botones de Reacción e Interacción */}
-                    <div className="flex items-center justify-between pt-2 text-xs flex-wrap gap-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-white/50 text-[11px]">{t.utilPregunta}</span>
-                        <button
-                          type="button"
-                          onClick={() => handleReaction(faq.id)}
-                          className={`px-3 py-1 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1 border text-xs ${
-                            hasReacted
-                              ? 'bg-cian/20 text-cian-light border-cian/50'
-                              : 'bg-white/5 text-white/70 border-white/15 hover:bg-white/10 hover:text-white'
-                          }`}
-                        >
-                          <span>{hasReacted ? t.utilSi : t.utilVota}</span>
-                        </button>
-                      </div>
-
-                      <a
-                        href={urlWhatsApp(`${t.dudaWhatsApp} ${faq.question}`)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[11px] font-bold text-cian hover:underline flex items-center gap-1 cursor-pointer"
+                  {/* Botones de Reacción e Interacción */}
+                  <div className="flex items-center justify-between pt-2 text-xs flex-wrap gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-white/50 text-[11px]">{t.utilPregunta}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleReaction(faq.id)}
+                        className={`px-3 py-1 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1 border text-xs ${
+                          hasReacted
+                            ? 'bg-cian/20 text-cian-light border-cian/50'
+                            : 'bg-white/5 text-white/70 border-white/15 hover:bg-white/10 hover:text-white'
+                        }`}
                       >
-                        Preguntar por WhatsApp →
-                      </a>
+                        <span>{hasReacted ? t.utilSi : t.utilVota}</span>
+                      </button>
                     </div>
 
+                    <a
+                      href={urlWhatsApp(`${t.dudaWhatsApp} ${faq.question}`)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] font-bold text-cian hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      {t.preguntarWhatsApp} →
+                    </a>
                   </div>
-                )}
+
+                </div>
               </div>
             );
           })}
         </div>
 
         {/* Cambiar de categoría rápido */}
-        {activeCategory !== 'Todas' && (
+        {activeCategory !== TODAS && (
           <div className="mt-8 text-center">
             <button
               type="button"
-              onClick={() => setActiveCategory('Todas')}
+              onClick={() => setActiveCategory(TODAS)}
               className="inline-flex items-center gap-2 text-xs font-bold text-white/60 hover:text-cian transition-colors py-2 px-4 rounded-xl border border-white/10 hover:border-cian/30 cursor-pointer"
             >
-              <span>Ver todas las demás categorías ({FAQS.length} preguntas en total) ↓</span>
+              <span>{t.masCategorias.replace('{n}', String(FAQS.length))} ↓</span>
             </button>
           </div>
         )}
@@ -242,7 +261,7 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         <div className="mt-14 bg-gradient-to-r from-navy via-navy-900 to-navy-800 border border-cian/40 rounded-3xl p-8 sm:p-10 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="space-y-2 text-center md:text-left">
             <span className="text-[10px] font-mono font-extrabold uppercase text-cian bg-cian/10 px-3 py-1 rounded-full border border-cian/30 inline-block">
-              Soporte Directo Dalsat
+              {t.soporteDirecto}
             </span>
             <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
               {t.cierreTitulo}
@@ -253,10 +272,10 @@ export default function FaqSection({ idioma = IDIOMA_POR_DEFECTO }: Props) {
           </div>
 
           <a
-            href={urlWhatsApp('Hola, quisiera consultar mi caso particular con un especialista de Dalsat.')}
+            href={urlWhatsApp(t.consultarMensaje)}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-8 py-4 rounded-2xl bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(217,100,44,0.3)] hover:scale-105 shrink-0 flex items-center gap-2 cursor-pointer"
+            className="px-8 py-4 rounded-2xl bg-terracota hover:bg-terracota-light text-navy-950 font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(217,100,44,0.3)] hover:scale-105 shrink-0 flex items-center gap-2 cursor-pointer"
           >
             <span>{t.consultar}</span>
           </a>

@@ -41,7 +41,7 @@ const LEGALES = [
 <Layout title={title} description={description} noindex={noindex}>
   <Header client:load currentPath={currentPath} idioma={idioma} />
 
-  <main class="pt-16 bg-crema text-grafito">
+  <main id="contenido" class="pt-16 bg-crema text-grafito">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
       <a href={ruta('/', idioma)} class="inline-flex items-center gap-1.5 text-sm font-semibold text-navy/70 hover:text-navy transition-colors mb-8">
         &larr; {t.comun.volverAlInicio}
@@ -85,7 +85,7 @@ const LEGALES = [
     </div>
   </main>
 
-  <Footer client:visible idioma={idioma} />
+  <Footer idioma={idioma} />
 </Layout>
 
 <style is:global>

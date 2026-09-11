@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { urlWhatsApp } from '../../data/contacto';
+import { ruta } from '../../i18n';
 
 const WHATSAPP_URL =
   urlWhatsApp('Hi, I have just written to you through the form on the site.');
@@ -10,17 +11,17 @@ const WHATSAPP_URL =
 // Mientras esperan, algo que mirar. Nada de esto pide otro formulario.
 const MEANWHILE = [
   {
-    href: '/en/demos',
+    href: ruta('/demos#video-agentes', 'en'),
     titulo: 'Try an agent',
-    texto: 'Write to it as if you were one of your own customers and see how it answers.',
+    texto: 'See how an agent answers in your sector and hear it on the phone.',
   },
   {
-    href: '/en/calculadora',
+    href: ruta('/calculadora', 'en'),
     titulo: 'Work out your saving',
     texto: 'How many hours answering messages and calls takes you today.',
   },
   {
-    href: '/en/faq',
+    href: ruta('/faq', 'en'),
     titulo: 'Frequently asked questions',
     texto: 'Prices, timelines, minimum terms and data protection.',
   },
@@ -34,14 +35,14 @@ const MEANWHILE = [
 >
   <Header client:load currentPath="/gracias" idioma="en" />
 
-  <main class="pt-16">
+  <main id="contenido" class="pt-16">
     <section class="relative min-h-[calc(100vh-64px)] flex items-center bg-gradient-to-b from-navy-950 via-navy-800 to-navy-900 py-16 sm:py-24 border-t border-white/10 overflow-hidden">
       <div
         class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"
         aria-hidden="true"
       ></div>
       <div
-        class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-cian/15 rounded-full blur-[150px] pointer-events-none"
+        class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_35%,rgba(20,205,236,0.14),transparent_60%)]"
         aria-hidden="true"
       ></div>
 
@@ -68,12 +69,12 @@ const MEANWHILE = [
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            class="w-full sm:w-auto inline-flex items-center justify-center bg-terracota hover:bg-terracota-dark text-navy font-extrabold text-sm px-8 py-4 rounded-2xl transition-all shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-105"
+            class="w-full sm:w-auto inline-flex items-center justify-center bg-terracota hover:bg-terracota-light text-navy-950 font-extrabold text-sm px-8 py-4 rounded-2xl transition-all shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-105"
           >
             Message us on WhatsApp
           </a>
           <a
-            href="/en"
+            href={ruta('/', 'en')}
             class="w-full sm:w-auto inline-flex items-center justify-center border border-white/20 text-white font-bold text-sm px-8 py-4 rounded-2xl transition-colors hover:border-cian/50 hover:text-cian"
           >
             Back to home
@@ -81,7 +82,7 @@ const MEANWHILE = [
         </div>
 
         <div class="text-left">
-          <p class="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white/40">
+          <p class="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">
             In the meantime
           </p>
           <ul class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -106,5 +107,5 @@ const MEANWHILE = [
     </section>
   </main>
 
-  <Footer client:visible idioma="en" />
+  <Footer idioma="en" />
 </Layout>

@@ -5,7 +5,8 @@ import SplitHero from '../components/SplitHero';
 import SatisfiedClients from '../components/SatisfiedClients';
 import Footer from '../components/Footer';
 import CtaContacto from '../components/CtaContacto.astro';
-import { SERVICIOS } from '../data/servicios';
+import { SERVICIOS, rutaServicio } from '../data/servicios';
+import { ruta } from '../i18n';
 
 // Contraste entre lo que ya hizo casi toda pyme y lo que toca ahora
 const ANTES = [
@@ -23,74 +24,78 @@ const AHORA = [
 ---
 
 <Layout
-  title="DALSAT | Re-digitalización de pymes en toda España"
-  description="Ya tienes web, redes y Google Maps. Ahora toca automatizar. SaaS a medida, agentes de IA, panel de gestión, mapeo de procesos, SEO y desarrollo web para pymes de toda España."
+  title="Automatización e IA para pymes | DALSAT"
+  description="Automatización e IA para pymes de toda España: agentes de IA para WhatsApp, software a medida, CRM con IA y automatización de procesos con DALSAT."
 >
   {/* Header Reutilizable Multipágina */}
   <Header client:load currentPath="/" />
 
-  <main>
+  <main id="contenido">
     {/* 1. HERO GALÁCTICO: SPLIT + CHAT */}
     <SplitHero client:load />
 
-    {/* 2. RE-DIGITALIZACIÓN: EL MENSAJE CENTRAL */}
+    {/* 2. RE-DIGITALIZACIÓN: EL MENSAJE CENTRAL.
+        Banda crema para marcar ritmo con el resto de secciones oscuras. No es
+        adyacente a la siguiente banda crema (SatisfiedClients): entre medias
+        va la banda navy-900 de "servicios". El cian no puede ir como texto ni
+        relleno sobre crema por contraste, asi que aqui solo sobrevive como
+        filete fino. */}
     <section
       id="re-digitalizacion"
-      class="relative bg-navy border-t border-white/10 py-20 sm:py-28 overflow-hidden"
+      class="relative bg-crema text-grafito border-t border-navy/10 py-20 sm:py-28 overflow-hidden"
       data-mascot-perch="re-digitalizacion"
     >
-      <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" aria-hidden="true"></div>
-      <div class="absolute bottom-0 left-1/4 w-[600px] h-[350px] bg-cian/10 rounded-full blur-[160px] pointer-events-none" aria-hidden="true"></div>
+      <div class="absolute inset-0 bg-[linear-gradient(to_right,#07284708_1px,transparent_1px),linear-gradient(to_bottom,#07284708_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" aria-hidden="true"></div>
 
       <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="max-w-3xl" data-reveal>
-          <span class="text-xs font-extrabold uppercase tracking-widest text-cian bg-cian/10 border border-cian/30 px-4 py-1.5 rounded-full inline-block mb-5">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-navy bg-navy/5 border border-navy/15 px-4 py-1.5 rounded-full inline-block mb-5">
             Re-digitalización
           </span>
-          <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-6">
+          <h2 class="text-3xl sm:text-5xl font-extrabold text-navy tracking-tight leading-tight mb-6">
             Ya tienes web, redes y Google Maps. Hoy eso ya no basta.
           </h2>
-          <p class="text-white/75 text-base sm:text-lg leading-relaxed mb-4">
+          <p class="text-grafito/80 text-base sm:text-lg leading-relaxed mb-4">
             Casi todas las pymes hicieron su primera digitalización hace años. Estuvo bien y sigue haciendo falta. Pero eso ya lo tiene todo el mundo, así que ya no te distingue de nadie.
           </p>
-          <p class="text-white/75 text-base sm:text-lg leading-relaxed">
+          <p class="text-grafito/80 text-base sm:text-lg leading-relaxed">
             Lo que viene ahora son procesos que funcionan solos. A eso lo llamamos re-digitalización. No es tener más pantallas: es mirar cómo funciona tu negocio de verdad, dibujarlo paso a paso y automatizar lo que se repite. La inteligencia artificial es una herramienta para ganar tiempo, no una moda.
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mt-12">
-          <div data-reveal class="rounded-3xl p-7 sm:p-9 border border-white/10 bg-white/[0.03]">
-            <span class="text-[11px] font-bold uppercase tracking-widest text-white/40 mb-5 inline-block">
+          <div data-reveal class="rounded-3xl p-7 sm:p-9 border border-navy/10 bg-white/50">
+            <span class="text-[11px] font-bold uppercase tracking-widest text-navy/60 mb-5 inline-block">
               La primera digitalización
             </span>
             <ul class="space-y-3.5">
               {ANTES.map((item) => (
-                <li class="flex items-start gap-3 text-white/55 text-sm sm:text-base">
-                  <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/30" aria-hidden="true"></span>
+                <li class="flex items-start gap-3 text-grafito/70 text-sm sm:text-base">
+                  <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-navy/30" aria-hidden="true"></span>
                   {item}
                 </li>
               ))}
             </ul>
-            <p class="mt-6 pt-5 border-t border-white/10 text-sm font-semibold text-white/50">
+            <p class="mt-6 pt-5 border-t border-navy/10 text-sm font-semibold text-grafito/60">
               Sirve para que te vean.
             </p>
           </div>
 
-          <div data-reveal style="--reveal-delay: 110ms" class="rounded-3xl p-7 sm:p-9 border border-cian/40 bg-gradient-to-b from-cian/[0.08] to-transparent">
-            <span class="text-[11px] font-bold uppercase tracking-widest text-cian mb-5 inline-block">
+          <div data-reveal style="--reveal-delay: 110ms" class="rounded-3xl p-7 sm:p-9 border border-navy/15 border-t-2 border-t-cian bg-white/70">
+            <span class="text-[11px] font-bold uppercase tracking-widest text-navy mb-5 inline-block">
               La re-digitalización
             </span>
             <ul class="space-y-3.5">
               {AHORA.map((item) => (
-                <li class="flex items-start gap-3 text-white/85 text-sm sm:text-base">
-                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-cian" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <li class="flex items-start gap-3 text-grafito text-sm sm:text-base">
+                  <svg class="mt-0.5 h-5 w-5 shrink-0 text-navy" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
                   {item}
                 </li>
               ))}
             </ul>
-            <p class="mt-6 pt-5 border-t border-cian/20 text-sm font-semibold text-white">
+            <p class="mt-6 pt-5 border-t border-navy/15 text-sm font-semibold text-navy">
               Sirve para que te quiten trabajo de encima.
             </p>
           </div>
@@ -118,7 +123,7 @@ const AHORA = [
               Seis sitios por donde empezar
             </h2>
             <p class="text-white/70 text-base sm:text-lg mt-4 max-w-2xl">
-              Cada uno resuelve algo distinto. Quédate con el que más te suene a tu semana.
+              Cada uno resuelve algo distinto, y se combinan entre sí. Quédate con el que más te suene a tu semana.
             </p>
           </div>
           <a
@@ -138,7 +143,7 @@ const AHORA = [
           {SERVICIOS.map((servicio, i) => (
             <li class="border-b border-white/10" data-reveal style={`--reveal-delay: ${i * 60}ms`}>
               <a
-                href="/servicios#catalogo"
+                href={ruta(rutaServicio(servicio.id), 'es')}
                 class="group flex items-baseline gap-4 sm:gap-6 py-5 sm:py-6"
               >
                 <span class="font-mono text-sm font-bold text-cian/60 tabular-nums shrink-0">
@@ -161,7 +166,7 @@ const AHORA = [
       </div>
     </section>
 
-    {/* 4. NUESTROS CLIENTES: solo el carrusel de logos, sin cifras */}
+    {/* 4. NUESTROS CLIENTES: tres citas quietas sobre crema */}
     <SatisfiedClients />
 
     {/* 5. DOS PUERTAS PARA PROBARLO SIN HABLAR CON NADIE.
@@ -170,7 +175,7 @@ const AHORA = [
         plantilla, asi que van juntas y con distinto peso: la demo manda. */}
     <section
       id="pruebalo"
-      class="relative py-20 sm:py-28 bg-navy border-t border-white/10 overflow-hidden"
+      class="relative py-20 sm:py-28 bg-navy bg-[radial-gradient(circle_at_88%_-10%,rgba(20,205,236,0.10),transparent_60%)] border-t border-white/10 overflow-hidden"
       data-mascot-perch="pruebalo"
     >
       {/* Textura propia de esta seccion. El resto de bandas oscuras usan la
@@ -179,7 +184,6 @@ const AHORA = [
         class="absolute inset-0 opacity-[0.05] pointer-events-none bg-[repeating-linear-gradient(135deg,#14CDEC_0px,#14CDEC_1px,transparent_1px,transparent_12px)]"
         aria-hidden="true"
       ></div>
-      <div class="absolute -top-32 right-[12%] w-[520px] h-[520px] bg-cian/10 rounded-full blur-[150px] pointer-events-none" aria-hidden="true"></div>
 
       <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div data-reveal>
@@ -205,11 +209,11 @@ const AHORA = [
               Prueba un agente hecho para tu tipo de negocio
             </h3>
             <p class="text-white/70 text-sm sm:text-base leading-relaxed max-w-lg">
-              Tatuaje, restauración, salud y asesoría. Escribe al agente como si fueras un cliente y escucha cómo suena por teléfono.
+              Tatuaje, restauración, salud y asesoría. Mira cómo contesta un agente en tu sector y escúchalo por teléfono. Si te encaja, te montamos uno con tus datos y lo pruebas gratis.
             </p>
             <a
-              href="/demos"
-              class="mt-8 sm:mt-10 self-start inline-flex items-center gap-2 text-sm font-extrabold text-navy bg-cian hover:bg-cian-light px-6 py-3.5 rounded-2xl transition-colors"
+              href={ruta('/demos#video-agentes', 'es')}
+              class="mt-8 sm:mt-10 self-start inline-flex items-center gap-2 text-sm font-extrabold border border-cian/50 bg-cian/10 text-cian hover:bg-cian/20 px-6 py-3.5 rounded-2xl transition-colors"
             >
               Probar una demo
               <span aria-hidden="true">→</span>
@@ -222,7 +226,7 @@ const AHORA = [
             style="--reveal-delay: 180ms"
             class="lg:col-span-5 rounded-[2rem] border border-white/10 bg-navy-950/60 p-8 sm:p-11 flex flex-col"
           >
-            <span class="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white/35 mb-6">
+            <span class="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white/60 mb-6">
               Cuentas claras
             </span>
             <h3 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight mb-4">
@@ -257,5 +261,5 @@ const AHORA = [
 
   </main>
 
-  <Footer client:visible />
+  <Footer />
 </Layout>

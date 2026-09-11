@@ -126,10 +126,14 @@ export default function AudioDemos({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       playAudio(target, playbackSpeed);
     }
 
-    // En pantallas móviles, desplazar suavemente la vista hasta el reproductor
+    // En pantallas móviles, desplazar suavemente la vista hasta el
+    // reproductor, respetando "reducir movimiento" del sistema.
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      const behavior: ScrollBehavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'auto'
+        : 'smooth';
       setTimeout(() => {
-        playerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        playerRef.current?.scrollIntoView({ behavior, block: 'center' });
       }, 100);
     }
   };
@@ -152,13 +156,13 @@ export default function AudioDemos({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       {/* Resplandor ambiental de fondo */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-gradient-to-tr from-cian/10 via-cian-dark/10 to-transparent rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="max-w-6xl lg:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-        
+      <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+
         {/* Cabecera */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cian/10 border border-cian/30 backdrop-blur-xl shadow-[0_0_20px_rgba(20,205,236,0.2)] mb-4">
             <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cian opacity-75"></span>
+              <span className="motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-cian opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cian"></span>
             </span>
             <span className="text-xs font-extrabold tracking-widest uppercase text-cian">
@@ -166,9 +170,11 @@ export default function AudioDemos({ idioma = IDIOMA_POR_DEFECTO }: Props) {
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3">
+          {/* Anidado bajo el h1 de /demos y el h2 del servicio activo de
+              ServiceVideos, igual que SectorDemos: este título va en h3. */}
+          <h3 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3">
             {t.titulo}
-          </h2>
+          </h3>
           <p className="text-white/70 text-base sm:text-lg font-light">
             {t.entradilla}
             {t.avisoIdioma && (
@@ -219,19 +225,19 @@ export default function AudioDemos({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                         </span>
                         <span className="text-[11px] font-mono text-white/50">{track.duration}</span>
                       </div>
-                      <h3 className="text-sm sm:text-base font-bold text-white leading-tight">
+                      <h4 className="text-sm sm:text-base font-bold text-white leading-tight">
                         {track.title}
-                      </h3>
+                      </h4>
                     </div>
                   </div>
 
                   {/* Icono de Ecualizador Animado si se está reproduciendo */}
                   {isThisPlaying && (
                     <div className="flex items-end gap-1 h-5 pr-2">
-                      <span className="w-1 bg-cian rounded-full animate-[bounce_0.6s_infinite_0.1s] h-3" />
-                      <span className="w-1 bg-cian rounded-full animate-[bounce_0.6s_infinite_0.3s] h-5" />
-                      <span className="w-1 bg-cian rounded-full animate-[bounce_0.6s_infinite_0.2s] h-4" />
-                      <span className="w-1 bg-cian rounded-full animate-[bounce_0.6s_infinite_0.4s] h-2" />
+                      <span className="w-1 bg-cian rounded-full motion-safe:animate-[bounce_0.6s_infinite_0.1s] h-3" />
+                      <span className="w-1 bg-cian rounded-full motion-safe:animate-[bounce_0.6s_infinite_0.3s] h-5" />
+                      <span className="w-1 bg-cian rounded-full motion-safe:animate-[bounce_0.6s_infinite_0.2s] h-4" />
+                      <span className="w-1 bg-cian rounded-full motion-safe:animate-[bounce_0.6s_infinite_0.4s] h-2" />
                     </div>
                   )}
                 </button>
@@ -243,9 +249,9 @@ export default function AudioDemos({ idioma = IDIOMA_POR_DEFECTO }: Props) {
           <div ref={playerRef} className="md:col-span-6 bg-gradient-to-b from-white/[0.1] to-white/[0.02] border border-cian/40 rounded-3xl p-6 sm:p-8 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] flex flex-col justify-between min-h-[320px]">
             <div>
               <div className="flex items-center justify-between text-xs font-mono text-cian mb-4 pb-3 border-b border-white/10">
-                <span className="flex items-center gap-2 font-bold">
-                  <span className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-cian animate-ping' : 'bg-white/40'}`} />
-                  REPRODUCTOR DE VOZ IA
+                <span className="flex items-center gap-2 font-bold uppercase">
+                  <span className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-cian motion-safe:animate-ping' : 'bg-white/40'}`} />
+                  {t.reproductor}
                 </span>
                 
                 {/* Selector de Velocidad */}
@@ -267,9 +273,11 @@ export default function AudioDemos({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                 </div>
               </div>
 
-              <h3 className="text-xl sm:text-2xl font-extrabold text-white mb-2">
+              {/* Anidado como SectorDemos: la sección va en h3, así que su
+                  interior baja a h4. */}
+              <h4 className="text-xl sm:text-2xl font-extrabold text-white mb-2">
                 {current.title}
-              </h3>
+              </h4>
               <p className="text-white/70 text-sm font-light leading-relaxed mb-4">
                 {current.subtitle}
               </p>
@@ -277,9 +285,11 @@ export default function AudioDemos({ idioma = IDIOMA_POR_DEFECTO }: Props) {
               {/* Globo Transcripción de Voz */}
               <div className="bg-black/40 border border-white/15 rounded-2xl p-4 mb-6 shadow-inner">
                 <div className="text-[10px] font-mono text-cian uppercase mb-1 flex items-center justify-between">
-                  <span>TRANSCRIPCIÓN EN TIEMPO REAL</span>
+                  <span>{t.transcripcion}</span>
                   {cargando && <span className="animate-pulse text-white/70">{t.cargando}</span>}
-                  {isPlaying && <span className="animate-pulse text-cian"> Reproduciendo ({playbackSpeed}x)...</span>}
+                  {isPlaying && (
+                    <span className="animate-pulse text-cian"> {t.reproduciendo.replace('{velocidad}', String(playbackSpeed))}</span>
+                  )}
                 </div>
                 <p className="text-xs sm:text-sm text-white/90 italic font-medium leading-relaxed">
                   "{current.transcript}"
@@ -309,12 +319,12 @@ export default function AudioDemos({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                 type="button"
                 onClick={() => togglePlay(current.id)}
                 disabled={cargando}
-                className="w-full py-4 rounded-2xl bg-terracota hover:bg-terracota-dark disabled:cursor-wait disabled:opacity-70 disabled:hover:bg-terracota disabled:hover:scale-100 text-navy font-extrabold text-sm transition-all duration-300 shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-4 rounded-2xl border border-cian/50 bg-cian/10 hover:bg-cian/20 disabled:cursor-wait disabled:opacity-70 disabled:hover:bg-cian/10 disabled:hover:scale-100 text-cian font-extrabold text-sm transition-all duration-300 hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cian focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900"
               >
                 {cargando ? (
                   <>
                     <span
-                      className="h-4 w-4 shrink-0 rounded-full border-2 border-navy/25 border-t-navy animate-spin"
+                      className="h-4 w-4 shrink-0 rounded-full border-2 border-cian/25 border-t-cian animate-spin"
                       aria-hidden="true"
                     />
                     {t.cargando}
@@ -324,7 +334,7 @@ export default function AudioDemos({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
                     </svg>
-                    Pausar Demo de Voz ({playbackSpeed}x)
+                    {t.pausar.replace('{velocidad}', String(playbackSpeed))}
                   </>
                 ) : (
                   <>
@@ -341,10 +351,7 @@ export default function AudioDemos({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                   <svg className="mt-px h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
                   </svg>
-                  <span>
-                    No se ha podido reproducir el audio. Vuelve a intentarlo, y si sigue igual
-                    escríbenos y te lo mandamos por WhatsApp.
-                  </span>
+                  <span>{t.fallo}</span>
                 </p>
               )}
             </div>

@@ -7,13 +7,13 @@ import Footer from '../../components/Footer';
 
 <Layout
   title="Frequently asked questions | DALSAT"
-  description="Common questions about DALSAT: where to start, what it costs, timelines, custom software, AI agents, the management panel, automation, SEO, websites and data protection."
+  description="Common questions about DALSAT: where to start, what it costs, timelines, custom software, AI agents, the AI-powered CRM, automation, SEO and websites."
 >
   <Header client:load currentPath="/faq" idioma="en" />
 
-  <main class="pt-16">
+  <main id="contenido" class="pt-16">
     <FaqSection client:load idioma="en" />
   </main>
 
-  <Footer client:visible idioma="en" />
+  <Footer idioma="en" />
 </Layout>
