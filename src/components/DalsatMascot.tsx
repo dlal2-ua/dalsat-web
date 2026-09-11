@@ -422,6 +422,22 @@ const HOMBRO_I = { x: 31, y: 66 };
 const HOMBRO_D = { x: 69, y: 66 };
 
 const TRAZO = { stroke: '#03131F', strokeOpacity: 0.85, strokeWidth: 1.6, strokeLinejoin: 'round' as const };
+const LLAMA = 'M-4.5,0 C-4.5,8 -1.6,14 0,23 C1.6,14 4.5,8 4.5,0 Z';
+const LLAMA_NUCLEO = 'M-1.8,0 C-1.8,4 -0.6,8 0,12 C0.6,8 1.8,4 1.8,0 Z';
+
+// De perfil el dibujo mira a la derecha; hacia la izquierda se refleja.
+// Cadera y hombro del lado que queda más cerca de quien mira y del lejano.
+const P_CADERA_CERCA = { x: 47, y: 88 };
+const P_CADERA_LEJOS = { x: 52, y: 88 };
+const P_HOMBRO_CERCA = { x: 47, y: 67 };
+const P_HOMBRO_LEJOS = { x: 52, y: 66 };
+
+// Vistas del robot: de frente parado o subiendo, de perfil cuando cruza la
+// pantalla y de espaldas, boca abajo, cuando baja en picado. El cambio es un
+// giro 2D: la vista se estrecha hasta casi desaparecer, se cambia el dibujo
+// y se vuelve a ensanchar.
+type Vista = 'frente' | 'perfil' | 'espalda';
+const GIRO_MS = 200;
 
 type Modo = 'espera' | 'aterrizando' | 'sentado' | 'cayendo' | 'volando' | 'flotando' | 'posado' | 'guardado' | 'anclado';
 
@@ -476,6 +492,13 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   const antenaRef = useRef<SVGGElement>(null);
   const ojosRef = useRef<SVGGElement>(null);
   const llamaRef = useRef<SVGGElement>(null);
+  const giroRef = useRef<SVGGElement>(null);
+  const vistaFrenteRef = useRef<SVGGElement>(null);
+  // Piezas de las vistas de perfil y de espaldas, por nombre.
+  const partes = useRef<Record<string, SVGElement | undefined>>({});
+  const parte = (nombre: string) => (el: SVGElement | null) => {
+    if (el) partes.current[nombre] = el;
+  };
 
   const medidoRef = useRef<MensajeMedido | null>(null);
   const cerradaRef = useRef(false);
@@ -556,10 +579,14 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     let vxv = 0;
     let vyv = 0;
     let vScroll = 0;
+    // Velocidad de scroll suavizada: la rueda va a golpes y la vista no debe
+    // darse la vuelta entre golpe y golpe.
+    let vScrollSuave = 0;
+    let porScroll = false;
     let velX = 0;
     let vy = 0;
     let vx = 0;
-    let caidaDesde = 0;
+    let caidaDesde = -1e9;
     let tumbo = 0;
     let banco = 0;
     let descendiendo = false;
@@ -579,6 +606,21 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     let anclando = false;
     let escondido = false;
     let revisarYa = false;
+
+    // Vista asentada, giro en curso y la vista que se pinta este frame.
+    // `orient` es el sentido del perfil: 1 mira a la derecha, -1 a la izquierda.
+    let vista: Vista = 'frente';
+    let orient = -1;
+    let giro: { de: Vista; deOri: number; a: Vista; aOri: number; desde: number } | null = null;
+    let candidata: Vista = 'frente';
+    let candOri = -1;
+    let candDesde = 0;
+    let vis: Vista = 'frente';
+    let visOri = -1;
+    let escGiroX = 1;
+    let escGiroY = 1;
+    let vistaPintada: Vista | null = null;
+    const P = partes.current;
 
     function mostrarRobot() {
       if (!escondido) return;
@@ -966,6 +1008,11 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         vxv = -1.2;
         vyv = 0.1;
         mezclaSentado = 0;
+        // Llega de lado, mirando hacia donde va; se pone de frente al frenar.
+        if (!reducido) {
+          vista = candidata = 'perfil';
+          orient = candOri = -1;
+        }
         aterrizarEnD(ahora);
       } else {
         liberarD();
@@ -988,6 +1035,95 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       rafId = requestAnimationFrame(bucle);
     }
 
+    // Vista que pide el movimiento. Mientras se baja por la página va boca
+    // abajo, de espaldas, y mientras se sube, de frente: acompaña al scroll.
+    // Sin scroll, volando, manda su propia velocidad en pantalla (de perfil
+    // si cruza, de espaldas si baja). Sentado, bajando a la D, cayendo o
+    // quieto, de frente.
+    function vistaDeseada(ahora: number): [Vista, number] {
+      if (reducido || ahora - caidaDesde < 900) return ['frente', orient];
+      const actual = giro ? giro.a : vista;
+      const conScroll = modo === 'volando' || modo === 'posado' || modo === 'flotando';
+      if (conScroll && Math.abs(vScrollSuave) > (porScroll ? 0.1 : 0.3)) {
+        porScroll = true;
+        return [vScrollSuave > 0 ? 'espalda' : 'frente', orient];
+      }
+      porScroll = false;
+      const libre = modo === 'volando' || (modo === 'aterrizando' && !descendiendo);
+      if (!libre) return ['frente', orient];
+      const vsx = vxv;
+      const vsy = sistema === 'documento' ? vyv - vScroll : vyv;
+      // Umbrales con histéresis: cuesta más salir del frente que volver a él,
+      // y un vuelo corto no llega a girarse.
+      if (Math.hypot(vsx, vsy) < (actual === 'frente' ? 0.25 : 0.15)) return ['frente', orient];
+      // Cerca del destino no empieza a girarse, y ya girado se endereza
+      // antes de llegar: el giro no se queda a medias al posarse.
+      if (vuelo) {
+        const o = vuelo.objetivo ? vuelo.objetivo() : { x: vuelo.tx, y: vuelo.ty };
+        if (o && Math.hypot(o.x - x, o.y - y) < (actual === 'frente' ? 70 : 30)) return ['frente', orient];
+      }
+      const ax = Math.abs(vsx);
+      const fBaja = actual === 'espalda' ? 0.7 : actual === 'perfil' ? 1.5 : 1.2;
+      const fSube = actual === 'frente' ? 0.7 : 1.5;
+      if (vsy > ax * fBaja) return ['espalda', orient];
+      if (-vsy > ax * fSube) return ['frente', orient];
+      return ['perfil', ax > 0.05 ? Math.sign(vsx) : orient];
+    }
+
+    const mismaVista = (a: Vista, ao: number, b: Vista, bo: number) => a === b && (a !== 'perfil' || ao === bo);
+
+    function actualizarVista(ahora: number) {
+      if (giro && ahora - giro.desde >= GIRO_MS) {
+        vista = giro.a;
+        orient = giro.aOri;
+        giro = null;
+      }
+      const [v, o] = vistaDeseada(ahora);
+      if (!mismaVista(v, o, candidata, candOri)) {
+        candidata = v;
+        candOri = o;
+        candDesde = ahora;
+      }
+      // Se arrepiente a medio giro (aún se ve la vista de partida): deshace el
+      // giro desde donde va, sin llegar a enseñar la otra.
+      if (giro && ahora - giro.desde < GIRO_MS / 2 && mismaVista(v, o, giro.de, giro.deOri)) {
+        const hecho = ahora - giro.desde;
+        giro = { de: giro.a, deOri: giro.aOri, a: giro.de, aOri: giro.deOri, desde: ahora - (GIRO_MS - hecho) };
+      }
+      if (!mismaVista(v, o, vista, orient)) {
+        // Fuera de pantalla (o casi) cambia sin girar: así entra ya de perfil.
+        const sx = sistema === 'documento' ? x - window.scrollX : x;
+        const sy = sistema === 'documento' ? y - window.scrollY : y;
+        const fuera =
+          sx > anchoVp() - rw * 0.3 || sx + rw * 0.3 < 0 || sy > altoVp() - rh * 0.3 || sy + rh * 0.3 < 0;
+        if (fuera || reducido) {
+          vista = v;
+          orient = o;
+          giro = null;
+        } else if (!giro && ahora - candDesde >= 110) {
+          giro = { de: vista, deOri: orient, a: v, aOri: o, desde: ahora };
+        }
+      }
+      if (giro) {
+        const t = clamp((ahora - giro.desde) / GIRO_MS, 0, 1);
+        const primera = t < 0.5;
+        vis = primera ? giro.de : giro.a;
+        visOri = primera ? giro.deOri : giro.aOri;
+        // Frente y espalda giran sobre el eje horizontal (voltereta hacia
+        // delante: acaba boca abajo); con el perfil, sobre el vertical.
+        const par = giro.de + giro.a;
+        const f = Math.max(0.06, Math.abs(Math.cos(Math.PI * t)));
+        const voltereta = par === 'frenteespalda' || par === 'espaldafrente';
+        escGiroX = voltereta ? 1 : f;
+        escGiroY = voltereta ? f : 1;
+      } else {
+        vis = vista;
+        visOri = orient;
+        escGiroX = 1;
+        escGiroY = 1;
+      }
+    }
+
     function pose(ahora: number, dt: number) {
       const k = dt / 16.7;
       const sentado = modo === 'sentado' || descendiendo;
@@ -995,16 +1131,33 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       const s = mezclaSentado;
       const vaiven = reducido ? 0 : Math.sin(ahora / 260);
       const cuelgue = reducido ? 0 : Math.sin(ahora / 700);
-      const estela = clamp(-velX * 30, -28, 28);
+      // Los ángulos que dependen de la pantalla pasan al dibujo con el signo
+      // de su reflejo: de perfil hacia la izquierda o boca abajo, girar a la
+      // derecha en pantalla es girar a la izquierda en el dibujo.
+      const signo = (vis === 'perfil' ? visOri : 1) * (vis === 'espalda' ? -1 : 1);
+      const estela = clamp(-velX * 30, -28, 28) * signo;
 
       // Piernas: sentado, el muslo viene hacia quien mira (escalado corto) y
-      // la espinilla cuelga por delante de la letra, balanceándose.
+      // la espinilla cuelga por delante de la letra, balanceándose. La vista
+      // de espaldas comparte las mismas.
       const escMuslo = lerp(1, 0.3, s);
-      const piernas: [SVGGElement | null, SVGGElement | null, SVGCircleElement | null, { x: number; y: number }, number][] = [
-        [musloIRef.current, espinillaIRef.current, rodillaIRef.current, CADERA_I, 1],
-        [musloDRef.current, espinillaDRef.current, rodillaDRef.current, CADERA_D, -1],
+      const piernas: [SVGElement[], SVGElement[], SVGElement[], { x: number; y: number }, number][] = [
+        [
+          [musloIRef.current, P.eMusloI].filter(Boolean) as SVGElement[],
+          [espinillaIRef.current, P.eEspinillaI].filter(Boolean) as SVGElement[],
+          [rodillaIRef.current, P.eRodillaI].filter(Boolean) as SVGElement[],
+          CADERA_I,
+          1,
+        ],
+        [
+          [musloDRef.current, P.eMusloD].filter(Boolean) as SVGElement[],
+          [espinillaDRef.current, P.eEspinillaD].filter(Boolean) as SVGElement[],
+          [rodillaDRef.current, P.eRodillaD].filter(Boolean) as SVGElement[],
+          CADERA_D,
+          -1,
+        ],
       ];
-      for (const [muslo, espinilla, rodilla, cadera, lado] of piernas) {
+      for (const [muslos, espinillas, rodillas, cadera, lado] of piernas) {
         const aCadera = lerp(estela + lado * (4 + 3 * cuelgue), lado * 12, s);
         const rad = (aCadera * Math.PI) / 180;
         const kx = cadera.x - LARGO_MUSLO * escMuslo * Math.sin(rad);
@@ -1012,11 +1165,40 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         const fase = lado > 0 ? vaiven : -vaiven;
         const aRodilla = lerp(aCadera * 1.25, lado * 4 + 3 * fase, s);
         const escEspinilla = lerp(1, 0.9 + 0.1 * fase, s);
-        muslo?.setAttribute('transform', `translate(${cadera.x} ${cadera.y}) rotate(${aCadera}) scale(1 ${escMuslo})`);
-        espinilla?.setAttribute('transform', `translate(${kx} ${ky}) rotate(${aRodilla}) scale(1 ${escEspinilla})`);
-        rodilla?.setAttribute('cx', String(kx));
-        rodilla?.setAttribute('cy', String(ky));
-        rodilla?.setAttribute('r', String(lerp(3.4, 5.6, s)));
+        const tMuslo = `translate(${cadera.x} ${cadera.y}) rotate(${aCadera}) scale(1 ${escMuslo})`;
+        const tEspinilla = `translate(${kx} ${ky}) rotate(${aRodilla}) scale(1 ${escEspinilla})`;
+        for (const m of muslos) m.setAttribute('transform', tMuslo);
+        for (const e of espinillas) e.setAttribute('transform', tEspinilla);
+        for (const r of rodillas) {
+          r.setAttribute('cx', String(kx));
+          r.setAttribute('cy', String(ky));
+          r.setAttribute('r', String(lerp(3.4, 5.6, s)));
+        }
+      }
+
+      // De perfil las extremidades se mueven de delante atrás: se quedan
+      // atrás en proporción a la velocidad y pedalean un poco, alternando.
+      if (vis === 'perfil') {
+        const atras = clamp(Math.abs(velX) * 22, 0, 26);
+        const paso = reducido ? 0 : Math.sin(ahora / 190);
+        const pierna = (cadera: { x: number; y: number }, a: number, muslo?: SVGElement, espinilla?: SVGElement) => {
+          const rad = (a * Math.PI) / 180;
+          muslo?.setAttribute('transform', `translate(${cadera.x} ${cadera.y}) rotate(${a})`);
+          espinilla?.setAttribute(
+            'transform',
+            `translate(${cadera.x - LARGO_MUSLO * Math.sin(rad)} ${cadera.y + LARGO_MUSLO * Math.cos(rad)}) rotate(${a + 14 + atras * 0.35})`,
+          );
+        };
+        pierna(P_CADERA_CERCA, 8 + atras * 0.5 + 6 * paso, P.pMusloCerca, P.pEspinillaCerca);
+        pierna(P_CADERA_LEJOS, 16 + atras * 0.5 - 6 * paso, P.pMusloLejos, P.pEspinillaLejos);
+        P.pBrazoCerca?.setAttribute(
+          'transform',
+          `translate(${P_HOMBRO_CERCA.x} ${P_HOMBRO_CERCA.y}) rotate(${16 + atras * 0.7 - 5 * paso})`,
+        );
+        P.pBrazoLejos?.setAttribute(
+          'transform',
+          `translate(${P_HOMBRO_LEJOS.x} ${P_HOMBRO_LEJOS.y}) rotate(${26 + atras * 0.7 + 5 * paso})`,
+        );
       }
 
       // Brazos: saluda con la mano mientras dura la bienvenida.
@@ -1037,21 +1219,33 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       if (saludando) objD = reducido ? -140 : -140 + 18 * Math.sin(ahora / 120);
       brazoI += (objI - brazoI) * Math.min(1, 0.2 * k);
       brazoD += (objD - brazoD) * Math.min(1, 0.2 * k);
-      brazoIRef.current?.setAttribute('transform', `translate(${HOMBRO_I.x} ${HOMBRO_I.y}) rotate(${brazoI})`);
-      brazoDRef.current?.setAttribute('transform', `translate(${HOMBRO_D.x} ${HOMBRO_D.y}) rotate(${brazoD})`);
+      const tBrazoI = `translate(${HOMBRO_I.x} ${HOMBRO_I.y}) rotate(${brazoI})`;
+      const tBrazoD = `translate(${HOMBRO_D.x} ${HOMBRO_D.y}) rotate(${brazoD})`;
+      brazoIRef.current?.setAttribute('transform', tBrazoI);
+      brazoDRef.current?.setAttribute('transform', tBrazoD);
+      P.eBrazoI?.setAttribute('transform', tBrazoI);
+      P.eBrazoD?.setAttribute('transform', tBrazoD);
 
       // Cabeza: mira hacia su bocadillo; la antena va con retraso y rebota.
+      // Ambas se calculan en pantalla y se pasan al dibujo con su signo.
       let objCabeza = 0;
       if (burbujaActual) objCabeza = burbujaActual.lado.endsWith('izq') ? -7 : 7;
       objCabeza -= banco * 0.25;
       cabeza += (objCabeza - cabeza) * Math.min(1, 0.1 * k);
-      cabezaRef.current?.setAttribute('transform', `rotate(${cabeza} 50 58)`);
+      const tCabeza = `rotate(${cabeza * signo} 50 58)`;
+      cabezaRef.current?.setAttribute('transform', tCabeza);
+      P.eCabeza?.setAttribute('transform', tCabeza);
+      P.pCabeza?.setAttribute('transform', tCabeza);
       const objAntena = reducido ? 0 : clamp(-velX * 40 - cabeza * 0.6, -35, 35);
       antenaVel += (objAntena - antena) * 0.04 * k - antenaVel * 0.12 * k;
       antena += antenaVel * k;
-      antenaRef.current?.setAttribute('transform', `rotate(${antena} 50 11)`);
+      antenaRef.current?.setAttribute('transform', `rotate(${antena * signo} 50 11)`);
+      P.eAntena?.setAttribute('transform', `rotate(${antena * signo} 50 11)`);
+      P.pAntena?.setAttribute('transform', `rotate(${antena * signo} 47 11)`);
 
-      ojosRef.current?.setAttribute('transform', `translate(0 34) scale(1 ${parpado(ahora)}) translate(0 -34)`);
+      const tParpado = `translate(0 34) scale(1 ${parpado(ahora)}) translate(0 -34)`;
+      ojosRef.current?.setAttribute('transform', tParpado);
+      P.pOjo?.setAttribute('transform', tParpado);
 
       const objEmpuje =
         modo === 'volando' || (modo === 'aterrizando' && !descendiendo)
@@ -1070,6 +1264,15 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         `translate(50 92) scale(${0.6 + empuje * 0.4} ${Math.max(0.001, empuje * parpadeoLlama * 1.2)})`,
       );
       llamaRef.current?.setAttribute('opacity', String(clamp(empuje * 1.4, 0, 1)));
+      // De perfil y de espaldas el fuego sale de la mochila.
+      const escLlama = `scale(${0.6 + empuje * 0.4} ${Math.max(0.001, empuje * parpadeoLlama * 1.2)})`;
+      const opLlama = String(clamp(empuje * 1.4, 0, 1));
+      P.pLlama?.setAttribute('transform', `translate(30 96) rotate(${18 + clamp(Math.abs(velX) * 10, 0, 14)}) ${escLlama}`);
+      P.pLlama?.setAttribute('opacity', opLlama);
+      P.eLlamaI?.setAttribute('transform', `translate(43 95) ${escLlama}`);
+      P.eLlamaD?.setAttribute('transform', `translate(57 95) ${escLlama}`);
+      P.eLlamaI?.setAttribute('opacity', opLlama);
+      P.eLlamaD?.setAttribute('opacity', opLlama);
     }
 
     function parpado(ahora: number) {
@@ -1096,6 +1299,21 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       const flota = !reducido && (modo === 'posado' || modo === 'flotando' || modo === 'guardado') ? Math.sin(ahora / 900) * 3 : 0;
       const angulo = banco + tumbo;
       cuerpo.style.transform = `translate3d(0, ${flota}px, 0) rotate(${angulo}deg) scale(${1 + a * 0.6}, ${1 - a})`;
+
+      if (vis !== vistaPintada) {
+        vistaPintada = vis;
+        vistaFrenteRef.current?.setAttribute('display', vis === 'frente' ? 'inline' : 'none');
+        P.perfil?.setAttribute('display', vis === 'perfil' ? 'inline' : 'none');
+        P.espalda?.setAttribute('display', vis === 'espalda' ? 'inline' : 'none');
+      }
+      // De espaldas va boca abajo: reflejo vertical sobre el centro del dibujo
+      // (la espalda es simétrica, así que equivale a darle media vuelta).
+      const espejoX = (vis === 'perfil' ? visOri : 1) * escGiroX;
+      const espejoY = (vis === 'espalda' ? -1 : 1) * escGiroY;
+      giroRef.current?.setAttribute(
+        'transform',
+        espejoX === 1 && espejoY === 1 ? '' : `translate(50 65) scale(${espejoX} ${espejoY}) translate(-50 -65)`,
+      );
     }
 
     function bucle(ahora: number) {
@@ -1107,6 +1325,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       const sy = window.scrollY;
       if (sy !== ultimoScroll) dirScroll = sy > ultimoScroll ? 1 : -1;
       vScroll = (sy - ultimoScroll) / dt;
+      vScrollSuave += (vScroll - vScrollSuave) * (1 - Math.exp(-dt / 220));
       if (sy !== ultimoScroll) ultimoMovScroll = ahora;
       ultimoScroll = sy;
 
@@ -1258,7 +1477,10 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
             caja.x < 0 ||
             caja.x + caja.w > anchoVp() ||
             obstFijos.some((f) => cruzan(f, caja));
-          if (fuera && ahora - ultimoPlan > 250) {
+          // Con el saludo de llegada aún midiéndose no se replanifica: se
+          // iría a un hueco cualquiera y a medio camino cambiaría de rumbo.
+          const midiendoSaludo = esperando?.tipo === 'bienvenida' && ahora - ultimoPlan < 1500;
+          if (fuera && ahora - ultimoPlan > 250 && !midiendoSaludo) {
             irAHueco('deriva', anclaDe(perchaActiva), burbujaActual ? mensajeActual : null, ahora);
           } else if (
             revisarYa ||
@@ -1295,8 +1517,15 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       }
 
       velX = modo === 'cayendo' ? (x - px) / dt : vuelo ? vxv : 0;
+      actualizarVista(ahora);
+      // Se inclina hacia donde va; boca abajo la cabeza es la que abre camino,
+      // así que la inclinación va al revés.
       const objBanco =
-        modo === 'sentado' || descendiendo ? dTilt : reducido || modo === 'cayendo' ? 0 : clamp(velX * 18, -18, 18);
+        modo === 'sentado' || descendiendo
+          ? dTilt
+          : reducido || modo === 'cayendo'
+            ? 0
+            : clamp(velX * 18, -18, 18) * (vis === 'espalda' ? -1 : 1);
       banco += (objBanco - banco) * Math.min(1, 0.12 * k);
       if (modo !== 'cayendo' && !vuelo) tumbo *= Math.pow(0.9, k);
 
@@ -1458,6 +1687,12 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
                   <stop offset="75%" stopColor="#E2D9C7" />
                   <stop offset="100%" stopColor="#C8BDA7" />
                 </radialGradient>
+                {/* El mismo casco en sombra, para las piezas del lado lejano. */}
+                <radialGradient id="mascotaCascoSombra" gradientUnits="userSpaceOnUse" cx="36" cy="24" r="104">
+                  <stop offset="0%" stopColor="#D8CFBC" />
+                  <stop offset="60%" stopColor="#BFB39B" />
+                  <stop offset="100%" stopColor="#A39680" />
+                </radialGradient>
                 <linearGradient id="mascotaVisor" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#0A3459" />
                   <stop offset="100%" stopColor="#03131F" />
@@ -1479,60 +1714,172 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
               <circle cx="50" cy="68" r="38" fill="#14CDEC" opacity="0.34" filter="url(#mascotaDifuso)" />
 
-              <g ref={llamaRef} opacity="0">
-                <path d="M-4.5,0 C-4.5,8 -1.6,14 0,23 C1.6,14 4.5,8 4.5,0 Z" fill="url(#mascotaLlama)" />
-                <path d="M-1.8,0 C-1.8,4 -0.6,8 0,12 C0.6,8 1.8,4 1.8,0 Z" fill="#FFFFFF" opacity="0.85" />
-              </g>
+              <g ref={giroRef}>
+                <g ref={vistaFrenteRef}>
+                  <g ref={llamaRef} opacity="0">
+                    <path d={LLAMA} fill="url(#mascotaLlama)" />
+                    <path d={LLAMA_NUCLEO} fill="#FFFFFF" opacity="0.85" />
+                  </g>
 
-              <g ref={espinillaIRef}>
-                <path d={ESPINILLA} fill="url(#mascotaCasco)" {...TRAZO} />
-              </g>
-              <g ref={espinillaDRef}>
-                <path d={ESPINILLA} fill="url(#mascotaCasco)" {...TRAZO} />
-              </g>
+                  <g ref={espinillaIRef}>
+                    <path d={ESPINILLA} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <g ref={espinillaDRef}>
+                    <path d={ESPINILLA} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
 
-              <rect x="30" y="58" width="40" height="36" rx="16" fill="url(#mascotaCasco)" {...TRAZO} />
-              <path d="M33 84 Q50 88 67 84" stroke="#03131F" strokeOpacity="0.25" strokeWidth="1.4" fill="none" />
-              <circle cx="50" cy="73" r="5.2" fill="#051E36" />
-              <circle cx="50" cy="73" r="2.6" fill="#14CDEC" />
+                  <rect x="30" y="58" width="40" height="36" rx="16" fill="url(#mascotaCasco)" {...TRAZO} />
+                  <path d="M33 84 Q50 88 67 84" stroke="#03131F" strokeOpacity="0.25" strokeWidth="1.4" fill="none" />
+                  <circle cx="50" cy="73" r="5.2" fill="#051E36" />
+                  <circle cx="50" cy="73" r="2.6" fill="#14CDEC" />
 
-              <g ref={musloIRef}>
-                <path d={MUSLO} fill="url(#mascotaCasco)" {...TRAZO} />
-              </g>
-              <g ref={musloDRef}>
-                <path d={MUSLO} fill="url(#mascotaCasco)" {...TRAZO} />
-              </g>
-              <circle ref={rodillaIRef} cx="41" cy="102" r="3.4" fill="url(#mascotaCasco)" {...TRAZO} />
-              <circle ref={rodillaDRef} cx="59" cy="102" r="3.4" fill="url(#mascotaCasco)" {...TRAZO} />
+                  <g ref={musloIRef}>
+                    <path d={MUSLO} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <g ref={musloDRef}>
+                    <path d={MUSLO} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <circle ref={rodillaIRef} cx="41" cy="102" r="3.4" fill="url(#mascotaCasco)" {...TRAZO} />
+                  <circle ref={rodillaDRef} cx="59" cy="102" r="3.4" fill="url(#mascotaCasco)" {...TRAZO} />
 
-              <g ref={brazoIRef}>
-                <path d={BRAZO} fill="url(#mascotaCasco)" {...TRAZO} />
-              </g>
-              <g ref={brazoDRef}>
-                <path d={BRAZO} fill="url(#mascotaCasco)" {...TRAZO} />
-              </g>
-              <circle cx={HOMBRO_I.x} cy={HOMBRO_I.y} r="3" fill="#0A3459" />
-              <circle cx={HOMBRO_D.x} cy={HOMBRO_D.y} r="3" fill="#0A3459" />
+                  <g ref={brazoIRef}>
+                    <path d={BRAZO} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <g ref={brazoDRef}>
+                    <path d={BRAZO} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <circle cx={HOMBRO_I.x} cy={HOMBRO_I.y} r="3" fill="#0A3459" />
+                  <circle cx={HOMBRO_D.x} cy={HOMBRO_D.y} r="3" fill="#0A3459" />
 
-              <g ref={cabezaRef}>
-                <g ref={antenaRef}>
-                  <line x1="50" y1="11" x2="50" y2="1.5" stroke="#03131F" strokeWidth="2.4" strokeLinecap="round" />
-                  <circle cx="50" cy="0" r="3.4" fill="#7FE4F5" stroke="#03131F" strokeWidth="1.2" />
+                  <g ref={cabezaRef}>
+                    <g ref={antenaRef}>
+                      <line x1="50" y1="11" x2="50" y2="1.5" stroke="#03131F" strokeWidth="2.4" strokeLinecap="round" />
+                      <circle cx="50" cy="0" r="3.4" fill="#7FE4F5" stroke="#03131F" strokeWidth="1.2" />
+                    </g>
+                    <circle cx="15" cy="34" r="5.6" fill="#0A3459" {...TRAZO} />
+                    <circle cx="85" cy="34" r="5.6" fill="#0A3459" {...TRAZO} />
+                    <circle cx="15" cy="34" r="2" fill="#14CDEC" />
+                    <circle cx="85" cy="34" r="2" fill="#14CDEC" />
+                    <rect x="16" y="8" width="68" height="52" rx="24" fill="url(#mascotaCasco)" {...TRAZO} />
+                    <ellipse cx="33" cy="15.5" rx="10" ry="3.8" fill="#FFFFFF" opacity="0.75" transform="rotate(-16 33 15.5)" />
+                    <rect x="24" y="20" width="52" height="28" rx="14" fill="url(#mascotaVisor)" />
+                    <g ref={ojosRef}>
+                      <ellipse cx="39" cy="34" rx="5" ry="6" fill="url(#mascotaOjo)" />
+                      <ellipse cx="61" cy="34" rx="5" ry="6" fill="url(#mascotaOjo)" />
+                      <circle cx="40.8" cy="31.4" r="1.6" fill="#FFFFFF" />
+                      <circle cx="62.8" cy="31.4" r="1.6" fill="#FFFFFF" />
+                    </g>
+                    <path d="M44 53 Q50 57 56 53" stroke="#0A3459" strokeWidth="2" strokeLinecap="round" fill="none" />
+                  </g>
                 </g>
-                <circle cx="15" cy="34" r="5.6" fill="#0A3459" {...TRAZO} />
-                <circle cx="85" cy="34" r="5.6" fill="#0A3459" {...TRAZO} />
-                <circle cx="15" cy="34" r="2" fill="#14CDEC" />
-                <circle cx="85" cy="34" r="2" fill="#14CDEC" />
-                <rect x="16" y="8" width="68" height="52" rx="24" fill="url(#mascotaCasco)" {...TRAZO} />
-                <ellipse cx="33" cy="15.5" rx="10" ry="3.8" fill="#FFFFFF" opacity="0.75" transform="rotate(-16 33 15.5)" />
-                <rect x="24" y="20" width="52" height="28" rx="14" fill="url(#mascotaVisor)" />
-                <g ref={ojosRef}>
-                  <ellipse cx="39" cy="34" rx="5" ry="6" fill="url(#mascotaOjo)" />
-                  <ellipse cx="61" cy="34" rx="5" ry="6" fill="url(#mascotaOjo)" />
-                  <circle cx="40.8" cy="31.4" r="1.6" fill="#FFFFFF" />
-                  <circle cx="62.8" cy="31.4" r="1.6" fill="#FFFFFF" />
+
+                {/* Perfil, mirando a la derecha: mochila propulsora detrás, un
+                    solo ojo en el visor y el lado lejano en sombra. */}
+                <g ref={parte('perfil')} display="none">
+                  <g ref={parte('pBrazoLejos')} transform={`translate(${P_HOMBRO_LEJOS.x} ${P_HOMBRO_LEJOS.y}) rotate(26)`}>
+                    <path d={BRAZO} fill="url(#mascotaCascoSombra)" {...TRAZO} />
+                  </g>
+                  <g ref={parte('pMusloLejos')}>
+                    <path d={MUSLO} fill="url(#mascotaCascoSombra)" {...TRAZO} />
+                  </g>
+                  <g ref={parte('pEspinillaLejos')}>
+                    <path d={ESPINILLA} fill="url(#mascotaCascoSombra)" {...TRAZO} />
+                  </g>
+                  <g ref={parte('pLlama')} opacity="0">
+                    <path d={LLAMA} fill="url(#mascotaLlama)" />
+                    <path d={LLAMA_NUCLEO} fill="#FFFFFF" opacity="0.85" />
+                  </g>
+                  <path d="M25 90 L35 90 L33.5 96 L26.5 96 Z" fill="#051E36" {...TRAZO} />
+                  <rect x="21" y="60" width="17" height="31" rx="6" fill="#0A3459" {...TRAZO} />
+                  <rect x="25.5" y="66" width="3.2" height="13" rx="1.6" fill="#14CDEC" />
+                  <rect x="35" y="58" width="29" height="36" rx="13" fill="url(#mascotaCasco)" {...TRAZO} />
+                  <path d="M38 61 Q46 57.5 53 61.5" stroke="#0A3459" strokeWidth="2.6" strokeLinecap="round" fill="none" />
+                  <rect x="59.5" y="67" width="3" height="11" rx="1.5" fill="#14CDEC" />
+                  <g ref={parte('pMusloCerca')}>
+                    <path d={MUSLO} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <g ref={parte('pEspinillaCerca')}>
+                    <path d={ESPINILLA} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <g ref={parte('pBrazoCerca')} transform={`translate(${P_HOMBRO_CERCA.x} ${P_HOMBRO_CERCA.y}) rotate(16)`}>
+                    <path d={BRAZO} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <circle cx={P_HOMBRO_CERCA.x} cy={P_HOMBRO_CERCA.y} r="3" fill="#0A3459" />
+                  <g ref={parte('pCabeza')}>
+                    <g ref={parte('pAntena')}>
+                      <line x1="47" y1="11" x2="44" y2="1.5" stroke="#03131F" strokeWidth="2.4" strokeLinecap="round" />
+                      <circle cx="43.6" cy="0" r="3.4" fill="#7FE4F5" stroke="#03131F" strokeWidth="1.2" />
+                    </g>
+                    <rect x="25" y="8" width="54" height="52" rx="23" fill="url(#mascotaCasco)" {...TRAZO} />
+                    <ellipse cx="37" cy="15.5" rx="8.5" ry="3.4" fill="#FFFFFF" opacity="0.75" transform="rotate(-16 37 15.5)" />
+                    <path
+                      d="M56 20 L68 20 C75 20 79.5 26 79.5 34 C79.5 42 75 48 68 48 L56 48 C53 48 51.5 45 51.5 42 L51.5 26 C51.5 23 53 20 56 20 Z"
+                      fill="url(#mascotaVisor)"
+                    />
+                    <g ref={parte('pOjo')}>
+                      <ellipse cx="69" cy="34" rx="3.6" ry="6" fill="url(#mascotaOjo)" />
+                      <circle cx="70.3" cy="31.4" r="1.4" fill="#FFFFFF" />
+                    </g>
+                    <circle cx="41" cy="34" r="8" fill="#0A3459" {...TRAZO} />
+                    <circle cx="41" cy="34" r="4.2" fill="none" stroke="#14CDEC" strokeWidth="1.4" />
+                    <circle cx="41" cy="34" r="1.6" fill="#14CDEC" />
+                    <path d="M66 53 Q70.5 56 74 52.5" stroke="#0A3459" strokeWidth="2" strokeLinecap="round" fill="none" />
+                  </g>
                 </g>
-                <path d="M44 53 Q50 57 56 53" stroke="#0A3459" strokeWidth="2" strokeLinecap="round" fill="none" />
+
+                {/* Espalda: dos toberas en la mochila y la rejilla de la nuca.
+                    Se pinta boca abajo cuando baja en picado. */}
+                <g ref={parte('espalda')} display="none">
+                  <g ref={parte('eLlamaI')} opacity="0">
+                    <path d={LLAMA} fill="url(#mascotaLlama)" />
+                    <path d={LLAMA_NUCLEO} fill="#FFFFFF" opacity="0.85" />
+                  </g>
+                  <g ref={parte('eLlamaD')} opacity="0">
+                    <path d={LLAMA} fill="url(#mascotaLlama)" />
+                    <path d={LLAMA_NUCLEO} fill="#FFFFFF" opacity="0.85" />
+                  </g>
+                  <g ref={parte('eEspinillaI')}>
+                    <path d={ESPINILLA} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <g ref={parte('eEspinillaD')}>
+                    <path d={ESPINILLA} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <g ref={parte('eMusloI')}>
+                    <path d={MUSLO} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <g ref={parte('eMusloD')}>
+                    <path d={MUSLO} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <circle ref={parte('eRodillaI')} cx="41" cy="102" r="3.4" fill="url(#mascotaCasco)" {...TRAZO} />
+                  <circle ref={parte('eRodillaD')} cx="59" cy="102" r="3.4" fill="url(#mascotaCasco)" {...TRAZO} />
+                  <rect x="30" y="58" width="40" height="36" rx="16" fill="url(#mascotaCasco)" {...TRAZO} />
+                  <g ref={parte('eBrazoI')}>
+                    <path d={BRAZO} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <g ref={parte('eBrazoD')}>
+                    <path d={BRAZO} fill="url(#mascotaCasco)" {...TRAZO} />
+                  </g>
+                  <circle cx={HOMBRO_I.x} cy={HOMBRO_I.y} r="3" fill="#0A3459" />
+                  <circle cx={HOMBRO_D.x} cy={HOMBRO_D.y} r="3" fill="#0A3459" />
+                  <path d="M37 59.5 L41 63.5 M63 59.5 L59 63.5" stroke="#0A3459" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M38 89 L48 89 L46.5 95 L39.5 95 Z M52 89 L62 89 L60.5 95 L53.5 95 Z" fill="#051E36" {...TRAZO} />
+                  <rect x="35" y="61" width="30" height="29" rx="7" fill="#0A3459" {...TRAZO} />
+                  <line x1="50" y1="64" x2="50" y2="87" stroke="#051E36" strokeWidth="1.4" />
+                  <circle cx="43" cy="70" r="2.3" fill="#14CDEC" />
+                  <circle cx="57" cy="70" r="2.3" fill="#14CDEC" />
+                  <g ref={parte('eCabeza')}>
+                    <g ref={parte('eAntena')}>
+                      <line x1="50" y1="11" x2="50" y2="1.5" stroke="#03131F" strokeWidth="2.4" strokeLinecap="round" />
+                      <circle cx="50" cy="0" r="3.4" fill="#7FE4F5" stroke="#03131F" strokeWidth="1.2" />
+                    </g>
+                    <circle cx="15" cy="34" r="5.6" fill="#0A3459" {...TRAZO} />
+                    <circle cx="85" cy="34" r="5.6" fill="#0A3459" {...TRAZO} />
+                    <rect x="16" y="8" width="68" height="52" rx="24" fill="url(#mascotaCasco)" {...TRAZO} />
+                    <ellipse cx="33" cy="15.5" rx="10" ry="3.8" fill="#FFFFFF" opacity="0.75" transform="rotate(-16 33 15.5)" />
+                    <rect x="37" y="22" width="26" height="17" rx="6" fill="#0A3459" opacity="0.16" />
+                    <path d="M41 27 H59 M41 30.5 H59 M41 34 H59" stroke="#0A3459" strokeOpacity="0.45" strokeWidth="1.4" strokeLinecap="round" />
+                  </g>
+                </g>
               </g>
             </svg>
           </div>
