@@ -16,7 +16,13 @@ function raizChat(): HTMLElement | null {
 }
 
 function burbujaNativa(): HTMLButtonElement | null {
-  return raizChat()?.querySelector('button') ?? null;
+  const raiz = raizChat();
+  // .dalsat-bubble es SIEMPRE el botón que abre/cierra (lo usa ya el CSS de
+  // Layout.astro para esconderlo). querySelector('button') a pelo cogía el
+  // primer <button> del root, y tras abrir el chat una vez el panel mete sus
+  // propios botones (enviar, cerrar...) delante en el DOM: la mascota se
+  // ponía a pulsar el que no era y parecía que el chat no abría.
+  return raiz?.querySelector<HTMLButtonElement>('.dalsat-bubble') ?? raiz?.querySelector('button') ?? null;
 }
 
 let reintentoAbrirChat: ReturnType<typeof setInterval> | null = null;
