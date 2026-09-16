@@ -1,0 +1,92 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import { urlWhatsApp } from '../../data/contacto';
+import { ruta } from '../../i18n';
+
+const WHATSAPP_URL =
+  urlWhatsApp('Hi, I landed on a page that does not exist on your site and wanted to ask something.');
+
+// A donde tiene sentido mandar a alguien que ha llegado aqui por error.
+const SHORTCUTS = [
+  { href: ruta('/servicios', 'en'), titulo: 'What we do', texto: 'The six services, explained one by one.' },
+  { href: ruta('/demos#video-agentes', 'en'), titulo: 'See a demo', texto: 'See how an agent answers in your sector.' },
+  { href: ruta('/calculadora', 'en'), titulo: 'Work out the saving', texto: 'How much time answering messages takes you today.' },
+  { href: ruta('/faq', 'en'), titulo: 'Frequently asked questions', texto: 'Prices, timelines, minimum terms and data protection.' },
+];
+---
+
+<Layout
+  title="Page not found | DALSAT"
+  description="This page does not exist. Here is where to go instead: services, demos, calculator and frequently asked questions."
+  noindex={true}
+>
+  <Header client:load currentPath="/404" idioma="en" />
+
+  <main id="contenido" class="pt-16">
+    <section class="relative min-h-[calc(100vh-64px)] flex items-center bg-gradient-to-b from-navy-950 via-navy-800 to-navy-900 py-16 sm:py-24 border-t border-white/10 overflow-hidden" data-mascot-perch="no-encontrada">
+      <div
+        class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"
+        aria-hidden="true"
+      ></div>
+      <div
+        class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_35%,rgba(20,205,236,0.14),transparent_60%)]"
+        aria-hidden="true"
+      ></div>
+
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 text-center">
+        <span
+          class="font-display font-bold text-white/15 text-[clamp(6rem,22vw,12rem)] leading-none tracking-tight block select-none"
+          aria-hidden="true"
+        >
+          404
+        </span>
+
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-2 mb-4">
+          This page does not exist
+        </h1>
+        <p class="text-white/70 text-base sm:text-lg max-w-xl mx-auto mb-10">
+          Either we moved it, or the link was wrong. Nothing to worry about, it is one click to fix.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-14">
+          <a
+            href={ruta('/', 'en')}
+            class="w-full sm:w-auto inline-flex items-center justify-center bg-terracota hover:bg-terracota-light text-navy-950 font-extrabold text-sm px-8 py-4 rounded-2xl transition-all shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-105"
+          >
+            Back to home
+          </a>
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-full sm:w-auto inline-flex items-center justify-center border border-white/20 text-white font-bold text-sm px-8 py-4 rounded-2xl transition-colors hover:border-cian/50 hover:text-cian"
+          >
+            Ask us on WhatsApp
+          </a>
+        </div>
+
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+          {SHORTCUTS.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="group block h-full rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-colors hover:border-cian/40"
+              >
+                <span class="block text-sm font-bold text-white group-hover:text-cian transition-colors">
+                  {item.titulo}
+                </span>
+                <span class="mt-1.5 block text-xs leading-relaxed text-white/60">
+                  {item.texto}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <Footer idioma="en" />
+</Layout>

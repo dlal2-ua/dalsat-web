@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { contenido } from '../i18n';
+import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
 
+<<<<<<< HEAD
 interface ChatMessage {
   from: 'client' | 'bot';
   text: string;
@@ -35,6 +38,14 @@ const CHAT_START = 0.22;
 const CHAT_FADE_SPAN = 0.18;
 const PAIRS_START = 0.38; // los pares de mensajes se revelan del 38 al 95 %
 const PAIRS_END = 0.95;
+=======
+// Fracciones del recorrido pineado (altura del hero menos una pantalla, 50vh
+// con 150vh de alto). El split acaba casi al final: antes el hero medía
+// 200vh y tras abrirse las letras quedaban 70vh de scroll vacío.
+const SPLIT_END = 0.7;
+const INTRO_FADE_END = 0.25; // el subtítulo se va en cuanto empiezas a scrollear
+const HINT_FADE_END = 0.6; // la indicación de scroll aguanta bastante más
+>>>>>>> develop
 
 /** Genera el valor box-shadow con N estrellas aleatorias en unidades vw/vh.
  *  El rango se extiende bastante más allá del viewport para que la deriva
@@ -47,7 +58,7 @@ function generateStars(count: number): string {
     const opacity = (0.15 + Math.random() * 0.25).toFixed(2);
     const isCyan = Math.random() < 0.3;
     const spread = Math.random() < 0.18 ? '1.5px' : '0.5px';
-    const color = isCyan ? `rgba(0,224,255,${opacity})` : `rgba(255,255,255,${opacity})`;
+    const color = isCyan ? `rgba(20,205,236,${opacity})` : `rgba(255,255,255,${opacity})`;
     shadows.push(`${x}vw ${y}vh 0 ${spread} ${color}`);
   }
   return shadows.join(', ');
@@ -81,7 +92,13 @@ function generateTwinkles(count: number): TwinkleStar[] {
   }));
 }
 
-export default function SplitHero() {
+interface Props {
+  idioma?: Idioma;
+}
+
+export default function SplitHero({ idioma = IDIOMA_POR_DEFECTO }: Props) {
+  const t = contenido(idioma).hero;
+
   const sectionRef = useRef<HTMLElement>(null);
   const starsRef = useRef<HTMLDivElement>(null);
   const starsFarRef = useRef<HTMLDivElement>(null);
@@ -89,10 +106,6 @@ export default function SplitHero() {
   const satRef = useRef<HTMLSpanElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
   const hintRef = useRef<HTMLDivElement>(null);
-  const chatRef = useRef<HTMLDivElement>(null);
-  const chatAreaRef = useRef<HTMLDivElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
-  const [visiblePairs, setVisiblePairs] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [twinkles, setTwinkles] = useState<TwinkleStar[]>([]);
 
@@ -106,13 +119,13 @@ export default function SplitHero() {
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setReducedMotion(true);
-      setVisiblePairs(PAIRS);
       return;
     }
 
     let target = 0;
     let current = 0;
     let rafId = 0;
+    let animating = false;
     let inView = true;
 
     const computeTarget = () => {
@@ -126,7 +139,7 @@ export default function SplitHero() {
     const apply = (p: number) => {
       const split = Math.min(1, p / SPLIT_END);
       const introOpacity = Math.max(0, 1 - p / INTRO_FADE_END);
-      const chat = Math.max(0, Math.min(1, (p - CHAT_START) / CHAT_FADE_SPAN));
+      const hintOpacity = Math.max(0, 1 - p / HINT_FADE_END);
 
       const dal = dalRef.current;
       const sat = satRef.current;
@@ -141,34 +154,46 @@ export default function SplitHero() {
 
       if (introRef.current) introRef.current.style.opacity = String(introOpacity);
       if (hintRef.current) {
-        hintRef.current.style.opacity = String(introOpacity);
-        hintRef.current.style.pointerEvents = introOpacity > 0.3 ? 'auto' : 'none';
+        hintRef.current.style.opacity = String(hintOpacity);
+        hintRef.current.style.pointerEvents = hintOpacity > 0.3 ? 'auto' : 'none';
       }
-
-      const chatEl = chatRef.current;
-      if (chatEl) {
-        chatEl.style.opacity = String(chat);
-        chatEl.style.transform = `translateY(${(1 - chat) * 50}px) scale(${0.96 + chat * 0.04})`;
-      }
-
-      const pairProgress = Math.max(0, Math.min(1, (p - PAIRS_START) / (PAIRS_END - PAIRS_START)));
-      const pairs = p <= PAIRS_START ? 0 : Math.min(PAIRS, Math.floor(pairProgress * PAIRS) + 1);
-      setVisiblePairs(pairs);
     };
 
-    const loop = () => {
-      if (inView) {
-        computeTarget();
-        current += (target - current) * 0.14;
-        if (Math.abs(target - current) < 0.0005) current = target;
+    // Antes este bucle llamaba a requestAnimationFrame sin condicion, asi que
+    // corria en cada frame para siempre aunque nadie hubiera hecho scroll.
+    // Ahora solo se arranca al recibir scroll/resize (o al entrar en
+    // viewport) y se para solo en cuanto `current` alcanza a `target`.
+    const step = () => {
+      if (!inView) {
+        animating = false;
+        return;
+      }
+      computeTarget();
+      current += (target - current) * 0.14;
+      if (Math.abs(target - current) < 0.0005) {
+        current = target;
         apply(current);
+        animating = false;
+        return;
       }
-      rafId = requestAnimationFrame(loop);
+      apply(current);
+      rafId = requestAnimationFrame(step);
     };
+
+    const kick = () => {
+      if (animating) return;
+      animating = true;
+      rafId = requestAnimationFrame(step);
+    };
+
+    const onScrollOrResize = () => kick();
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize);
 
     const observer = new IntersectionObserver(
       (entries) => {
         inView = entries[0]?.isIntersecting ?? false;
+        if (inView) kick();
       },
       { rootMargin: '100px' },
     );
@@ -177,56 +202,29 @@ export default function SplitHero() {
     computeTarget();
     current = target;
     apply(current);
-    rafId = requestAnimationFrame(loop);
 
     return () => {
       cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', onScrollOrResize);
+      window.removeEventListener('resize', onScrollOrResize);
       observer.disconnect();
     };
   }, []);
 
-  // Sin scroll interno: desliza la lista hacia arriba con un translateY suave
-  // para que el último mensaje revelado quede siempre visible
-  useEffect(() => {
-    if (reducedMotion) return;
-    const area = chatAreaRef.current;
-    const list = listRef.current;
-    if (!area || !list) return;
-
-    const count = visiblePairs * 2;
-    const update = () => {
-      if (count === 0) {
-        list.style.transform = 'translateY(0)';
-        return;
-      }
-      const last = list.children[count - 1] as HTMLElement | undefined;
-      if (!last) return;
-      const bottom = last.offsetTop + last.offsetHeight + 24;
-      const overflow = Math.max(0, bottom - area.clientHeight);
-      list.style.transform = `translateY(${-overflow}px)`;
-    };
-
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, [visiblePairs, reducedMotion]);
-
-  // La flecha lleva hasta el punto del scroll donde el chat ya es visible
+  // La flecha lleva más allá del split, hacia el resto de la página
   const scrollToChat = () => {
     const section = sectionRef.current;
     if (!section) return;
     const total = section.offsetHeight - window.innerHeight;
-    window.scrollTo({ top: section.offsetTop + total * 0.5, behavior: 'smooth' });
+    window.scrollTo({ top: section.offsetTop + total, behavior: 'smooth' });
   };
-
-  const visibleCount = visiblePairs * 2;
 
   return (
     <section
       ref={sectionRef}
       id="hero"
-      className="relative bg-[#001A3F]"
-      style={{ height: reducedMotion ? 'auto' : '450vh' }}
+      className="relative bg-navy"
+      style={{ height: reducedMotion ? 'auto' : '120vh' }}
     >
       <style>{`
         @keyframes heroLetterIn {
@@ -247,14 +245,27 @@ export default function SplitHero() {
         }
         .hero-subtitle {
           opacity: 0;
-          animation: heroFadeIn 0.9s ease-out 0.8s forwards;
+          animation: heroFadeIn 0.9s ease-out 0.3s forwards;
+        }
+        .hero-cta {
+          opacity: 0;
+          animation: heroFadeIn 0.9s ease-out 0.5s forwards;
         }
         .hero-hint {
           opacity: 0;
-          animation: heroFadeIn 0.9s ease-out 1.3s forwards;
+          animation: heroFadeIn 0.9s ease-out 0.6s forwards;
         }
         .hero-arrow {
           animation: heroArrowBounce 1.8s ease-in-out infinite;
+        }
+        @keyframes heroWheel {
+          0%   { opacity: 0; transform: translateY(0); }
+          25%  { opacity: 1; }
+          75%  { opacity: 1; transform: translateY(10px); }
+          100% { opacity: 0; transform: translateY(12px); }
+        }
+        .hero-wheel {
+          animation: heroWheel 1.8s ease-in-out infinite;
         }
         @keyframes starDriftA {
           from { transform: translate(0, 0); }
@@ -286,11 +297,11 @@ export default function SplitHero() {
           animation: starFloat var(--float-duration, 35s) ease-in-out infinite alternate;
         }
         @media (prefers-reduced-motion: reduce) {
-          .hero-letter, .hero-subtitle, .hero-hint {
+          .hero-letter, .hero-subtitle, .hero-cta, .hero-hint {
             animation: none;
             opacity: 1;
           }
-          .hero-arrow, .stars-near, .stars-far, .star-float { animation: none; }
+          .hero-arrow, .hero-wheel, .stars-near, .stars-far, .star-float { animation: none; }
           .star-twinkle { animation: none; opacity: 0.4; }
         }
       `}</style>
@@ -299,7 +310,7 @@ export default function SplitHero() {
         className={
           reducedMotion
             ? 'relative flex min-h-[100svh] flex-col items-center justify-center gap-12 overflow-hidden py-28'
-            : 'sticky top-0 flex h-screen items-center justify-center overflow-hidden'
+            : 'sticky top-0 flex h-[100svh] items-center justify-center overflow-hidden'
         }
       >
         {/* Nebulosa sutil */}
@@ -308,7 +319,7 @@ export default function SplitHero() {
           aria-hidden="true"
           style={{
             background:
-              'radial-gradient(ellipse 60% 45% at 22% 28%, rgba(0,224,255,0.07), transparent 70%), radial-gradient(ellipse 55% 40% at 78% 70%, rgba(0,224,255,0.05), transparent 70%), radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,26,63,0.8), transparent 100%)',
+              'radial-gradient(ellipse 60% 45% at 22% 28%, rgba(20,205,236,0.07), transparent 70%), radial-gradient(ellipse 55% 40% at 78% 70%, rgba(20,205,236,0.05), transparent 70%), radial-gradient(ellipse 80% 60% at 50% 50%, rgba(7,40,71,0.8), transparent 100%)',
           }}
         />
 
@@ -335,9 +346,9 @@ export default function SplitHero() {
                 style={{
                   width: star.size,
                   height: star.size,
-                  background: star.cyan ? 'rgba(0,224,255,0.9)' : 'rgba(255,255,255,0.9)',
+                  background: star.cyan ? 'rgba(20,205,236,0.9)' : 'rgba(255,255,255,0.9)',
                   boxShadow: star.cyan
-                    ? '0 0 6px 1px rgba(0,224,255,0.5)'
+                    ? '0 0 6px 1px rgba(20,205,236,0.5)'
                     : '0 0 6px 1px rgba(255,255,255,0.4)',
                   ['--twinkle-duration' as string]: star.duration,
                   ['--twinkle-delay' as string]: star.delay,
@@ -349,31 +360,64 @@ export default function SplitHero() {
 
         {/* Capa 1: DALSAT, se abre en dos mitades al scrollear */}
         <div className={reducedMotion ? 'relative z-10 flex flex-col items-center px-4 text-center' : 'absolute inset-0 z-10 flex flex-col items-center justify-center px-4 text-center'}>
-          <h1
-            aria-label="DALSAT"
-            className="flex font-display font-bold leading-none tracking-[0.12em] text-white text-[clamp(3.5rem,12vw,5rem)] md:text-[clamp(5rem,15vw,11rem)]"
-            style={{ textShadow: '0 0 40px rgba(0,224,255,0.3)' }}
-          >
-            <span ref={dalRef} className="inline-block will-change-transform" aria-hidden="true">
-              {['D', 'A', 'L'].map((letter, i) => (
-                <span key={i} className="hero-letter inline-block" style={{ animationDelay: `${0.1 + i * 0.08}s` }}>
-                  {letter}
-                </span>
-              ))}
+          {/* El wordmark "DALSAT" es decorativo (aria-hidden): el h1 semantico
+              lo envuelve junto con una segunda linea visible con la palabra
+              clave (t.hero.titulo), que es lo que de verdad lee un lector de
+              pantalla o un buscador como titular de la pagina. La mascota
+              ancla en la "D" via [data-mascot-anchor="hero-d"] y su
+              parentElement (el span de dalRef): esa estructura no se toca. */}
+          <h1 className="flex flex-col items-center gap-3 sm:gap-4">
+            <span
+              aria-hidden="true"
+              className="flex font-display font-bold leading-none tracking-[0.12em] text-white text-[clamp(3.5rem,12vw,5rem)] md:text-[clamp(5rem,15vw,11rem)]"
+              style={{ textShadow: '0 0 40px rgba(20,205,236,0.3)' }}
+            >
+              <span ref={dalRef} className="inline-block will-change-transform">
+                {['D', 'A', 'L'].map((letter, i) => (
+                  <span
+                    key={i}
+                    className="hero-letter inline-block"
+                    style={{ animationDelay: `${0.1 + i * 0.08}s` }}
+                    {...(i === 0 ? { 'data-mascot-anchor': 'hero-d' } : {})}
+                  >
+                    {letter}
+                  </span>
+                ))}
+              </span>
+              <span ref={satRef} className="inline-block will-change-transform">
+                {['S', 'A', 'T'].map((letter, i) => (
+                  <span key={i} className="hero-letter inline-block" style={{ animationDelay: `${0.34 + i * 0.08}s` }}>
+                    {letter}
+                  </span>
+                ))}
+              </span>
             </span>
-            <span ref={satRef} className="inline-block will-change-transform" aria-hidden="true">
-              {['S', 'A', 'T'].map((letter, i) => (
-                <span key={i} className="hero-letter inline-block" style={{ animationDelay: `${0.34 + i * 0.08}s` }}>
-                  {letter}
-                </span>
-              ))}
+            <span className="hero-subtitle block max-w-xl px-2 text-center font-display font-semibold tracking-wide text-cian text-[clamp(1rem,2.6vw,1.5rem)]">
+              {t.titulo}
             </span>
           </h1>
 
           <div ref={introRef} className="flex flex-col items-center">
-            <p className="hero-subtitle mt-6 max-w-md text-[clamp(1rem,2.5vw,1.25rem)] font-normal text-white/55">
-              Automatización inteligente para tu negocio
+            <p className="hero-subtitle mt-5 max-w-md text-[clamp(1rem,2.5vw,1.25rem)] font-normal text-white/80">
+              {t.subtitulo}
             </p>
+
+            {/* La primera pantalla no tenia ninguna accion: habia que scrollear
+                o subir a la cabecera. Ahora se puede escribir desde aqui. */}
+            <div className="hero-cta mt-7 flex flex-col items-center gap-3 sm:flex-row">
+              <a
+                href={ruta('/contacto', idioma)}
+                className="inline-flex items-center justify-center rounded-2xl bg-terracota px-7 py-3.5 text-sm font-extrabold text-navy-950 shadow-[0_0_25px_rgba(217,100,44,0.35)] transition-all hover:scale-105 hover:bg-terracota-light"
+              >
+                {t.ctaPrincipal}
+              </a>
+              <a
+                href={ruta('/servicios', idioma)}
+                className="inline-flex items-center justify-center rounded-2xl border border-white/25 px-7 py-3.5 text-sm font-bold text-white/80 transition-colors hover:border-cian/60 hover:text-cian"
+              >
+                {t.ctaSecundario}
+              </a>
+            </div>
           </div>
         </div>
 
@@ -383,118 +427,18 @@ export default function SplitHero() {
             <button
               type="button"
               onClick={scrollToChat}
-              className="hero-hint flex min-h-[44px] cursor-pointer flex-col items-center gap-2 text-white/50 transition-colors hover:text-[#00E0FF]"
+              className="hero-hint flex min-h-[44px] cursor-pointer flex-col items-center gap-2.5 text-white/75 transition-colors hover:text-cian"
             >
-              <span className="text-xs font-medium tracking-wide">Descubre lo que podemos hacer</span>
-              <svg className="hero-arrow h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+              <span className="text-sm font-semibold tracking-wide">{t.pista}</span>
+              <span className="hero-mouse relative flex h-9 w-[22px] items-center justify-center rounded-full border-2 border-current">
+                <span className="hero-wheel absolute top-1.5 h-1.5 w-1 rounded-full bg-current" />
+              </span>
+              <svg className="hero-arrow h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
               </svg>
             </button>
           </div>
         )}
-
-        {/* Capa 2: chat integrado con el fondo galáctico.
-            pointer-events-none: el chat es decorativo y nunca captura la rueda,
-            el único scroll es el de la página */}
-        <div
-          ref={chatRef}
-          className={`pointer-events-none relative z-20 flex w-[94vw] max-w-2xl flex-col ${
-            reducedMotion ? '' : 'h-[78vh]'
-          }`}
-          style={reducedMotion ? undefined : { opacity: 0 }}
-        >
-          {/* Cabecera del chat */}
-          <div className="flex items-center justify-between rounded-t-2xl border border-white/10 bg-white/5 px-5 py-3.5 backdrop-blur-md">
-            <svg className="h-5 w-5 text-white/60" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-            <span
-              className="font-display text-xl font-bold tracking-[0.2em] text-white"
-              style={{ textShadow: '0 0 20px rgba(0,224,255,0.4)' }}
-            >
-              DALSAT
-            </span>
-            <svg className="h-5 w-5 text-white/60" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-            </svg>
-          </div>
-
-          {/* Mensajes sobre el fondo estrellado (sin barra de scroll propia) */}
-          <div
-            ref={chatAreaRef}
-            className="flex-1 overflow-hidden border-x border-white/10 bg-[#001A3F]/20 backdrop-blur-[2px]"
-          >
-            <div
-              ref={listRef}
-              className="relative flex flex-col gap-4 px-4 py-6 transition-transform duration-500 ease-out will-change-transform sm:px-6"
-            >
-            {MESSAGES.map((msg, i) => {
-              const shown = i < visibleCount;
-              const isBot = msg.from === 'bot';
-              return (
-                <div
-                  key={i}
-                  className={`flex items-end gap-2.5 transition-all duration-500 ease-out ${
-                    isBot ? 'justify-end' : 'justify-start'
-                  } ${shown ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'}`}
-                  style={{ transitionDelay: shown && isBot ? '180ms' : '0ms' }}
-                >
-                  {!isBot && (
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-300/80">
-                      <svg className="h-5 w-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path
-                          fillRule="evenodd"
-                          d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                  )}
-                  <div className={`flex max-w-[78%] flex-col ${isBot ? 'items-end' : 'items-start'}`}>
-                    <div
-                      className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-lg sm:text-[15px] ${
-                        isBot
-                          ? 'rounded-br-md bg-gradient-to-r from-[#E8704F] via-[#7C6BD6] to-[#2EC4B6] text-white shadow-[#7C6BD6]/30'
-                          : 'rounded-bl-md bg-gray-200/95 text-gray-900 shadow-black/30'
-                      }`}
-                    >
-                      {msg.text}
-                    </div>
-                    <span className="mt-1 px-1 text-[11px] text-white/40">{msg.time}</span>
-                  </div>
-                  {isBot && (
-                    <div
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#00E0FF] to-[#7C6BD6] text-[11px] font-bold text-white"
-                      style={{ boxShadow: '0 0 14px rgba(0,224,255,0.35)' }}
-                    >
-                      DA
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-            </div>
-          </div>
-
-          {/* Barra de entrada (decorativa) */}
-          <div className="flex items-center gap-3 rounded-b-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-md">
-            <svg className="h-5 w-5 shrink-0 text-white/50" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
-            </svg>
-            <span className="flex-1 select-none text-sm text-white/40">Escribe un mensaje…</span>
-            <svg className="h-5 w-5 shrink-0 text-white/50" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
-            </svg>
-            <div
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#00E0FF]"
-              style={{ boxShadow: '0 0 16px rgba(0,224,255,0.4)' }}
-            >
-              <svg className="h-4 w-4 text-[#001A3F]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
-              </svg>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

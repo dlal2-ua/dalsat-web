@@ -1,0 +1,197 @@
+---
+// Pagina de un servicio: /servicios/{slug} y /en/servicios/{slug}.
+//
+// Existe por el SEO: antes los seis servicios enlazaban a /servicios#catalogo,
+// y Google no indexa lo que va detras de un #, asi que ninguna URL podia salir
+// por "agente IA WhatsApp" o "software a medida". Ahora cada servicio tiene
+// la suya.
+//
+// Todo el texto sale de src/i18n (servicios.{id} y paginaServicio.lista.{id})
+// y las preguntas, de faq.items por id. Nada se escribe aqui: asi la pagina no
+// puede decir algo que el resto de la web no dice. Es estatica, sin isla.
+import Layout from '../layouts/Layout.astro';
+import Header from './Header';
+import Footer from './Footer';
+import CtaContacto from './CtaContacto.astro';
+import { SERVICIOS, rutaServicio } from '../data/servicios';
+import { contenido } from '../i18n';
+import { ruta, type Idioma } from '../i18n/config';
+
+interface Props {
+  idioma: Idioma;
+  id: string;
+}
+
+const { idioma, id } = Astro.props;
+const t = contenido(idioma);
+type IdServicio = keyof typeof t.servicios;
+
+const servicio = SERVICIOS.find((s) => s.id === id)!;
+const base = t.servicios[id as IdServicio];
+const detalle = t.paginaServicio.lista[id as IdServicio];
+const preguntas = detalle.faq
+  .map((idPregunta) => t.faq.items.find((p) => p.id === idPregunta))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+const otros = SERVICIOS.filter((s) => s.id !== id);
+
+const SITE = Astro.site ?? new URL('https://dalsats.com');
+const urlPagina = new URL(ruta(rutaServicio(id), idioma), SITE).toString();
+
+const schemaServicio = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: detalle.h1,
+  serviceType: base.nombre,
+  description: detalle.seoDescripcion,
+  url: urlPagina,
+  areaServed: { '@type': 'Country', name: idioma === 'es' ? 'España' : 'Spain' },
+  provider: { '@id': new URL('/#organizacion', SITE).toString() },
+};
+
+const schemaMigas = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'DALSAT', item: new URL(ruta('/', idioma), SITE).toString() },
+    { '@type': 'ListItem', position: 2, name: t.paginaServicio.migas, item: new URL(ruta('/servicios', idioma), SITE).toString() },
+    { '@type': 'ListItem', position: 3, name: base.nombre, item: urlPagina },
+  ],
+};
+---
+
+<Layout title={detalle.seoTitulo} description={detalle.seoDescripcion}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaServicio)} />
+  <script type="application/ld+json" set:html={JSON.stringify(schemaMigas)} />
+
+  <Header client:load currentPath="/servicios" idioma={idioma} />
+
+  <main id="contenido" class="pt-16">
+    {/* Portada: misma gramatica que /servicios (numero, regla, etiqueta) para
+        que se lea como una pieza de ese indice. */}
+    <section class="relative py-16 sm:py-24 bg-navy-900 overflow-hidden bg-[radial-gradient(ellipse_55%_60%_at_0%_0%,rgba(20,205,236,0.14),transparent_70%)]">
+      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <nav aria-label={t.paginaServicio.migas} class="mb-8 sm:mb-10 text-xs font-mono text-white/60">
+          <a href={ruta('/servicios', idioma)} class="hover:text-cian transition-colors">{t.paginaServicio.migas}</a>
+          <span aria-hidden="true" class="mx-2 text-cian/60">/</span>
+          <span aria-current="page" class="text-white/80">{base.nombre}</span>
+        </nav>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-10 gap-y-8 items-end">
+          <div class="lg:col-span-7" data-reveal>
+            <div class="flex items-center gap-4 mb-6">
+              <span class="font-mono text-sm font-bold text-cian tabular-nums">{servicio.order}</span>
+              <span class="h-px flex-1 max-w-[7rem] bg-cian/30" aria-hidden="true"></span>
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-white/60">{base.nombre}</span>
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-[1.05]">
+              {detalle.h1}
+            </h1>
+          </div>
+          <div class="lg:col-span-5 lg:pb-2 space-y-4 border-l-2 border-cian/30 pl-5" data-reveal style="--reveal-delay: 120ms">
+            {detalle.intro.map((parrafo) => (
+              <p class="text-white/75 text-base sm:text-lg leading-relaxed">{parrafo}</p>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Banda en crema: para quien es y que incluye. En crema el cian no da
+        contraste, asi que los titulos van en navy y el cian solo en reglas. */}
+    <section class="bg-crema text-grafito py-16 sm:py-24">
+      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div class="lg:col-span-5" data-reveal>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight mb-6">{t.paginaServicio.paraQuien}</h2>
+          <ul class="space-y-4">
+            {detalle.paraQuien.map((linea) => (
+              <li class="flex gap-3 text-base leading-relaxed">
+                <span class="mt-2.5 h-px w-5 shrink-0 bg-cian-dark" aria-hidden="true"></span>
+                <span>{linea}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="lg:col-span-7" data-reveal style="--reveal-delay: 120ms">
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight mb-6">{t.paginaServicio.incluye}</h2>
+          <ol class="border-t border-navy/15">
+            {detalle.incluye.map((linea, i) => (
+              <li class="flex items-baseline gap-5 border-b border-navy/15 py-4">
+                <span class="font-mono text-sm font-bold text-navy/60 tabular-nums shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                <span class="text-base sm:text-lg font-semibold text-navy">{linea}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    {servicio.video && (
+      <section class="bg-navy py-16 sm:py-24 border-t border-white/10">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-8">{t.paginaServicio.video}</h2>
+          <video
+            controls
+            preload="none"
+            poster={servicio.video.poster}
+            class="w-full aspect-video rounded-2xl border border-white/15 bg-black"
+          >
+            <source src={servicio.video.src} type="video/mp4" />
+          </video>
+        </div>
+      </section>
+    )}
+
+    {/* Preguntas: <details> nativo, asi las respuestas estan en el HTML (las
+        lee Google) y se abren sin JavaScript. */}
+    {preguntas.length > 0 && (
+      <section class="bg-navy-900 py-16 sm:py-24 border-t border-white/10">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-8" data-reveal>
+            {t.paginaServicio.preguntas}
+          </h2>
+          <div class="border-t border-white/10">
+            {preguntas.map((p) => (
+              <details class="group border-b border-white/10">
+                <summary class="flex cursor-pointer list-none items-start justify-between gap-6 py-5 [&::-webkit-details-marker]:hidden">
+                  <h3 class="text-base sm:text-lg font-bold text-white">{p.question}</h3>
+                  <span class="mt-1 font-mono text-cian transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+                </summary>
+                <p class="pb-6 text-white/75 leading-relaxed">{p.answer}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {/* Los otros cinco, como el indice de la home: enlaces entre servicios
+        para que Google y el visitante lleguen de uno a otro. */}
+    <section class="bg-navy-950 py-16 sm:py-20 border-t border-white/10">
+      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-white/60 mb-6">{t.paginaServicio.otros}</h2>
+        <ul class="border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-x-8 sm:gap-x-14">
+          {otros.map((s) => (
+            <li class="border-b border-white/10">
+              <a href={ruta(rutaServicio(s.id), idioma)} class="group flex items-baseline gap-4 sm:gap-6 py-5">
+                <span class="font-mono text-sm font-bold text-cian/70 tabular-nums shrink-0">{s.order}</span>
+                <span class="text-lg sm:text-xl font-extrabold text-white tracking-tight group-hover:text-cian transition-colors">
+                  {t.servicios[s.id as IdServicio].nombre}
+                </span>
+                <span class="ml-auto shrink-0 text-cian opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true">&rarr;</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <CtaContacto
+      titulo={t.cierreContacto.servicios.titulo}
+      texto={t.cierreContacto.servicios.texto}
+      cta={t.cierreContacto.servicios.cta}
+      idioma={idioma}
+    />
+  </main>
+
+  <Footer idioma={idioma} />
+</Layout>

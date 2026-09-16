@@ -1,0 +1,105 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { urlWhatsApp } from '../data/contacto';
+import { ruta } from '../i18n';
+
+const WHATSAPP_URL = urlWhatsApp('Hola, he llegado a una página que no existe en vuestra web y quería preguntaros una cosa.');
+
+// A donde tiene sentido mandar a alguien que ha llegado aqui por error.
+const ATAJOS = [
+  { href: ruta('/servicios', 'es'), titulo: 'Qué hacemos', texto: 'Los seis servicios, explicados uno a uno.' },
+  { href: ruta('/demos#video-agentes', 'es'), titulo: 'Ver una demo', texto: 'Mira cómo contesta un agente en tu sector.' },
+  { href: ruta('/calculadora', 'es'), titulo: 'Calcular el ahorro', texto: 'Cuánto tiempo te quita hoy atender mensajes.' },
+  { href: ruta('/faq', 'es'), titulo: 'Preguntas frecuentes', texto: 'Precios, plazos, permanencia y protección de datos.' },
+];
+
+// El fallback de Vercel para cualquier ruta que no existe sirve siempre este
+// archivo (el 404 en castellano), tambien para rutas bajo /en/*. Server-side
+// no hay forma de distinguir: se detecta en el cliente y se manda a la
+// version inglesa. Guard explicito contra bucle si /en/404 tampoco resuelve.
+const SCRIPT_REDIRECCION_EN = `
+  var p = location.pathname;
+  if ((p === '/en' || p.indexOf('/en/') === 0) && p !== '/en/404' && p !== '/en/404/') {
+    location.replace('/en/404');
+  }
+`;
+---
+
+<Layout
+  title="Página no encontrada | DALSAT"
+  description="Esta página no existe. Te dejamos por dónde seguir: servicios, demos, calculadora y preguntas frecuentes."
+  noindex={true}
+>
+  <Header client:load currentPath="/404" />
+
+  {/* Vercel sirve este archivo para cualquier ruta que no existe, tambien
+      bajo /en/*, y no hay forma de distinguirlo en servidor. Se detecta en
+      cliente y se redirige a /en/404 antes de que el visitante note el
+      castellano. Guard explicito para no crear un bucle si esa ruta tampoco
+      resolviera. */}
+  <script is:inline set:html={SCRIPT_REDIRECCION_EN} />
+
+  <main id="contenido" class="pt-16">
+    <section class="relative min-h-[calc(100vh-64px)] flex items-center bg-gradient-to-b from-navy-950 via-navy-800 to-navy-900 py-16 sm:py-24 border-t border-white/10 overflow-hidden" data-mascot-perch="no-encontrada">
+      <div
+        class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"
+        aria-hidden="true"
+      ></div>
+      <div
+        class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_35%,rgba(20,205,236,0.14),transparent_60%)]"
+        aria-hidden="true"
+      ></div>
+
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 text-center">
+        <span
+          class="font-display font-bold text-white/15 text-[clamp(6rem,22vw,12rem)] leading-none tracking-tight block select-none"
+          aria-hidden="true"
+        >
+          404
+        </span>
+
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-2 mb-4">
+          Esta página no existe
+        </h1>
+        <p class="text-white/70 text-base sm:text-lg max-w-xl mx-auto mb-10">
+          O la hemos movido, o el enlace venía mal. No te preocupes, se arregla en un clic.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-14">
+          <a
+            href={ruta('/', 'es')}
+            class="w-full sm:w-auto inline-flex items-center justify-center bg-terracota hover:bg-terracota-light text-navy-950 font-extrabold text-sm px-8 py-4 rounded-2xl transition-all shadow-[0_0_25px_rgba(217,100,44,0.35)] hover:scale-105"
+          >
+            Volver al inicio
+          </a>
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-full sm:w-auto inline-flex items-center justify-center border border-cian/40 bg-cian/10 text-cian hover:bg-cian/20 hover:text-white font-bold text-sm px-8 py-4 rounded-2xl transition-colors"
+          >
+            Preguntarnos por WhatsApp
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+          {ATAJOS.map((a) => (
+            <a
+              href={a.href}
+              class="group rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition-all hover:border-cian/50 hover:bg-white/[0.07]"
+            >
+              <span class="block text-white font-bold text-base mb-1 group-hover:text-cian transition-colors">
+                {a.titulo}
+              </span>
+              <span class="block text-white/60 text-sm leading-relaxed">{a.texto}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

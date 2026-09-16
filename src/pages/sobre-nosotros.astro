@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header';
+import AboutUs from '../components/AboutUs';
+import Footer from '../components/Footer';
+import CtaContacto from '../components/CtaContacto.astro';
+---
+
+<Layout
+  title="Sobre nosotros | DALSAT"
+  description="Quiénes somos: un estudio de digitalización que ayuda a pymes de toda España a automatizar procesos y responder a clientes con inteligencia artificial."
+>
+  <Header client:load currentPath="/sobre-nosotros" />
+
+  <main id="contenido" class="pt-16">
+    {/* Componente Quiénes Somos */}
+    <AboutUs />
+
+    <CtaContacto
+      titulo="¿Hablamos de tu negocio?"
+      texto="Te acompañamos desde el primer día y seguimos encima cuando ya está funcionando."
+      cta="Habla con nosotros"
+    />
+
+  </main>
+
+  <Footer />
+</Layout>

@@ -1,0 +1,52 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header';
+import ServiceVideos from '../components/ServiceVideos';
+import Footer from '../components/Footer';
+import CtaContacto from '../components/CtaContacto.astro';
+---
+
+<Layout
+  title="Demos de agentes de IA y vídeos de cada servicio | DALSAT"
+  description="Mira demos de agentes de IA por sector y vídeos cortos de cada servicio: software a medida, CRM con IA, mapeo de procesos, SEO y desarrollo web con DALSAT."
+>
+  <Header client:load currentPath="/demos" />
+
+  <main id="contenido" class="pt-16">
+    {/* Portada de demos. Lo que importa esta debajo: los vídeos y simuladores.
+        Asi que la portada se aparta (mas baja, sin badge) y lo unico que anade
+        es un punto vivo que avisa de que esto se toca. Centrada a proposito,
+        para contrastar con la portada de /servicios, que va alineada a
+        izquierda. */}
+    <section class="relative py-14 sm:py-20 bg-gradient-to-b from-navy-800 via-navy-950 to-navy-900 overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_40%,rgba(20,205,236,0.12),transparent_60%)]" aria-hidden="true"></div>
+
+      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 text-center" data-reveal>
+        <p class="flex items-center justify-center gap-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-white/60 mb-6">
+          <span class="relative flex h-2 w-2" aria-hidden="true">
+            <span class="absolute inline-flex h-full w-full motion-safe:animate-ping rounded-full bg-cian opacity-70"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-cian"></span>
+          </span>
+          Los seis servicios
+        </p>
+        <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-[1.05] mb-5 max-w-4xl mx-auto">
+          Ve en qué consiste cada servicio
+        </h1>
+        <p class="text-white/70 text-base sm:text-lg font-light max-w-2xl mx-auto">
+          Vamos publicando un vídeo corto por servicio. En el de agentes de IA puedes ver cómo contesta un agente en tu sector y oírlo por teléfono. Si te encaja, te montamos uno con tus datos y lo pruebas gratis.
+        </p>
+      </div>
+    </section>
+
+    {/* Vídeo de cada servicio, en pestañas */}
+    <ServiceVideos client:load />
+
+    <CtaContacto
+      titulo="¿Y con los datos de tu negocio?"
+      texto="Te preparamos una prueba gratis con tus servicios, tus precios y tu forma de hablar."
+      cta="Pedir una prueba con mis datos"
+    />
+  </main>
+
+  <Footer />
+</Layout>

@@ -1,0 +1,42 @@
+---
+// Cierre de pagina hacia /contacto.
+//
+// El mismo bloque estaba escrito tres veces, en /servicios, /demos y
+// /calculadora: mismo marcado, mismo boton, misma sombra, y solo cambiaba el
+// texto. Ahora el marcado vive aqui y cada pagina pasa su copy, que si es
+// distinto en cada una y tiene que seguir siendolo: se pregunta desde donde
+// esta el visitante.
+//
+// El enlace del boton pasaba por /contacto a pelo: en las paginas inglesas
+// eso mandaba al visitante al formulario en castellano. `idioma` es opcional
+// y cae por defecto en idiomaDeUrl(Astro.url), asi que las paginas que ya
+// usaban este componente sin pasarlo siguen funcionando sin tocarlas.
+
+import { idiomaDeUrl, ruta, type Idioma } from '../i18n/config';
+
+interface Props {
+  titulo: string;
+  texto: string;
+  cta: string;
+  idioma?: Idioma;
+}
+
+const { titulo, texto, cta, idioma = idiomaDeUrl(Astro.url) } = Astro.props;
+---
+
+<section class="py-20 bg-navy-900 border-t border-white/10 text-center" data-mascot-perch="cierre">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6" data-reveal>
+    <h2 class="text-3xl sm:text-5xl font-extrabold text-white mb-4">
+      {titulo}
+    </h2>
+    <p class="text-white/70 text-base sm:text-lg mb-8">
+      {texto}
+    </p>
+    <a
+      href={ruta('/contacto', idioma)}
+      class="inline-flex bg-terracota hover:bg-terracota-light text-navy-950 font-extrabold text-base px-8 py-4 rounded-2xl transition-all shadow-[0_0_30px_rgba(217,100,44,0.4)] hover:scale-105"
+    >
+      {cta} →
+    </a>
+  </div>
+</section>

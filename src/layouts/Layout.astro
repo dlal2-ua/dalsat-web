@@ -1,39 +1,264 @@
 ---
+<<<<<<< HEAD
 import Analytics from '@vercel/analytics/astro';
 import CookieBanner from '../components/CookieBanner';
+=======
+import CookieBanner from '../components/CookieBanner';
+import StickyMobileCta from '../components/StickyMobileCta';
+import VolverArriba from '../components/VolverArriba';
+import FloatingWhatsApp from '../components/FloatingWhatsApp';
+import DalsatMascot from '../components/DalsatMascot';
+import { ClientRouter } from 'astro:transitions';
+// Fuentes servidas desde la propia web, no desde Google Fonts: la hoja de
+// Google bloqueaba el primer pintado y mandaba la IP de cada visitante a
+// Google (riesgo RGPD). Mismas familias y pesos que antes; tailwind.config
+// sigue diciendo 'Inter' y 'Space Grotesk'.
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/inter/800.css';
+import '@fontsource/space-grotesk/500.css';
+import '@fontsource/space-grotesk/700.css';
+import { contenido } from '../i18n';
+import {
+  ETIQUETA_HTML,
+  IDIOMAS,
+  IDIOMA_POR_DEFECTO,
+  idiomaDeUrl,
+  ruta,
+  rutaSinIdioma,
+} from '../i18n/config';
+>>>>>>> develop
 
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  /** Paginas que no deben salir en Google: 404, gracias y similares. */
+  noindex?: boolean;
 }
 
 const {
-  title = 'Dalsat — Automatización e IA para negocios',
-  description = 'Dalsat diseña e implanta agentes de IA e integraciones que automatizan tu negocio: WhatsApp, calendario, email, facturación y más. Sin código, listo en días.',
+  title = 'Automatización e IA para pymes | DALSAT',
+  description = 'Software a medida, agentes de IA, CRM con IA, mapeo y automatización de procesos, SEO y desarrollo web para pymes de toda España. Miramos cómo funciona tu negocio y automatizamos lo que se repite.',
+  // Tarjeta 1200x630 propia. El logo suelto se recortaba en WhatsApp.
+  image = '/og-dalsat.png',
+  noindex = false,
 } = Astro.props;
+
+const SITE_URL = Astro.site || new URL('https://dalsats.com');
+
+// Slug de la instancia de Dalsat que atiende el chat web. Vacio = sin chat.
+//
+// El slug conserva el nombre de cuando la instancia era de pruebas; lo que
+// importa es a que negocio apunta, y apunta a Dalsat: cabecera, identidad,
+// servicios y precios verificados en el chat antes de encenderlo.
+//
+// No poner aqui una instancia de otro negocio: el agente responde con SU
+// nombre, SU horario y SUS precios, y cambiarle el contexto no basta porque
+// esos campos salen del registro del cliente y los comparten los contextos.
+const INSTANCIA_CHAT = 'movil-pruebas-bq';
+
+const idioma = idiomaDeUrl(Astro.url);
+const t = contenido(idioma);
+// Ruta sin prefijo: es lo que necesitan el selector de idioma, el estado
+// activo del menu y los hreflang.
+const RUTA_NEUTRA = rutaSinIdioma(Astro.url.pathname);
+
+// En contacto y gracias la barra fija del movil sobra: ya estas donde te
+// llevaria. En el resto de paginas acompana.
+const RUTA = RUTA_NEUTRA.replace(/\/$/, '') || '/';
+const SIN_BARRA_MOVIL = ['/contacto', '/gracias'];
+const mostrarBarraMovil = !SIN_BARRA_MOVIL.includes(RUTA);
+const canonicalURL = new URL(Astro.url.pathname, SITE_URL);
+
+// Los hreflang tienen que apuntar a la misma forma de URL que la canonica y el
+// sitemap (con barra final en el build). ruta('/', 'en') devuelve '/en' sin
+// barra, y el home ingles quedaba enlazado a una URL que no era la canonica.
+const CON_BARRA = Astro.url.pathname.endsWith('/');
+const alternativa = (idiomaDestino: typeof idioma) => {
+  const camino = ruta(RUTA_NEUTRA, idiomaDestino);
+  return new URL(CON_BARRA && !camino.endsWith('/') ? `${camino}/` : camino, SITE_URL);
+};
+
+const DESCRIPCION_ORG = {
+  es: 'Estudio de digitalización para pymes de toda España: software a medida, agentes de IA especializados por negocio, CRM con IA, mapeo y automatización de procesos, SEO y desarrollo web.',
+  en: 'Digitalisation studio for small businesses across Spain: custom software, AI agents built for each business, an AI-powered CRM, process mapping and automation, SEO and web development.',
+};
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": new URL('/#organizacion', SITE_URL).toString(),
+  "name": "DALSAT",
+  "url": SITE_URL.toString(),
+  "logo": new URL('/logo-dalsat.png', SITE_URL).toString(),
+  "description": DESCRIPCION_ORG[idioma],
+  "email": "dalsat.soluciones@gmail.com",
+  "sameAs": ["https://www.instagram.com/dalsat.co/"],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "email": "dalsat.soluciones@gmail.com",
+    "areaServed": "ES",
+    "availableLanguage": ["es", "en"]
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "ES"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "España"
+  },
+  "knowsAbout": [
+    "Software a medida",
+    "Agentes de IA para empresas",
+    "CRM con IA para pymes",
+    "Mapeo y automatización de procesos",
+    "SEO y posicionamiento en Google",
+    "Desarrollo web"
+  ]
+};
+
+// Nodo WebSite: dice a Google el nombre del sitio y en que idioma esta cada
+// version. Va aparte del Organization, enlazado por @id.
+const schemaWeb = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "DALSAT",
+  "url": new URL(ruta('/', idioma), SITE_URL).toString(),
+  "inLanguage": ETIQUETA_HTML[idioma],
+  "publisher": { "@id": new URL('/#organizacion', SITE_URL).toString() }
+};
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={ETIQUETA_HTML[idioma]}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
     <title>{title}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
-      rel="stylesheet"
+    <meta name="description" content={description} />
+    <meta name="author" content="DALSAT" />
+    <meta
+      name="robots"
+      content={noindex
+        ? 'noindex, follow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
     />
+    <link rel="canonical" href={canonicalURL} />
+
+    {/* hreflang: le dice a Google que estas paginas son la misma en dos
+        idiomas, y cual servir si no encaja ninguna. Sin esto las dos versiones
+        compiten entre si por la misma busqueda. */}
+    {IDIOMAS.map((codigo) => (
+      <link
+        rel="alternate"
+        hreflang={ETIQUETA_HTML[codigo]}
+        href={alternativa(codigo)}
+      />
+    ))}
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={alternativa(IDIOMA_POR_DEFECTO)}
+    />
+
+    <!-- OpenGraph / Facebook / WhatsApp / LinkedIn -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, canonicalURL)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content={idioma === 'es'
+        ? 'DALSAT: ya tienes web, redes y Google Maps. Ahora toca automatizar.'
+        : 'DALSAT: you already have a site, social accounts and Google Maps. Now comes automation.'}
+    />
+    <meta property="og:locale" content={idioma === 'es' ? 'es_ES' : 'en_GB'} />
+    <meta property="og:locale:alternate" content={idioma === 'es' ? 'en_GB' : 'es_ES'} />
+    <meta property="og:site_name" content="DALSAT" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, canonicalURL)} />
+
+    <!-- Datos Estructurados JSON-LD Schema de Google -->
+    <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+    <script type="application/ld+json" set:html={JSON.stringify(schemaWeb)} />
+
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#072847" />
+    {/* Marca que hay JS antes de pintar. Los revelados al hacer scroll se
+        cuelgan de .js, asi que sin JavaScript el contenido sale visible en
+        vez de quedarse en opacity 0 para siempre. */}
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+    {/* Transiciones entre paginas. El router de Astro navega sin recargar, asi
+        que el revelado de abajo se re-arma en astro:page-load. */}
+    <ClientRouter />
     <style is:global>
+      /* La burbuja del widget de chat no se enseña nunca: la sustituye la
+         mascota, que al pulsarse le hace clic por programa. Va aquí, en CSS
+         desde el primer pintado, y no desde la mascota: por JS se veía la
+         burbuja abajo a la derecha mientras la página terminaba de cargar. */
+      html.js [data-dalsat-chat] .dalsat-bubble {
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+
+      /* Con el chat abierto la mascota se posa en la esquina de abajo a la
+         derecha para hacer de botón de cerrar, justo donde vive el botón de
+         WhatsApp. Se aparta mientras tanto para no quedar uno encima del otro. */
+      /* Foco visible en todo el sitio para quien navega con teclado. Solo con
+         :focus-visible, asi que el clic con raton no deja el anillo puesto. */
+      :focus-visible {
+        outline: 2px solid theme('colors.cian.DEFAULT');
+        outline-offset: 3px;
+      }
+
+      html:has([data-dalsat-chat].open) .whatsapp-flotante {
+        opacity: 0;
+        pointer-events: none;
+      }
+
       @media (prefers-reduced-motion: no-preference) {
         html {
           scroll-behavior: smooth;
+        }
+
+        /* Revelado al entrar en pantalla, para todo el sitio. Se esconde solo
+           si hay JS (.js lo pone el script de arriba) y si el visitante no ha
+           pedido menos movimiento.
+
+           Se desplaza con `translate`, no con `transform`: muchas tarjetas ya
+           usan hover:-translate-y-1, que compila a transform, y un transform
+           aqui se lo comeria por especificidad. Son propiedades
+           independientes, asi que componen en vez de pisarse. */
+        html.js [data-reveal] {
+          opacity: 0;
+          translate: 0 18px;
+        }
+
+        html.js [data-reveal].se-ve {
+          opacity: 1;
+          translate: none;
+          transition:
+            opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+            translate 0.55s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
         }
       }
 
@@ -100,8 +325,17 @@ const {
       }
     </style>
   </head>
-  <body class="font-sans antialiased bg-white text-gray-900">
+  <body class="font-sans antialiased bg-crema text-grafito">
+    {/* Primer elemento tabulable: salta la cabecera. Cada pagina marca su
+        <main> con id="contenido". */}
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[2147483647] focus:rounded-xl focus:bg-navy-950 focus:px-4 focus:py-3 focus:text-sm focus:font-bold focus:text-white"
+    >
+      {t.comun.saltarContenido}
+    </a>
     <slot />
+<<<<<<< HEAD
     <Analytics />
     <CookieBanner client:load />
     <script>
@@ -121,5 +355,106 @@ const {
         .querySelectorAll('.reveal, .reveal-zoom, .reveal-left, .reveal-right, .reveal-roll')
         .forEach((el) => observer.observe(el));
     </script>
+=======
+    <VolverArriba client:idle etiqueta={t.comun.volverArriba} />
+
+    {/* WhatsApp va pegado a la esquina de abajo a la derecha (la burbuja
+        nativa del chat, que tambien estaba ahi, esta escondida). En movil no
+        sale, que la barra fija de abajo ya lleva WhatsApp. */}
+    <FloatingWhatsApp client:idle idioma={idioma} />
+    {mostrarBarraMovil && <StickyMobileCta client:idle idioma={idioma} />}
+    {/* La analitica de Vercel ya no se carga aqui: la inyecta el banner solo
+        si el visitante acepta. Antes se cargaba siempre y el aviso era humo. */}
+    <CookieBanner client:idle idioma={idioma} />
+
+    {/* Revelado al hacer scroll para todo el sitio. Sin libreria de animacion:
+        IntersectionObserver y una clase. El escalonado lo pone cada elemento
+        con --reveal-delay, no un timer en JS.
+
+        Lleva MutationObserver porque las islas de React (Platform, FaqSection,
+        AboutUs...) se hidratan despues de que corra este script: sin el, sus
+        [data-reveal] se quedarian escondidos para siempre. */}
+    <script>
+      const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const SIN_SOPORTE = !('IntersectionObserver' in window);
+
+      const observador =
+        REDUCE || SIN_SOPORTE
+          ? null
+          : new IntersectionObserver(
+              (entradas) => {
+                for (const entrada of entradas) {
+                  if (!entrada.isIntersecting) continue;
+                  entrada.target.classList.add('se-ve');
+                  observador?.unobserve(entrada.target);
+                }
+              },
+              { rootMargin: '0px 0px -10% 0px', threshold: 0.12 }
+            );
+
+      function encolar(el: HTMLElement) {
+        if (observador) observador.observe(el);
+        else el.classList.add('se-ve');
+      }
+
+      function registrar(raiz: ParentNode) {
+        if (raiz instanceof HTMLElement && raiz.matches('[data-reveal]:not(.se-ve)')) {
+          encolar(raiz);
+        }
+        for (const el of raiz.querySelectorAll<HTMLElement>('[data-reveal]:not(.se-ve)')) {
+          encolar(el);
+        }
+      }
+
+      // Con ViewTransitions el script no se vuelve a ejecutar al navegar: el
+      // documento se sustituye en caliente. Sin esto, la segunda pagina que
+      // visitara alguien se quedaria entera en opacity 0.
+      registrar(document);
+      document.addEventListener('astro:page-load', () => registrar(document));
+
+      // Safari de iOS no aplica :active al tocar si no hay ningún listener de
+      // touchstart. Lo usa el carrusel de clientes para pararse al mantener.
+      document.addEventListener('touchstart', () => {}, { passive: true });
+
+      // Las islas aparecen mas tarde. Solo miramos subarboles nuevos.
+      new MutationObserver((mutaciones) => {
+        for (const m of mutaciones) {
+          for (const nodo of m.addedNodes) {
+            if (nodo instanceof HTMLElement) registrar(nodo);
+          }
+        }
+      }).observe(document.body, { childList: true, subtree: true });
+    </script>
+
+    {/* Widget de chat de la plataforma Dalsat. Una etiqueta y nada mas: el
+        agente corre en dev.dalsats.com, pinta su propia burbuja abajo a la
+        derecha y no pide el iframe hasta el primer clic.
+
+        `is:inline` es obligatorio: sin el, Astro procesa el script y lo saca
+        del body. `defer` para que no bloquee el pintado.
+
+        La CSP de vercel.json le abre script-src, frame-src y connect-src
+        hacia dev.dalsats.com; sin eso el navegador lo bloquea en silencio.
+
+        OJO: el agente vive en el entorno de DESARROLLO. Un despliegue de la
+        plataforma deja el chat caido un rato en la web comercial; ya se vio
+        un 503 durante uno. Si molesta, mover la instancia a produccion y
+        cambiar el host aqui. */}
+    {INSTANCIA_CHAT && (
+      <>
+        <script
+          is:inline
+          src={`https://dev.dalsats.com/webchat/${INSTANCIA_CHAT}/widget.js`}
+          defer
+        />
+        {/* Mascota de soporte: sustituye a la burbuja nativa en todos los
+            tamaños. No reimplementa el panel: al pulsar, hace clic en la
+            burbuja real. OJO: dev.dalsats.com solo se deja embeber desde
+            https://dalsats.com (frame-ancestors), así que en localhost o en
+            previews de Vercel el panel se abre pero sale "rechazado". */}
+        <DalsatMascot client:load idioma={idioma} />
+      </>
+    )}
+>>>>>>> develop
   </body>
 </html>
