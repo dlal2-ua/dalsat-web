@@ -2,50 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { contenido } from '../i18n';
 import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
 
-<<<<<<< HEAD
-interface ChatMessage {
-  from: 'client' | 'bot';
-  text: string;
-  time: string;
-}
-
-// 4 pares pregunta-respuesta: cada tramo de scroll revela un par completo
-const MESSAGES: ChatMessage[] = [
-  { from: 'client', text: 'Oye, ¿qué es Dalsat?', time: '14:46' },
-  {
-    from: 'bot',
-    text: 'Dalsat automatiza las tareas repetitivas de tu negocio. Imagina que alguien responde tus WhatsApps, gestiona citas y manda facturas — sin que tú hagas nada. 🤖',
-    time: '14:46',
-  },
-  { from: 'client', text: '¿Y eso cómo funciona?', time: '14:47' },
-  {
-    from: 'bot',
-    text: 'Cuéntanos cómo funciona tu negocio — horarios, servicios, preguntas frecuentes. En días, tu agente está activo respondiendo como si fueras tú.',
-    time: '14:47',
-  },
-  { from: 'client', text: '¿Para cualquier tipo de empresa?', time: '14:48' },
-  {
-    from: 'bot',
-    text: 'Sí. Da igual si tienes una clínica, un restaurante, una academia o una tienda online. Si tienes clientes que hacen preguntas repetitivas, Dalsat te ahorra horas cada semana. ✅',
-    time: '14:48',
-  },
-];
-
-const PAIRS = MESSAGES.length / 2;
-const SPLIT_END = 0.3; // el split ocupa el 0–30 % del scroll
-const INTRO_FADE_END = 0.12; // subtítulo y flecha desaparecen al empezar a scrollear
-const CHAT_START = 0.22;
-const CHAT_FADE_SPAN = 0.18;
-const PAIRS_START = 0.38; // los pares de mensajes se revelan del 38 al 95 %
-const PAIRS_END = 0.95;
-=======
 // Fracciones del recorrido pineado (altura del hero menos una pantalla, 50vh
 // con 150vh de alto). El split acaba casi al final: antes el hero medía
 // 200vh y tras abrirse las letras quedaban 70vh de scroll vacío.
 const SPLIT_END = 0.7;
 const INTRO_FADE_END = 0.25; // el subtítulo se va en cuanto empiezas a scrollear
 const HINT_FADE_END = 0.6; // la indicación de scroll aguanta bastante más
->>>>>>> develop
 
 /** Genera el valor box-shadow con N estrellas aleatorias en unidades vw/vh.
  *  El rango se extiende bastante más allá del viewport para que la deriva
