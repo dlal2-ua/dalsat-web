@@ -1,8 +1,4 @@
 ---
-<<<<<<< HEAD
-import Analytics from '@vercel/analytics/astro';
-import CookieBanner from '../components/CookieBanner';
-=======
 import CookieBanner from '../components/CookieBanner';
 import StickyMobileCta from '../components/StickyMobileCta';
 import VolverArriba from '../components/VolverArriba';
@@ -29,7 +25,6 @@ import {
   ruta,
   rutaSinIdioma,
 } from '../i18n/config';
->>>>>>> develop
 
 interface Props {
   title?: string;
@@ -51,14 +46,15 @@ const SITE_URL = Astro.site || new URL('https://dalsats.com');
 
 // Slug de la instancia de Dalsat que atiende el chat web. Vacio = sin chat.
 //
-// El slug conserva el nombre de cuando la instancia era de pruebas; lo que
-// importa es a que negocio apunta, y apunta a Dalsat: cabecera, identidad,
-// servicios y precios verificados en el chat antes de encenderlo.
+// Instancia dedicada de Dalsat (ya no la de pruebas del panel admin). El
+// plugin plugins/dalsat_web/ (repo dalsat) le prohibe dar precios y, en
+// cuanto el visitante muestra interes, lo remite al formulario de /contacto
+// en vez de escalar como haria un cliente normal.
 //
 // No poner aqui una instancia de otro negocio: el agente responde con SU
 // nombre, SU horario y SUS precios, y cambiarle el contexto no basta porque
 // esos campos salen del registro del cliente y los comparten los contextos.
-const INSTANCIA_CHAT = 'movil-pruebas-bq';
+const INSTANCIA_CHAT = 'dalsat_web';
 
 const idioma = idiomaDeUrl(Astro.url);
 const t = contenido(idioma);
@@ -335,27 +331,6 @@ const schemaWeb = {
       {t.comun.saltarContenido}
     </a>
     <slot />
-<<<<<<< HEAD
-    <Analytics />
-    <CookieBanner client:load />
-    <script>
-      const observer = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('reveal-visible');
-              observer.unobserve(entry.target);
-            }
-          }
-        },
-        { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
-      );
-
-      document
-        .querySelectorAll('.reveal, .reveal-zoom, .reveal-left, .reveal-right, .reveal-roll')
-        .forEach((el) => observer.observe(el));
-    </script>
-=======
     <VolverArriba client:idle etiqueta={t.comun.volverArriba} />
 
     {/* WhatsApp va pegado a la esquina de abajo a la derecha (la burbuja
@@ -455,6 +430,5 @@ const schemaWeb = {
         <DalsatMascot client:load idioma={idioma} />
       </>
     )}
->>>>>>> develop
   </body>
 </html>
