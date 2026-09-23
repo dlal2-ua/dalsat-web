@@ -17,7 +17,7 @@ const schema = schemaFaq(contenido('es').faq.items, 'es');
   <Header client:load currentPath="/faq" />
 
   <main id="contenido" class="pt-16">
-    <FaqSection client:load />
+    <FaqSection client:idle />
   </main>
 
   <Footer />

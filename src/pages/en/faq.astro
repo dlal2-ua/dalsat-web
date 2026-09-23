@@ -17,7 +17,7 @@ const schema = schemaFaq(contenido('en').faq.items, 'en');
   <Header client:load currentPath="/faq" idioma="en" />
 
   <main id="contenido" class="pt-16">
-    <FaqSection client:load idioma="en" />
+    <FaqSection client:idle idioma="en" />
   </main>
 
   <Footer idioma="en" />
