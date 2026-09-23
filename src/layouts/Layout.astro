@@ -83,6 +83,26 @@ const DESCRIPCION_ORG = {
   en: 'Digitalisation studio for small businesses across Spain: custom software, AI agents built for each business, an AI-powered CRM, process mapping and automation, SEO and web development.',
 };
 
+// En el idioma de la pagina: en /en el nodo Organization iba en castellano.
+const SABE_DE = {
+  es: [
+    'Software a medida',
+    'Agentes de IA para empresas',
+    'CRM con IA para pymes',
+    'Mapeo y automatización de procesos',
+    'SEO y posicionamiento en Google',
+    'Desarrollo web',
+  ],
+  en: [
+    'Custom software',
+    'AI agents for businesses',
+    'AI-powered CRM for small businesses',
+    'Process mapping and automation',
+    'SEO and Google rankings',
+    'Web development',
+  ],
+} as const;
+
 const schemaData = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -106,16 +126,9 @@ const schemaData = {
   },
   "areaServed": {
     "@type": "Country",
-    "name": "España"
+    "name": idioma === 'es' ? 'España' : 'Spain'
   },
-  "knowsAbout": [
-    "Software a medida",
-    "Agentes de IA para empresas",
-    "CRM con IA para pymes",
-    "Mapeo y automatización de procesos",
-    "SEO y posicionamiento en Google",
-    "Desarrollo web"
-  ]
+  "knowsAbout": SABE_DE[idioma]
 };
 
 // Nodo WebSite: dice a Google el nombre del sitio y en que idioma esta cada
