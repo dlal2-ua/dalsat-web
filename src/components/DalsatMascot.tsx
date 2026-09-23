@@ -564,6 +564,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
     let glifo: Glifo | null = null;
     let dLiberada = false;
     let modo: Modo = 'espera';
+    let saludoDiferido = 0;
     let sistema: Sistema = 'pantalla';
     let x = -9999;
     let y = -9999;
@@ -985,7 +986,17 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       dTiltVel = -0.45;
       // Se presenta siempre: es lo primero que ve quien entra y tiene que
       // saber que es un asistente al que se puede pulsar.
-      pedir(tc.comun.avisoChat, null, 'bienvenida-sentado');
+      // En movil el bocadillo tapaba la linea de oferta del hero justo en el
+      // primer vistazo: ahi espera unos segundos a que se haya leido, y solo
+      // saluda si sigue sentado en la D.
+      if (anchoVp() < 640) {
+        clearTimeout(saludoDiferido);
+        saludoDiferido = window.setTimeout(() => {
+          if (modo === 'sentado') pedir(tc.comun.avisoChat, null, 'bienvenida-sentado');
+        }, 6000);
+      } else {
+        pedir(tc.comun.avisoChat, null, 'bienvenida-sentado');
+      }
     }
 
     // Vuelve a la D si se sube hasta que la letra está otra vez entera (con
@@ -1556,6 +1567,7 @@ export default function DalsatMascot({ idioma = IDIOMA_POR_DEFECTO }: Props) {
 
     return () => {
       cancelado = true;
+      clearTimeout(saludoDiferido);
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', alRedimensionar);
       document.fonts?.removeEventListener?.('loadingdone', alRedimensionar);
