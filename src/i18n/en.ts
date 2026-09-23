@@ -313,7 +313,7 @@ export const en: Contenido = {
       {
         id: 'restaurante',
         name: 'Restaurants and hospitality',
-        badge: 'Restaurants',
+        badge: 'Example · restaurant',
         description: 'Table bookings on the terrace or indoors, menu and allergen questions, and opening hours answered 24/7.',
         whatsappMessage: 'Hi, I would like you to set up an agent demo for my restaurant or hospitality business.',
         chatMessages: [
@@ -326,7 +326,7 @@ export const en: Contenido = {
       {
         id: 'salud',
         name: 'Clinics and health',
-        badge: 'Clinics and doctors',
+        badge: 'Example · clinic',
         description: 'Medical, dental or physiotherapy appointments with automatic reminders, so fewer slots are left empty without notice.',
         whatsappMessage: 'Hi, I would like you to set up an agent demo for my clinic or health centre.',
         chatMessages: [
@@ -513,7 +513,7 @@ export const en: Contenido = {
         category: 'Security and GDPR',
         badge: 'GDPR',
         question: 'Is it GDPR compliant?',
-        answer: 'Yes. The data is stored on our server, alongside your business information, and we have no access to your customers\' private data: we do not see it and we do not share it with anyone.',
+        answer: 'We take it into account from the design stage. Each business\'s data is kept separate from everyone else\'s, we do not sell it or use it for anything else, and our team only looks at it when needed to give you support. To be able to reply, messages go through the providers that make the service work (WhatsApp and the AI model). The privacy policy has the details and, if you need it, we sign a data processing agreement with you.',
       },
       {
         id: 'precio',

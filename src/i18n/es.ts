@@ -310,7 +310,7 @@ export const es = {
       {
         id: 'restaurante',
         name: 'Restauración y hostelería',
-        badge: 'Restaurantes',
+        badge: 'Ejemplo · restaurante',
         description: 'Reservas de mesas en terraza/comedor, consulta de carta, alérgenos y horarios automáticos 24/7.',
         whatsappMessage: 'Hola, me gustaría que me montarais una demo del agente para mi restaurante.',
         chatMessages: [
@@ -323,7 +323,7 @@ export const es = {
       {
         id: 'salud',
         name: 'Clínicas y salud',
-        badge: 'Clínicas y médicos',
+        badge: 'Ejemplo · clínica',
         description: 'Citas médicas, odontológicas o fisioterapia con recordatorios automáticos para que se te queden menos huecos sin avisar.',
         whatsappMessage: 'Hola, me gustaría que me montarais una demo del agente para mi clínica.',
         chatMessages: [
@@ -510,7 +510,7 @@ export const es = {
         category: 'Seguridad y RGPD',
         badge: 'RGPD',
         question: '¿Cumple el RGPD?',
-        answer: 'Sí. Los datos se guardan en nuestro servidor, junto a la información de tu negocio, y nosotros no tenemos acceso a los datos privados de tus clientes: no los vemos ni los compartimos con nadie.',
+        answer: 'Lo tenemos en cuenta desde el diseño. Los datos de cada negocio están separados de los de los demás, no los vendemos ni los usamos para otra cosa, y nuestro equipo solo entra a verlos cuando hace falta para darte soporte. Para poder contestar, los mensajes pasan por los proveedores que hacen funcionar el servicio (WhatsApp y el modelo de IA). Tienes el detalle en la política de privacidad y, si lo necesitas, firmamos contigo el contrato de encargado del tratamiento.',
       },
       {
         id: 'precio',
