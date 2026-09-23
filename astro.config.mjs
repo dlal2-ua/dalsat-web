@@ -6,7 +6,9 @@ import sitemap from '@astrojs/sitemap';
 
 // Paginas con noindex: no pintan nada en el sitemap. Las legales salen de aqui
 // hasta que DALSAT este constituida y tengan razon social y NIF.
-const FUERA_DEL_SITEMAP = ['/404', '/gracias', '/aviso-legal', '/politica-privacidad'];
+// /recursos va con noindex mientras no haya articulos publicados: quitarlo de
+// esta lista al publicar el primero.
+const FUERA_DEL_SITEMAP = ['/404', '/gracias', '/aviso-legal', '/politica-privacidad', '/recursos'];
 
 export default defineConfig({
   site: 'https://dalsats.com',

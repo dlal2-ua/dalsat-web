@@ -631,6 +631,14 @@ export const es = {
   // Paginas de cada servicio (/servicios/{slug}). Solo lo que ya dice el
   // resto de la web: nada de funciones, integraciones ni cifras que no esten
   // confirmadas. `faq` son ids de faq.items que se repiten en esa pagina.
+  recursos: {
+    titulo: 'Recursos',
+    entradilla: 'Guías prácticas para que tu negocio atienda mejor y pierda menos tiempo, sin tecnicismos.',
+    seoTitulo: 'Recursos y guías para automatizar tu pyme | DALSAT',
+    seoDescripcion: 'Guías prácticas sobre WhatsApp, reservas, recordatorios y asistentes de IA para pymes, explicadas sin tecnicismos.',
+    vacio: 'Estamos preparando las primeras guías. Mientras tanto, mira las preguntas frecuentes o escríbenos.',
+  },
+
   paginaSector: {
     migas: 'Sectores',
     indiceTitulo: 'Soluciones por sector',

@@ -631,6 +631,14 @@ export const en: Contenido = {
     },
   },
 
+  recursos: {
+    titulo: 'Resources',
+    entradilla: 'Practical guides to help your business serve customers better and waste less time, without the jargon.',
+    seoTitulo: 'Resources and guides to automate your small business | DALSAT',
+    seoDescripcion: 'Practical guides on WhatsApp, bookings, reminders and AI assistants for small businesses, explained without jargon.',
+    vacio: 'We are preparing the first guides. In the meantime, have a look at the FAQ or get in touch.',
+  },
+
   paginaSector: {
     migas: 'Industries',
     indiceTitulo: 'Solutions by industry',

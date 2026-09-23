@@ -1,0 +1,14 @@
+---
+// Solo se generan los articulos publicados (draft: false) de este idioma.
+import { getCollection } from 'astro:content';
+import PaginaArticulo from '../../components/PaginaArticulo.astro';
+
+export async function getStaticPaths() {
+  const articulos = await getCollection('blog', (a) => !a.data.draft && a.data.lang === 'es');
+  return articulos.map((articulo) => ({ params: { slug: articulo.id }, props: { articulo } }));
+}
+
+const { articulo } = Astro.props;
+---
+
+<PaginaArticulo idioma="es" articulo={articulo} />

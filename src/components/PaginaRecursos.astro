@@ -1,0 +1,55 @@
+---
+// Listado de /recursos (y /en/recursos). Solo articulos publicados
+// (draft: false) del idioma de la pagina. Mientras no haya ninguno la pagina
+// lleva noindex y no esta en el sitemap: una pagina vacia no aporta nada a
+// Google y cuenta como contenido pobre.
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Header from './Header';
+import Footer from './Footer';
+import { contenido } from '../i18n';
+import { ruta, type Idioma } from '../i18n/config';
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+const l = contenido(idioma).recursos;
+const articulos = (await getCollection('blog', (a) => !a.data.draft && a.data.lang === idioma)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+const fecha = new Intl.DateTimeFormat(idioma === 'es' ? 'es-ES' : 'en-GB', { dateStyle: 'long' });
+---
+
+<Layout title={l.seoTitulo} description={l.seoDescripcion} noindex={articulos.length === 0}>
+  <Header client:load currentPath="/recursos" idioma={idioma} />
+  <main id="contenido" class="pt-16">
+    <section class="relative py-16 sm:py-24 bg-navy-900 overflow-hidden">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
+        <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-[1.05]">{l.titulo}</h1>
+        <p class="mt-6 text-white/75 text-base sm:text-lg leading-relaxed">{l.entradilla}</p>
+      </div>
+    </section>
+    <section class="bg-navy-950 py-12 sm:py-16 border-t border-white/10">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {articulos.length === 0 ? (
+          <p class="text-white/70">{l.vacio}</p>
+        ) : (
+          <ul class="border-t border-white/10">
+            {articulos.map((a) => (
+              <li class="border-b border-white/10">
+                <a href={ruta(`/recursos/${a.id}`, idioma)} class="group block py-6">
+                  <time datetime={a.data.date.toISOString()} class="font-mono text-xs text-white/50">{fecha.format(a.data.date)}</time>
+                  <span class="mt-1 block text-xl sm:text-2xl font-extrabold text-white tracking-tight group-hover:text-cian transition-colors">{a.data.title}</span>
+                  <span class="mt-2 block text-white/70 leading-relaxed">{a.data.description}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </section>
+  </main>
+  <Footer idioma={idioma} />
+</Layout>
