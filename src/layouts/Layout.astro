@@ -16,6 +16,9 @@ import '@fontsource/inter/700.css';
 import '@fontsource/inter/800.css';
 import '@fontsource/space-grotesk/500.css';
 import '@fontsource/space-grotesk/700.css';
+// Mismo fichero que ya pide el CSS de Fontsource (Vite lo resuelve al mismo
+// hash): precargarlo evita el parpadeo del texto en la primera visita.
+import interLatin400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
 import { contenido } from '../i18n';
 import {
   ETIQUETA_HTML,
@@ -158,6 +161,7 @@ const schemaWeb = {
         : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
     />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="preload" href={interLatin400} as="font" type="font/woff2" crossorigin />
 
     {/* hreflang: le dice a Google que estas paginas son la misma en dos
         idiomas, y cual servir si no encaja ninguna. Sin esto las dos versiones

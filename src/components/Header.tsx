@@ -32,8 +32,8 @@ export default function Header({ currentPath = '/', idioma = IDIOMA_POR_DEFECTO 
           <img
             src="/logo-dalsat.png"
             alt="" aria-hidden="true"
-            width="44"
-            height="44"
+            width="73"
+            height="40"
             className="h-10 w-auto object-contain brightness-0 invert group-hover:scale-105 transition-transform"
           />
           <span className="font-display font-bold text-white text-lg tracking-wider">DALSAT</span>

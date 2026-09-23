@@ -36,7 +36,7 @@ export default function Footer({ idioma = IDIOMA_POR_DEFECTO }: FooterProps) {
               <img
                 src="/logo-dalsat.png"
                 alt="" aria-hidden="true"
-                width={40}
+                width={73}
                 height={40}
                 className="h-10 w-auto object-contain brightness-0 invert transition-transform duration-300 group-hover:scale-110"
               />

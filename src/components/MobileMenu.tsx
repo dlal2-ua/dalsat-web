@@ -97,7 +97,7 @@ export default function MobileMenu({ currentPath = '/', idioma = IDIOMA_POR_DEFE
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
           <a href={ruta('/', idioma)} onClick={() => setOpen(false)} className="flex items-center gap-2.5">
-            <img src="/logo-dalsat.png" alt="" aria-hidden="true" width="36" height="36" className="h-8 w-auto object-contain brightness-0 invert" />
+            <img src="/logo-dalsat.png" alt="" aria-hidden="true" width="59" height="32" className="h-8 w-auto object-contain brightness-0 invert" />
             <span className="font-display text-lg font-bold tracking-widest text-white">DALSAT</span>
           </a>
           <button
