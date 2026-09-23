@@ -138,7 +138,7 @@ export const es = {
       nombre: 'Agentes de IA',
       titulo: 'Agentes que atienden por ti, cada uno para lo suyo',
       texto:
-        'Un agente que conoce tu negocio y responde como responderías tú. Por WhatsApp, por Instagram, dentro de tu propia web o al teléfono, y en el idioma de tu cliente. Resuelve dudas, coge reservas y avisa a tu equipo cuando hace falta una persona.',
+        'Un agente que conoce tu negocio y responde como responderías tú. Por WhatsApp, por Instagram, dentro de tu propia web o al teléfono, y en el idioma de tu cliente. Resuelve dudas, manda tu enlace para que el cliente reserve solo y avisa a tu equipo cuando hace falta una persona.',
       puntos: ['WhatsApp, Instagram y web', 'Llamadas con agente de voz', 'Atención y reservas'],
     },
     panel: {
@@ -302,9 +302,9 @@ export const es = {
         whatsappMessage: 'Hola, me gustaría que me montarais una demo del agente para un estudio de tatuajes y estética.',
         chatMessages: [
           { sender: 'user' as 'user' | 'bot', text: '¡Buenas! Quería saber si tenéis hueco para un tatuaje pequeño en el brazo esta semana.', time: '17:40' },
-          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Sí, tenemos hueco libre este jueves a las 11:30 o el viernes a las 16:00. ¿Cuál te viene mejor para agendar la cita?', time: '17:40' },
-          { sender: 'user' as 'user' | 'bot', text: 'El viernes a las 16:00 me va perfecto', time: '17:41' },
-          { sender: 'bot' as 'user' | 'bot', text: '¡Genial! Cita reservada para el viernes 16:00. Te enviamos la ubicación y recordatorio 24h antes.', time: '17:41' },
+          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Un tatuaje pequeño empieza en 60 €, según diseño. Aquí ves los huecos libres de esta semana y reservas el que te venga mejor: [enlace de reservas]', time: '17:40' },
+          { sender: 'user' as 'user' | 'bot', text: 'Perfecto, ¿tengo que llevar el diseño hecho?', time: '17:41' },
+          { sender: 'bot' as 'user' | 'bot', text: 'No hace falta: puedes traer una idea o una foto y el artista la adapta contigo. El día antes te llegará un recordatorio por aquí con la dirección.', time: '17:41' },
         ],
       },
       {
@@ -315,9 +315,9 @@ export const es = {
         whatsappMessage: 'Hola, me gustaría que me montarais una demo del agente para mi restaurante.',
         chatMessages: [
           { sender: 'user' as 'user' | 'bot', text: 'Hola, me gustaría reservar una mesa para 4 personas este sábado por la noche.', time: '21:15' },
-          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Tenemos mesa libre en comedor interior a las 21:30 o en terraza a las 22:15. ¿En qué zona prefieres?', time: '21:15' },
-          { sender: 'user' as 'user' | 'bot', text: 'En terraza a las 22:15 por favor.', time: '21:16' },
-          { sender: 'bot' as 'user' | 'bot', text: '¡Mesa en terraza para 4 a las 22:15 reservada a tu nombre! Nos vemos el sábado.', time: '21:16' },
+          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Desde aquí puedes reservar mesa para el sábado y elegir interior o terraza: [enlace de reservas]', time: '21:15' },
+          { sender: 'user' as 'user' | 'bot', text: '¿Tenéis opciones sin gluten?', time: '21:16' },
+          { sender: 'bot' as 'user' | 'bot', text: 'Sí, varios platos de la carta se pueden preparar sin gluten; avisa al reservar y lo tenemos en cuenta. ¡Nos vemos el sábado!', time: '21:16' },
         ],
       },
       {
@@ -328,9 +328,9 @@ export const es = {
         whatsappMessage: 'Hola, me gustaría que me montarais una demo del agente para mi clínica.',
         chatMessages: [
           { sender: 'user' as 'user' | 'bot', text: 'Hola, necesito cita con el fisioterapeuta para un dolor de espalda.', time: '10:05' },
-          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Tenemos consulta libre mañana a las 10:15 o el jueves a las 17:00. ¿Te agendamos la de mañana?', time: '10:05' },
-          { sender: 'user' as 'user' | 'bot', text: 'Sí, mañana a las 10:15 perfecto.', time: '10:06' },
-          { sender: 'bot' as 'user' | 'bot', text: 'Cita confirmada para mañana a las 10:15. Recibirás un aviso 2h antes. ¡Que te mejore la espalda!', time: '10:06' },
+          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! La sesión de fisioterapia son 40 €. Aquí ves los huecos libres y reservas directamente: [enlace de reservas]', time: '10:05' },
+          { sender: 'user' as 'user' | 'bot', text: 'Genial. ¿Es normal que duela más después de la primera sesión?', time: '10:06' },
+          { sender: 'bot' as 'user' | 'bot', text: 'Eso es mejor que te lo diga tu fisioterapeuta: le paso tu pregunta. El día antes de la cita te llegará un recordatorio por aquí.', time: '10:06' },
         ],
       },
       {
@@ -341,9 +341,9 @@ export const es = {
         whatsappMessage: 'Hola, me gustaría que me montarais una demo del agente para mi asesoría.',
         chatMessages: [
           { sender: 'user' as 'user' | 'bot', text: 'Buenas, ¿qué documentación necesito aportar para la campaña de la Renta?', time: '12:30' },
-          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Necesitaremos tu borrador, certificado de retenciones y datos catastrales. ¿Te agendo cita con tu asesor fiscal?', time: '12:30' },
+          { sender: 'bot' as 'user' | 'bot', text: '¡Hola! Tu DNI, el borrador o la referencia, certificados de retenciones y, si tienes vivienda, los datos catastrales. ¿Quieres cita con un asesor?', time: '12:30' },
           { sender: 'user' as 'user' | 'bot', text: 'Sí por favor, para la semana que viene.', time: '12:31' },
-          { sender: 'bot' as 'user' | 'bot', text: 'Te he reservado cita con tu asesor para el martes a las 11:00. Te enviamos el listado detallado de documentos a tu email.', time: '12:31' },
+          { sender: 'bot' as 'user' | 'bot', text: 'Aquí eliges día y hora con tu asesor: [enlace de reservas]. El día antes te recordamos la cita y lo que tienes que traer.', time: '12:31' },
         ],
       },
     ],
@@ -510,7 +510,7 @@ export const es = {
         category: 'Seguridad y RGPD',
         badge: 'RGPD',
         question: '¿Cumple el RGPD?',
-        answer: 'Lo tenemos en cuenta desde el diseño. Los datos de cada negocio están separados de los de los demás, no los vendemos ni los usamos para otra cosa, y nuestro equipo solo entra a verlos cuando hace falta para darte soporte. Para poder contestar, los mensajes pasan por los proveedores que hacen funcionar el servicio (WhatsApp y el modelo de IA). Tienes el detalle en la política de privacidad y, si lo necesitas, firmamos contigo el contrato de encargado del tratamiento.',
+        answer: 'Lo tenemos en cuenta desde el diseño. Los datos de cada negocio están separados de los de los demás, no los vendemos ni los usamos para otra cosa, y nuestro equipo solo entra a verlos cuando hace falta para darte soporte. Para poder contestar, los mensajes pasan por los proveedores que hacen funcionar el servicio (WhatsApp y el modelo de IA). Tienes el detalle en la política de privacidad.',
       },
       {
         id: 'precio',
@@ -698,9 +698,9 @@ export const es = {
         h1: 'Agentes de IA para WhatsApp, Instagram, web y teléfono',
         seoTitulo: 'Agente de IA para WhatsApp y teléfono | DALSAT',
         seoDescripcion:
-          'Un agente de IA que atiende a tus clientes por WhatsApp, Instagram, tu web o teléfono, en su idioma: resuelve dudas, coge reservas y te avisa si hace falta.',
+          'Un agente de IA que atiende a tus clientes por WhatsApp, Instagram, tu web o teléfono, en su idioma: resuelve dudas, lleva al cliente a reservar y te avisa si hace falta.',
         intro: [
-          'Un agente que conoce tu negocio y responde como responderías tú. Por WhatsApp, por Instagram, dentro de tu propia web o al teléfono, y en el idioma de tu cliente. Resuelve dudas, coge reservas y avisa a tu equipo cuando hace falta una persona.',
+          'Un agente que conoce tu negocio y responde como responderías tú. Por WhatsApp, por Instagram, dentro de tu propia web o al teléfono, y en el idioma de tu cliente. Resuelve dudas, manda tu enlace para que el cliente reserve solo y avisa a tu equipo cuando hace falta una persona.',
           'Se conecta al número de WhatsApp Business que ya usas, así que tus clientes no notan ningún cambio. Si le mandan un audio, lo escucha y contesta. Y cuando algo se sale de lo que sabe, no se inventa la respuesta: te lo pasa con el resumen de lo hablado.',
         ],
         paraQuien: [

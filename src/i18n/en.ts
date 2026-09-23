@@ -141,7 +141,7 @@ export const en: Contenido = {
       nombre: 'AI agents',
       titulo: 'Agents that field enquiries for you, each one for its own job',
       texto:
-        'An agent that knows your business and answers the way you would. On WhatsApp, on Instagram, inside your own site or on the phone, and in your customer\'s language. It settles questions, takes bookings and calls in your team when a person is needed.',
+        'An agent that knows your business and answers the way you would. On WhatsApp, on Instagram, inside your own site or on the phone, and in your customer\'s language. It settles questions, sends your booking link so customers book by themselves, and calls in your team when a person is needed.',
       puntos: ['WhatsApp, Instagram and web', 'Calls with a voice agent', 'Enquiries and bookings'],
     },
     panel: {
@@ -304,10 +304,10 @@ export const en: Contenido = {
         description: 'Booking appointments, asking about styles, ballpark prices and calendar availability without interrupting the work.',
         whatsappMessage: 'Hi, I would like you to set up an agent demo for a tattoo and beauty studio.',
         chatMessages: [
-          { sender: 'user' as 'user' | 'bot', text: 'Hi there! I wanted to know if you have a slot for a small tattoo on the arm this week.', time: '17:40' },
-          { sender: 'bot' as 'user' | 'bot', text: 'Hello! Yes, we have a free slot this Thursday at 11:30 or Friday at 16:00. Which suits you better for the appointment?', time: '17:40' },
-          { sender: 'user' as 'user' | 'bot', text: 'Friday at 16:00 is perfect for me', time: '17:41' },
-          { sender: 'bot' as 'user' | 'bot', text: 'Great! Appointment booked for Friday at 16:00. We will send you the location and a reminder 24h beforehand.', time: '17:41' },
+          { sender: 'user' as 'user' | 'bot', text: 'Hi! Do you have a slot for a small arm tattoo this week?', time: '17:40' },
+          { sender: 'bot' as 'user' | 'bot', text: 'Hi! A small tattoo starts at €60, depending on the design. You can see this week\'s free slots and book the one that suits you here: [booking link]', time: '17:40' },
+          { sender: 'user' as 'user' | 'bot', text: 'Great, do I need to bring the design?', time: '17:41' },
+          { sender: 'bot' as 'user' | 'bot', text: 'No need: bring an idea or a photo and the artist will adapt it with you. You will get a reminder here with the address the day before.', time: '17:41' },
         ],
       },
       {
@@ -317,10 +317,10 @@ export const en: Contenido = {
         description: 'Table bookings on the terrace or indoors, menu and allergen questions, and opening hours answered 24/7.',
         whatsappMessage: 'Hi, I would like you to set up an agent demo for my restaurant or hospitality business.',
         chatMessages: [
-          { sender: 'user' as 'user' | 'bot', text: 'Hi, I would like to book a table for 4 this Saturday evening.', time: '21:15' },
-          { sender: 'bot' as 'user' | 'bot', text: 'Hello! We have a free table indoors at 21:30 or on the terrace at 22:15. Which would you prefer?', time: '21:15' },
-          { sender: 'user' as 'user' | 'bot', text: 'On the terrace at 22:15 please.', time: '21:16' },
-          { sender: 'bot' as 'user' | 'bot', text: 'Terrace table for 4 at 22:15 booked in your name! See you on Saturday.', time: '21:16' },
+          { sender: 'user' as 'user' | 'bot', text: 'Hi, I would like to book a table for 4 this Saturday night.', time: '21:15' },
+          { sender: 'bot' as 'user' | 'bot', text: 'Hi! You can book a table for Saturday and choose indoors or the terrace here: [booking link]', time: '21:15' },
+          { sender: 'user' as 'user' | 'bot', text: 'Do you have gluten-free options?', time: '21:16' },
+          { sender: 'bot' as 'user' | 'bot', text: 'Yes, several dishes can be made gluten-free; mention it when you book and we will take it into account. See you on Saturday!', time: '21:16' },
         ],
       },
       {
@@ -331,9 +331,9 @@ export const en: Contenido = {
         whatsappMessage: 'Hi, I would like you to set up an agent demo for my clinic or health centre.',
         chatMessages: [
           { sender: 'user' as 'user' | 'bot', text: 'Hi, I need an appointment with the physiotherapist for back pain.', time: '10:05' },
-          { sender: 'bot' as 'user' | 'bot', text: 'Hello! We have a free consultation tomorrow at 10:15 or Thursday at 17:00. Shall we book you in for tomorrow?', time: '10:05' },
-          { sender: 'user' as 'user' | 'bot', text: 'Yes, tomorrow at 10:15 is perfect.', time: '10:06' },
-          { sender: 'bot' as 'user' | 'bot', text: 'Appointment confirmed for tomorrow at 10:15. You will get a reminder 2h beforehand. Hope your back feels better!', time: '10:06' },
+          { sender: 'bot' as 'user' | 'bot', text: 'Hi! A physiotherapy session is €40. You can see the free slots and book directly here: [booking link]', time: '10:05' },
+          { sender: 'user' as 'user' | 'bot', text: 'Great. Is it normal for it to hurt more after the first session?', time: '10:06' },
+          { sender: 'bot' as 'user' | 'bot', text: 'Your physiotherapist is the right person to answer that: I will pass your question on. You will get a reminder here the day before your appointment.', time: '10:06' },
         ],
       },
       {
@@ -343,10 +343,10 @@ export const en: Contenido = {
         description: 'Answering questions on invoicing, tax returns and client paperwork, and booking straight in with the specialist.',
         whatsappMessage: 'Hi, I would like you to set up an agent demo for my accountancy or admin practice.',
         chatMessages: [
-          { sender: 'user' as 'user' | 'bot', text: 'Hi, what paperwork do I need to bring for the tax return season?', time: '12:30' },
-          { sender: 'bot' as 'user' | 'bot', text: 'Hello! We will need your draft return, your withholding certificate and your property details. Shall I book you in with your tax adviser?', time: '12:30' },
+          { sender: 'user' as 'user' | 'bot', text: 'Hi, what documents do I need for the tax return season?', time: '12:30' },
+          { sender: 'bot' as 'user' | 'bot', text: 'Hi! Your ID, the draft return or reference, withholding certificates and, if you own a home, the land registry details. Would you like to book an adviser?', time: '12:30' },
           { sender: 'user' as 'user' | 'bot', text: 'Yes please, for next week.', time: '12:31' },
-          { sender: 'bot' as 'user' | 'bot', text: 'I have booked you in with your adviser for Tuesday at 11:00. We are sending the detailed document list to your email.', time: '12:31' },
+          { sender: 'bot' as 'user' | 'bot', text: 'Choose a day and time with your adviser here: [booking link]. The day before, we will remind you of the appointment and what to bring.', time: '12:31' },
         ],
       },
     ],
@@ -513,7 +513,7 @@ export const en: Contenido = {
         category: 'Security and GDPR',
         badge: 'GDPR',
         question: 'Is it GDPR compliant?',
-        answer: 'We take it into account from the design stage. Each business\'s data is kept separate from everyone else\'s, we do not sell it or use it for anything else, and our team only looks at it when needed to give you support. To be able to reply, messages go through the providers that make the service work (WhatsApp and the AI model). The privacy policy has the details and, if you need it, we sign a data processing agreement with you.',
+        answer: 'We take it into account from the design stage. Each business\'s data is kept separate from everyone else\'s, we do not sell it or use it for anything else, and our team only looks at it when needed to give you support. To be able to reply, messages go through the providers that make the service work (WhatsApp and the AI model). The privacy policy has the details.',
       },
       {
         id: 'precio',
@@ -698,9 +698,9 @@ export const en: Contenido = {
         h1: 'AI agents for WhatsApp, Instagram, web and phone',
         seoTitulo: 'AI agent for WhatsApp and phone calls | DALSAT',
         seoDescripcion:
-          'An AI agent that answers your customers on WhatsApp, Instagram, your site or the phone, in their language: it settles questions, takes bookings and alerts you.',
+          'An AI agent that answers your customers on WhatsApp, Instagram, your site or the phone, in their language: it settles questions, gets customers to book and alerts you.',
         intro: [
-          "An agent that knows your business and answers the way you would. On WhatsApp, on Instagram, inside your own site or on the phone, and in your customer's language. It settles questions, takes bookings and calls in your team when a person is needed.",
+          "An agent that knows your business and answers the way you would. On WhatsApp, on Instagram, inside your own site or on the phone, and in your customer's language. It settles questions, sends your booking link so customers book by themselves, and calls in your team when a person is needed.",
           'It connects to the WhatsApp Business number you already use, so your customers notice no change. If they send a voice note, it listens and answers. And when something goes beyond what it knows, it does not make up an answer: it hands it to you with a summary of the conversation.',
         ],
         paraQuien: [
