@@ -16,6 +16,7 @@ import CtaContacto from './CtaContacto.astro';
 import { SERVICIOS, rutaServicio } from '../data/servicios';
 import { contenido } from '../i18n';
 import { ruta, type Idioma } from '../i18n/config';
+import { schemaFaq } from '../data/schemaFaq';
 
 interface Props {
   idioma: Idioma;
@@ -33,6 +34,7 @@ const preguntas = detalle.faq
   .map((idPregunta) => t.faq.items.find((p) => p.id === idPregunta))
   .filter((p): p is NonNullable<typeof p> => Boolean(p));
 const otros = SERVICIOS.filter((s) => s.id !== id);
+const schemaPreguntas = preguntas.length > 0 ? schemaFaq(preguntas, idioma) : null;
 
 const SITE = Astro.site ?? new URL('https://dalsats.com');
 const urlPagina = new URL(ruta(rutaServicio(id), idioma), SITE).toString();
@@ -62,6 +64,7 @@ const schemaMigas = {
 <Layout title={detalle.seoTitulo} description={detalle.seoDescripcion}>
   <script type="application/ld+json" set:html={JSON.stringify(schemaServicio)} />
   <script type="application/ld+json" set:html={JSON.stringify(schemaMigas)} />
+  {schemaPreguntas && <script type="application/ld+json" set:html={JSON.stringify(schemaPreguntas)} />}
 
   <Header client:load currentPath="/servicios" idioma={idioma} />
 
