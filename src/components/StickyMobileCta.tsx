@@ -3,8 +3,6 @@ import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
 import { useEffect, useState } from 'react';
 import { urlWhatsApp } from '../data/contacto';
 
-const WHATSAPP_URL =
-  urlWhatsApp('Hola, me interesa lo que hacéis y me gustaría recibir más información.');
 
 // En el movil no hay botón fijo de contacto: el de la cabecera se esconde a
 // partir de md y el flotante de WhatsApp es un icono suelto. Esta barra
@@ -16,6 +14,8 @@ interface Props {
 
 export default function StickyMobileCta({ idioma = IDIOMA_POR_DEFECTO }: Props) {
   const t = contenido(idioma);
+  // El mensaje va en el idioma de la pagina (antes siempre en castellano).
+  const WHATSAPP_URL = urlWhatsApp(t.comun.mensajeWhatsApp);
 
   const [visible, setVisible] = useState(false);
 
