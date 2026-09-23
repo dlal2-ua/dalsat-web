@@ -10,6 +10,11 @@ const FUERA_DEL_SITEMAP = ['/404', '/gracias', '/aviso-legal', '/politica-privac
 
 export default defineConfig({
   site: 'https://dalsats.com',
+  // Una sola forma de URL: sin barra final, igual que todos los enlaces
+  // internos (ruta()). Antes /servicios y /servicios/ respondian las dos con
+  // 200 y la canonica llevaba barra: Google veia duplicados. Vercel redirige
+  // la forma con barra (vercel.json, trailingSlash: false).
+  trailingSlash: 'never',
   output: 'static',
   adapter: vercel(),
   integrations: [
