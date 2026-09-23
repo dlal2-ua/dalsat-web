@@ -1,0 +1,13 @@
+---
+// Una pagina por sector. El marcado vive en components/PaginaSector.astro.
+import PaginaSector from '../../../components/PaginaSector.astro';
+import { SECTORES } from '../../../data/sectores';
+
+export function getStaticPaths() {
+  return SECTORES.map((s) => ({ params: { slug: s.slug } }));
+}
+
+const { slug } = Astro.params;
+---
+
+<PaginaSector idioma="en" slug={slug as string} />

@@ -1,0 +1,40 @@
+---
+// Indice de sectores: /sectores (y /en/sectores).
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import CtaContacto from '../../components/CtaContacto.astro';
+import { SECTORES, rutaSector } from '../../data/sectores';
+import { contenido } from '../../i18n';
+import { ruta } from '../../i18n/config';
+
+const idioma = 'es' as const;
+const t = contenido(idioma);
+const l = t.paginaSector;
+---
+
+<Layout title={l.indiceSeoTitulo} description={l.indiceSeoDescripcion}>
+  <Header client:load currentPath="/sectores" idioma={idioma} />
+  <main id="contenido" class="pt-16">
+    <section class="relative py-16 sm:py-24 bg-navy-900 overflow-hidden bg-[radial-gradient(ellipse_55%_60%_at_0%_0%,rgba(20,205,236,0.14),transparent_70%)]">
+      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10" data-reveal>
+        <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-[1.05] max-w-3xl">{l.indiceTitulo}</h1>
+        <p class="mt-6 max-w-2xl text-white/75 text-base sm:text-lg leading-relaxed">{l.indiceEntradilla}</p>
+      </div>
+    </section>
+    <section class="bg-navy-950 py-12 sm:py-16 border-t border-white/10">
+      <ul class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 border-t border-white/10">
+        {SECTORES.map((s) => (
+          <li class="border-b border-white/10">
+            <a href={ruta(rutaSector(s.slug), idioma)} class="group block py-6 sm:py-8">
+              <span class="block text-xl sm:text-3xl font-extrabold text-white tracking-tight group-hover:text-cian transition-colors">{s.texto[idioma].nombre}</span>
+              <span class="mt-2 block max-w-3xl text-white/70 leading-relaxed">{s.texto[idioma].h1}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+    <CtaContacto titulo={l.cta.titulo} texto={l.cta.texto} cta={l.cta.cta} idioma={idioma} />
+  </main>
+  <Footer idioma={idioma} />
+</Layout>

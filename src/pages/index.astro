@@ -6,6 +6,7 @@ import SatisfiedClients from '../components/SatisfiedClients';
 import Footer from '../components/Footer';
 import CtaContacto from '../components/CtaContacto.astro';
 import { SERVICIOS, rutaServicio } from '../data/servicios';
+import { SECTORES, rutaSector } from '../data/sectores';
 import { ruta } from '../i18n';
 
 // Contraste entre lo que ya hizo casi toda pyme y lo que toca ahora
@@ -163,6 +164,17 @@ const AHORA = [
           ))}
         </ul>
 
+      </div>
+    </section>
+
+    {/* Enlaces a las landings por sector (SEO-10): el visitante se
+        reconoce antes en "peluqueria" que en "agente de IA". */}
+    <section class="bg-navy-950 py-10 border-t border-white/10">
+      <div class="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-baseline gap-x-6 gap-y-3">
+        <a href={ruta('/sectores', 'es')} class="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-white/60 hover:text-cian transition-colors">Por sector</a>
+        {SECTORES.map((s) => (
+          <a href={ruta(rutaSector(s.slug), 'es')} class="text-base font-bold text-white hover:text-cian transition-colors">{s.texto['es'].nombre}</a>
+        ))}
       </div>
     </section>
 

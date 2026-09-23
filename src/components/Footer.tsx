@@ -105,6 +105,9 @@ export default function Footer({ idioma = IDIOMA_POR_DEFECTO }: FooterProps) {
               <li>
                 <a href={ruta(rutaServicio('web'), idioma)} className="hover:text-cian transition-colors">{t.footer.web}</a>
               </li>
+              <li>
+                <a href={ruta('/sectores', idioma)} className="hover:text-cian transition-colors">{t.footer.sectores}</a>
+              </li>
             </ul>
           </div>
 

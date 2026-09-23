@@ -631,6 +631,30 @@ export const en: Contenido = {
     },
   },
 
+  paginaSector: {
+    migas: 'Industries',
+    indiceTitulo: 'Solutions by industry',
+    indiceEntradilla:
+      'Every kind of business gets the same questions over and over. See how the assistant works in yours.',
+    indiceSeoTitulo: 'WhatsApp assistants by industry: salons, clinics, driving schools | DALSAT',
+    indiceSeoDescripcion:
+      'How an AI WhatsApp assistant works for hair salons and beauty, driving schools, accountancy firms, law firms and clinics.',
+    problemas: 'What happens today',
+    comoAyuda: 'What your assistant does',
+    ejemplo: 'Example conversation',
+    ejemploAviso: 'Example conversation with made-up details, so you can see how it replies.',
+    cliente: 'We already work with',
+    preguntas: 'Frequently asked questions',
+    otros: 'Other industries',
+    cliente_tu: 'Customer',
+    agente: 'Assistant',
+    cta: {
+      titulo: 'Shall we try it with your business?',
+      texto: 'We set up a demo with your services and prices so you can try it before deciding anything.',
+      cta: 'Ask for my demo',
+    },
+  },
+
   paginaServicio: {
     migas: 'Services',
     paraQuien: 'Who it is for',
@@ -820,6 +844,7 @@ export const en: Contenido = {
     seoWeb: 'SEO and web development',
     seo: 'SEO for small businesses',
     web: 'Web development',
+    sectores: 'Solutions by industry',
     contactoRapido: 'Quick contact',
     invitacion: 'Want to see a demo built around your business? Write to us directly.',
     instagram: 'DALSAT on Instagram (@dalsat.co)',

@@ -35,7 +35,7 @@ interface ClientLogo {
 }
 
 // Los clientes y lo que dicen. El orden de este array es el orden en pantalla.
-const LOGOS: ClientLogo[] = [
+export const LOGOS: ClientLogo[] = [
   {
     id: 'vibora-studio',
     name: 'Víbora Studio',

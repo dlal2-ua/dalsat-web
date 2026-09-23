@@ -631,6 +631,30 @@ export const es = {
   // Paginas de cada servicio (/servicios/{slug}). Solo lo que ya dice el
   // resto de la web: nada de funciones, integraciones ni cifras que no esten
   // confirmadas. `faq` son ids de faq.items que se repiten en esa pagina.
+  paginaSector: {
+    migas: 'Sectores',
+    indiceTitulo: 'Soluciones por sector',
+    indiceEntradilla:
+      'Cada tipo de negocio tiene sus preguntas de siempre. Mira cómo trabaja el asistente en el tuyo.',
+    indiceSeoTitulo: 'Asistentes de WhatsApp por sector: peluquerías, clínicas, autoescuelas | DALSAT',
+    indiceSeoDescripcion:
+      'Cómo trabaja un asistente de WhatsApp con IA en peluquerías y estética, autoescuelas, asesorías, despachos de abogados y clínicas.',
+    problemas: 'Lo que pasa hoy',
+    comoAyuda: 'Qué hace tu asistente',
+    ejemplo: 'Ejemplo de conversación',
+    ejemploAviso: 'Conversación de ejemplo con datos inventados, para que veas cómo contesta.',
+    cliente: 'Ya trabajamos con',
+    preguntas: 'Preguntas frecuentes',
+    otros: 'Otros sectores',
+    cliente_tu: 'Cliente',
+    agente: 'Asistente',
+    cta: {
+      titulo: '¿Lo vemos con tu negocio?',
+      texto: 'Te montamos una demo con tus servicios y tus precios para que la pruebes antes de decidir nada.',
+      cta: 'Pedir mi demo',
+    },
+  },
+
   paginaServicio: {
     migas: 'Servicios',
     paraQuien: 'Para quién es',
@@ -822,6 +846,7 @@ export const es = {
     seoWeb: 'SEO y desarrollo web',
     seo: 'SEO para pymes',
     web: 'Desarrollo web',
+    sectores: 'Soluciones por sector',
     contactoRapido: 'Contacto rápido',
     invitacion: '¿Quieres ver una demo personalizada para tu negocio? Escríbenos directamente.',
     instagram: 'DALSAT en Instagram (@dalsat.co)',
