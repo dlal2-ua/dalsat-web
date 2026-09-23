@@ -1,0 +1,27 @@
+# DALSAT
+
+> Estudio de digitalización para pymes de toda España. Miramos cómo funciona cada negocio, vemos lo que se repite cada semana y lo automatizamos: agentes de IA que atienden por WhatsApp, web y teléfono, software a medida, un CRM con IA, mapeo y automatización de procesos, SEO y desarrollo web.
+
+Idiomas: castellano (raíz) e inglés (/en).
+
+## Servicios
+
+- [Agentes de IA para WhatsApp y teléfono](https://dalsats.com/servicios/agentes-ia): atienden a los clientes del negocio por WhatsApp, Instagram, la web o el teléfono, en su idioma; resuelven dudas, gestionan reservas y avisan al negocio cuando hace falta una persona.
+- [Software a medida](https://dalsats.com/servicios/software-a-medida): programas hechos para cómo trabaja cada pyme (clientes, citas, presupuestos, stock), con precio y plazo cerrados.
+- [CRM con IA](https://dalsats.com/servicios/crm-con-ia): panel desde el que el negocio ve conversaciones, reservas y la actividad de sus agentes.
+- [Mapeo y automatización de procesos](https://dalsats.com/servicios/automatizacion-de-procesos): se dibuja el negocio paso a paso y se automatiza lo repetitivo; a veces la conclusión es que no hace falta IA.
+- [SEO para pymes y negocios locales](https://dalsats.com/servicios/seo-para-pymes): ficha de Google al día, contenido útil y web rápida.
+- [Desarrollo web](https://dalsats.com/servicios/desarrollo-web): webs rápidas y claras pensadas para que quien entra pida cita, escriba o compre.
+
+## Cómo se trabaja
+
+- La primera reunión no se cobra y no compromete a nada.
+- Antes de pagar, se monta una demo con los datos del negocio para probarla.
+- Precio cerrado antes de empezar; sin permanencia.
+
+## Más información
+
+- [Preguntas frecuentes](https://dalsats.com/faq)
+- [Demos por sector](https://dalsats.com/demos)
+- [Calculadora de ahorro](https://dalsats.com/calculadora)
+- [Contacto](https://dalsats.com/contacto): formulario, email dalsat.soluciones@gmail.com o WhatsApp +34 614 28 97 02.
