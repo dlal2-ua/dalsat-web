@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { contenido } from '../i18n';
-import { IDIOMA_POR_DEFECTO, type Idioma } from '../i18n/config';
+import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
 import type { Contenido } from '../i18n/es';
 import { urlWhatsApp } from '../data/contacto';
 
@@ -20,7 +20,7 @@ const CAMPO_OK = 'border-white/15 focus:ring-cian focus:border-transparent';
 // fuerte, icono y texto, que se ve igual de bien y no compite con los CTA.
 const CAMPO_MAL = 'border-white/60 bg-white/[0.09] focus:ring-white/70 focus:border-white';
 
-const LIMITES = { name: 80, email: 120, business: 80, message: 2000 };
+const LIMITES = { name: 80, email: 120, business: 80, phone: 20, message: 2000 };
 
 function validar(data: FormData, msg: Contenido['formulario']['errores']): Errores {
   const errores: Errores = {};
@@ -190,6 +190,22 @@ export default function ContactForm({ idioma = IDIOMA_POR_DEFECTO }: Props) {
       </div>
 
       <div>
+        <label className="block text-sm font-semibold text-white/90 mb-1.5" htmlFor="phone">
+          {t.telefono} <span className="font-normal text-white/60">{t.opcional}</span>
+        </label>
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          placeholder={t.telefonoPista}
+          maxLength={LIMITES.phone}
+          autoComplete="tel"
+          inputMode="tel"
+          className={`${CAMPO_BASE} ${CAMPO_OK}`}
+        />
+      </div>
+
+      <div>
         <label className="block text-sm font-semibold text-white/90 mb-1.5" htmlFor="message">
           {t.mensaje} <span className="font-normal text-white/60">{t.opcional}</span>
         </label>
@@ -221,6 +237,16 @@ export default function ContactForm({ idioma = IDIOMA_POR_DEFECTO }: Props) {
         <span>{status === 'sending' ? t.enviando : `${t.enviar} →`}</span>
       </button>
 
+      {/* La politica de privacidad basa el tratamiento en el consentimiento
+          al enviar: tiene que estar a la vista junto al boton. */}
+      <p className="text-xs leading-relaxed text-white/70">
+        {t.privacidadAntes}{' '}
+        <a href={ruta('/politica-privacidad', idioma)} className="underline underline-offset-2 hover:text-cian">
+          {t.privacidadEnlace}
+        </a>
+        .
+      </p>
+
       <p aria-live="polite" className="sr-only">
         {status === 'sending' ? t.enviandoAviso : ''}
       </p>
@@ -240,7 +266,7 @@ export default function ContactForm({ idioma = IDIOMA_POR_DEFECTO }: Props) {
             </a>{' '}
             {t.falloTextoO}{' '}
             <a
-              href={urlWhatsApp('Hola, me interesa lo que hacéis y me gustaría recibir más información.')}
+              href={urlWhatsApp(contenido(idioma).comun.mensajeWhatsApp)}
               target="_blank"
               rel="noopener noreferrer"
               className="font-semibold underline underline-offset-2 hover:text-cian"
