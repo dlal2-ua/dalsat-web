@@ -16,6 +16,7 @@ export const en: Contenido = {
     calculadora: 'Calculator',
     faq: 'FAQ',
     sobreNosotros: 'About us',
+    seguridad: 'Security',
     contacto: 'Contact',
     panel: 'Client login',
     cta: 'Talk to us',

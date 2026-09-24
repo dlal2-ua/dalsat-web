@@ -13,6 +13,7 @@ export const es = {
     calculadora: 'Calculadora',
     faq: 'Preguntas frecuentes',
     sobreNosotros: 'Sobre nosotros',
+    seguridad: 'Seguridad',
     contacto: 'Contacto',
     panel: 'Acceso clientes',
     cta: 'Hablar con nosotros',

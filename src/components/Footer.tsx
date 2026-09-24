@@ -74,6 +74,9 @@ export default function Footer({ idioma = IDIOMA_POR_DEFECTO }: FooterProps) {
                 <a href={ruta('/sobre-nosotros', idioma)} className="hover:text-cian transition-colors">{t.nav.sobreNosotros}</a>
               </li>
               <li>
+                <a href={ruta('/seguridad', idioma)} className="hover:text-cian transition-colors">{t.nav.seguridad}</a>
+              </li>
+              <li>
                 <a href={ruta('/contacto', idioma)} className="hover:text-cian transition-colors">{t.nav.contacto}</a>
               </li>
             </ul>
