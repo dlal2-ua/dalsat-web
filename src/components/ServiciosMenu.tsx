@@ -97,7 +97,7 @@ export default function ServiciosMenu({ currentPath = '/', idioma = IDIOMA_POR_D
           el raton puede bajar sin que la lista se cierre. */}
       <div
         id="menu-servicios"
-        className={`absolute left-1/2 top-full z-50 w-[27rem] -translate-x-1/2 pt-3 transition-[opacity,transform,visibility] duration-200 ease-out motion-reduce:transition-none ${
+        className={`absolute left-1/2 top-full z-50 w-[27rem] max-w-[calc(100vw-2rem)] -translate-x-1/2 whitespace-normal pt-3 transition-[opacity,transform,visibility] duration-200 ease-out motion-reduce:transition-none ${
           abierto ? 'visible translate-y-0 opacity-100' : 'invisible pointer-events-none -translate-y-1 opacity-0'
         }`}
       >
