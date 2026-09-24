@@ -548,7 +548,7 @@ export const es = {
     privacidadAntes: 'Al enviar aceptas que usemos estos datos solo para contestarte, según nuestra',
     privacidadEnlace: 'política de privacidad',
     mensaje: 'Mensaje',
-    mensajePista: 'Cuéntanos sobre tu negocio o qué te gustaría automatizar',
+    mensajePista: 'Cuéntanos sobre tu negocio o qué te gustaría automatizar. Si tienes web o Instagram, pon el enlace y te montamos la demo con tus datos',
     opcional: '(opcional)',
     enviar: 'Enviar mensaje',
     enviando: 'Enviando…',

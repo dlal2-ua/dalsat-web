@@ -551,7 +551,7 @@ export const en: Contenido = {
     privacidadAntes: 'By sending this you agree that we use these details only to reply to you, as set out in our',
     privacidadEnlace: 'privacy policy',
     mensaje: 'Message',
-    mensajePista: 'Tell us about your business or what you would like to automate',
+    mensajePista: 'Tell us about your business or what you would like to automate. If you have a website or Instagram, add the link and we will build the demo with your data',
     opcional: '(optional)',
     enviar: 'Send message',
     enviando: 'Sending…',
