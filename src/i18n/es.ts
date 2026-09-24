@@ -518,7 +518,7 @@ export const es = {
         category: 'Contrato y plazos',
         badge: 'Precio',
         question: '¿Cuánto cuesta?',
-        answer: 'Depende de lo que montemos: no cuesta lo mismo un agente de WhatsApp que un programa a medida para tu negocio. Miramos tu caso, te decimos qué merece la pena y qué no, y te pasamos un precio cerrado antes de empezar. Antes de pagar nada, te montamos una demo con tus datos y la pruebas gratis durante un periodo de prueba. La primera reunión no se cobra y no te compromete a nada.',
+        answer: 'Un agente de WhatsApp parte desde 40 €/mes. Lo que pagas al final depende de lo que necesites (más canales, agente de voz, un programa a medida...): miramos tu caso, te decimos qué merece la pena y qué no, y te pasamos un precio cerrado antes de empezar. Antes de pagar nada, te montamos una demo con tus datos y la pruebas gratis durante un periodo de prueba. La primera reunión no se cobra y no te compromete a nada.',
       },
       {
         id: 'tiempo',
@@ -549,7 +549,7 @@ export const es = {
     privacidadAntes: 'Al enviar aceptas que usemos estos datos solo para contestarte, según nuestra',
     privacidadEnlace: 'política de privacidad',
     mensaje: 'Mensaje',
-    mensajePista: 'Cuéntanos sobre tu negocio o qué te gustaría automatizar',
+    mensajePista: 'Cuéntanos sobre tu negocio o qué te gustaría automatizar. Si tienes web o Instagram, pon el enlace y te montamos la demo con tus datos',
     opcional: '(opcional)',
     enviar: 'Enviar mensaje',
     enviando: 'Enviando…',
@@ -703,6 +703,7 @@ export const es = {
         intro: [
           'Un agente que conoce tu negocio y responde como responderías tú. Por WhatsApp, por Instagram, dentro de tu propia web o al teléfono, y en el idioma de tu cliente. Resuelve dudas, manda tu enlace para que el cliente reserve solo y avisa a tu equipo cuando hace falta una persona.',
           'Se conecta al número de WhatsApp Business que ya usas, así que tus clientes no notan ningún cambio. Si le mandan un audio, lo escucha y contesta. Y cuando algo se sale de lo que sabe, no se inventa la respuesta: te lo pasa con el resumen de lo hablado.',
+          'Desde 40 €/mes, con el precio cerrado antes de empezar.',
         ],
         paraQuien: [
           'Negocios que pierden tiempo contestando siempre las mismas preguntas.',
@@ -716,7 +717,7 @@ export const es = {
           'Traspaso a tu equipo cuando hace falta una persona',
           'Lo gestionas desde tu CRM: qué responde, sus precios y sus horarios',
         ],
-        faq: ['numero', 'notas_voz', 'fallo', 'idiomas', 'tiempo'],
+        faq: ['precio', 'numero', 'notas_voz', 'fallo', 'idiomas', 'tiempo'],
       },
       panel: {
         h1: 'CRM con IA para pymes',
