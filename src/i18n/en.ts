@@ -520,7 +520,7 @@ export const en: Contenido = {
         category: 'Terms and timings',
         badge: 'Price',
         question: 'How much does it cost?',
-        answer: 'It depends what we build: a WhatsApp agent does not cost the same as custom software for your business. We look at your case, tell you what is worth doing and what is not, and give you a fixed price before we start. Before you pay anything, we set up a demo with your data and you try it free for a trial period. The first meeting is free and commits you to nothing.',
+        answer: 'A WhatsApp agent starts from €40/month. What you end up paying depends on what you need (more channels, a voice agent, custom software...): we look at your case, tell you what is worth doing and what is not, and give you a fixed price before we start. Before you pay anything, we set up a demo with your data and you try it free for a trial period. The first meeting is free and commits you to nothing.',
       },
       {
         id: 'tiempo',
@@ -702,6 +702,7 @@ export const en: Contenido = {
         intro: [
           "An agent that knows your business and answers the way you would. On WhatsApp, on Instagram, inside your own site or on the phone, and in your customer's language. It settles questions, sends your booking link so customers book by themselves, and calls in your team when a person is needed.",
           'It connects to the WhatsApp Business number you already use, so your customers notice no change. If they send a voice note, it listens and answers. And when something goes beyond what it knows, it does not make up an answer: it hands it to you with a summary of the conversation.',
+          'From €40/month, with the price fixed before we start.',
         ],
         paraQuien: [
           'Businesses losing time answering the same questions over and over.',
@@ -715,7 +716,7 @@ export const en: Contenido = {
           'Handover to your team when a person is needed',
           'You run it from your CRM: what it answers, its prices and its hours',
         ],
-        faq: ['numero', 'notas_voz', 'fallo', 'idiomas', 'tiempo'],
+        faq: ['precio', 'numero', 'notas_voz', 'fallo', 'idiomas', 'tiempo'],
       },
       panel: {
         h1: 'AI-powered CRM for small businesses',
