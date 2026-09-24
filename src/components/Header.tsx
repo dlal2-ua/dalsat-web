@@ -1,4 +1,5 @@
 import MobileMenu from './MobileMenu';
+import ServiciosMenu from './ServiciosMenu';
 import SelectorIdioma from './SelectorIdioma';
 import { contenido } from '../i18n';
 import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
@@ -12,19 +13,21 @@ interface HeaderProps {
 export default function Header({ currentPath = '/', idioma = IDIOMA_POR_DEFECTO }: HeaderProps) {
   const t = contenido(idioma);
 
+  // "Servicios" no esta aqui: es un desplegable propio (ServiciosMenu). Tampoco
+  // "Contacto": el boton naranja de al lado lleva al mismo sitio y con los
+  // ocho enlaces la cabecera no cabia a 1440 px (en el movil si sigue).
   const NAV_ITEMS = [
-    { href: '/servicios', label: t.nav.servicios },
     { href: '/demos', label: t.nav.demos },
     { href: '/calculadora', label: t.nav.calculadora },
     { href: '/faq', label: t.nav.faq },
     { href: '/sobre-nosotros', label: t.nav.sobreNosotros },
-    { href: '/contacto', label: t.nav.contacto },
+    { href: '/seguridad', label: t.nav.seguridad },
   ];
 
   const PANEL_URL = 'https://app.dalsats.com';
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-navy/85 backdrop-blur-md border-b border-white/10">
+    <header className="fixed top-0 left-0 right-0 z-[9100] bg-navy/85 backdrop-blur-md border-b border-white/10">
       <div className="max-w-7xl lg:max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Logo de Dalsat */}
@@ -40,7 +43,8 @@ export default function Header({ currentPath = '/', idioma = IDIOMA_POR_DEFECTO 
         </a>
 
         {/* Menú de Navegación de Escritorio */}
-        <nav className="hidden lg:flex items-center gap-7 text-sm font-medium" aria-label={t.nav.principal}>
+        <nav className="hidden min-[1320px]:flex items-center gap-5 2xl:gap-7 whitespace-nowrap text-sm font-medium" aria-label={t.nav.principal}>
+          <ServiciosMenu currentPath={currentPath} idioma={idioma} />
           {NAV_ITEMS.map((item) => {
             const isActive = currentPath === item.href;
             return (
@@ -69,17 +73,17 @@ export default function Header({ currentPath = '/', idioma = IDIOMA_POR_DEFECTO 
             href={PANEL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden lg:inline-flex items-center gap-1.5 text-sm font-medium text-white/70 transition-colors hover:text-cian"
+            className="hidden min-[1320px]:inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-medium text-white/70 transition-colors hover:text-cian"
           >
             {t.nav.panel}
           </a>
           <a
             href={ruta('/contacto', idioma)}
-            className="hidden lg:inline-flex bg-terracota hover:bg-terracota-light text-navy-950 text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(217,100,44,0.3)] hover:scale-105"
+            className="hidden min-[1320px]:inline-flex whitespace-nowrap bg-terracota hover:bg-terracota-light text-navy-950 text-sm font-semibold px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(217,100,44,0.3)] hover:scale-105"
           >
             {t.nav.cta} →
           </a>
-          <div className="hidden lg:block">
+          <div className="hidden min-[1320px]:block">
             <SelectorIdioma idioma={idioma} rutaActual={currentPath} />
           </div>
           <MobileMenu currentPath={currentPath} idioma={idioma} />

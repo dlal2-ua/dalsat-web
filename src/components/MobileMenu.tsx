@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import SelectorIdioma from './SelectorIdioma';
+import { SERVICIOS, rutaServicio } from '../data/servicios';
 import { contenido } from '../i18n';
 import { IDIOMA_POR_DEFECTO, ruta, type Idioma } from '../i18n/config';
 
@@ -12,16 +13,18 @@ interface MobileMenuProps {
 export default function MobileMenu({ currentPath = '/', idioma = IDIOMA_POR_DEFECTO }: MobileMenuProps) {
   const t = contenido(idioma);
 
+  // "Servicios" va aparte, como lista desplegable.
   const LINKS = [
-    { href: '/servicios', label: t.nav.servicios },
     { href: '/demos', label: t.nav.demos },
     { href: '/calculadora', label: t.nav.calculadora },
     { href: '/faq', label: t.nav.faq },
     { href: '/sobre-nosotros', label: t.nav.sobreNosotros },
+    { href: '/seguridad', label: t.nav.seguridad },
     { href: '/contacto', label: t.nav.contacto },
   ];
 
   const [open, setOpen] = useState(false);
+  const [serviciosAbiertos, setServiciosAbiertos] = useState(currentPath.startsWith('/servicios'));
   const [mounted, setMounted] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -76,7 +79,7 @@ export default function MobileMenu({ currentPath = '/', idioma = IDIOMA_POR_DEFE
   }, [open]);
 
   const drawerContent = (
-    <div className="lg:hidden">
+    <div className="min-[1320px]:hidden">
       {/* Overlay */}
       <div
         onClick={() => setOpen(false)}
@@ -113,7 +116,57 @@ export default function MobileMenu({ currentPath = '/', idioma = IDIOMA_POR_DEFE
           </button>
         </div>
 
-        <div className="flex flex-1 flex-col gap-1 px-3 py-6">
+        <div className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-6">
+          {/* Servicios: la palabra abre la lista de los seis, cada uno con
+              una linea que dice para que sirve. */}
+          <div>
+            <button
+              type="button"
+              aria-expanded={serviciosAbiertos}
+              aria-controls="mobile-servicios"
+              onClick={() => setServiciosAbiertos((v) => !v)}
+              className="flex w-full items-center justify-between rounded-xl px-4 py-3.5 text-left text-base font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              {t.nav.servicios}
+              <svg
+                className={`h-4 w-4 transition-transform duration-200 motion-reduce:transition-none ${serviciosAbiertos ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              </svg>
+            </button>
+            {serviciosAbiertos && (
+              <ul id="mobile-servicios" className="mb-2 ml-4 border-l border-white/10 pl-2">
+                {SERVICIOS.map((s) => (
+                  <li key={s.id}>
+                    <a
+                      href={ruta(rutaServicio(s.id), idioma)}
+                      onClick={() => setOpen(false)}
+                      className="block rounded-lg px-3 py-2.5 transition-colors hover:bg-white/10"
+                    >
+                      <span className="block text-[15px] font-medium text-white">{t.servicios[s.id as keyof typeof t.servicios].nombre}</span>
+                      <span className="mt-0.5 block text-[13px] leading-snug text-white/60">
+                        {t.nav.ayudaServicios[s.id as keyof typeof t.nav.ayudaServicios]}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+                <li>
+                  <a
+                    href={ruta('/servicios', idioma)}
+                    onClick={() => setOpen(false)}
+                    className="block rounded-lg px-3 py-2.5 text-sm font-semibold text-cian transition-colors hover:bg-white/10"
+                  >
+                    {t.nav.verTodosServicios} <span aria-hidden="true">&rarr;</span>
+                  </a>
+                </li>
+              </ul>
+            )}
+          </div>
           {LINKS.map((link) => (
             <a
               key={link.href}
@@ -150,7 +203,7 @@ export default function MobileMenu({ currentPath = '/', idioma = IDIOMA_POR_DEFE
   );
 
   return (
-    <div className="lg:hidden">
+    <div className="min-[1320px]:hidden">
       <button
         ref={toggleRef}
         type="button"

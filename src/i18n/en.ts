@@ -23,6 +23,17 @@ export const en: Contenido = {
     abrirMenu: 'Open menu',
     cerrarMenu: 'Close menu',
     cambiarIdioma: 'Change language',
+    verTodosServicios: 'See all services',
+    porTipoNegocio: 'See by type of business',
+    abrirServicios: 'Open the list of services',
+    ayudaServicios: {
+      saas: 'A program to run your customers, appointments or stock, instead of spreadsheets',
+      agentes: 'They answer your customers on WhatsApp, Instagram, your website or by phone',
+      panel: 'One place to see conversations, bookings and the numbers for the week',
+      procesos: 'We find the tasks you repeat every week and make them run by themselves',
+      seo: 'So your business shows up on Google when someone nearby searches for you',
+      web: 'A clear, fast website that brings you messages and appointments',
+    },
   },
 
   comun: {
@@ -665,6 +676,9 @@ export const en: Contenido = {
   },
 
   paginaServicio: {
+    lista_pista: 'Tap the one you are interested in to see what it includes.',
+    noSeCual: 'Not sure which one you need?',
+    noSeCualEnlace: 'Tell us how you work and we will tell you where to start',
     migas: 'Services',
     paraQuien: 'Who it is for',
     incluye: 'What it includes',

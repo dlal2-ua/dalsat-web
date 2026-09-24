@@ -20,6 +20,17 @@ export const es = {
     abrirMenu: 'Abrir menú',
     cerrarMenu: 'Cerrar menú',
     cambiarIdioma: 'Cambiar idioma',
+    verTodosServicios: 'Ver todos los servicios',
+    porTipoNegocio: 'Ver por tipo de negocio',
+    abrirServicios: 'Abrir la lista de servicios',
+    ayudaServicios: {
+      saas: 'Un programa para llevar tus clientes, citas o stock, en vez de hojas de cálculo',
+      agentes: 'Contestan a tus clientes por WhatsApp, Instagram, tu web o por teléfono',
+      panel: 'Un sitio donde ves las conversaciones, las reservas y los números de la semana',
+      procesos: 'Buscamos qué tareas repites cada semana y las dejamos hechas solas',
+      seo: 'Que tu negocio salga en Google cuando alguien de tu zona te busca',
+      web: 'Una web clara y rápida que te trae mensajes y citas',
+    },
   },
 
   comun: {
@@ -665,6 +676,9 @@ export const es = {
   },
 
   paginaServicio: {
+    lista_pista: 'Toca el que te interese y te contamos qué incluye.',
+    noSeCual: '¿No sabes cuál necesitas?',
+    noSeCualEnlace: 'Cuéntanos cómo trabajas y te decimos por dónde empezar',
     migas: 'Servicios',
     paraQuien: 'Para quién es',
     incluye: 'Qué incluye',
