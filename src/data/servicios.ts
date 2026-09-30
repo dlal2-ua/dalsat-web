@@ -32,7 +32,13 @@ export interface Servicio {
 export const SERVICIOS: Servicio[] = [
   { id: 'saas', order: '01', nombre: 'Software a medida', slug: 'software-a-medida' },
   { id: 'agentes', order: '02', nombre: 'Agentes de IA', slug: 'agentes-ia' },
-  { id: 'panel', order: '03', nombre: 'CRM con IA', slug: 'crm-con-ia' },
+  {
+  id: 'panel',
+  order: '03',
+  nombre: 'CRM con IA',
+  slug: 'crm-con-ia',
+  video: { src: '/videos/procesos/dalsat-crm.mp4', poster: '/videos/procesos/poster.webp' },
+},
   {
     id: 'procesos',
     order: '04',
